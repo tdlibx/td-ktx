@@ -10,11 +10,8 @@ class ClientFlowProvider(
 ) : FlowProvider {
 
     val resultHandler = ResultHandlerFlow()
-    
-    private val client: Client = clientInstance
-            ?.also { it.setUpdatesHandler { resultHandler } }
-            ?: Client.create(resultHandler, null, null)
 
+    lateinit var client: Client
 
     override fun getFlow(): Flow<TdApi.Object> {
         return resultHandler.buffer(64)
@@ -24,6 +21,11 @@ class ClientFlowProvider(
         client.send(function, resultHandler)
     }
 
+    override fun createClient() {
+        client = clientInstance
+            ?.also { it.setUpdatesHandler { resultHandler } }
+            ?: Client.create(resultHandler, null, null)
+    }
 }
 
 /**

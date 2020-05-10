@@ -13,6 +13,13 @@ import kotlin.coroutines.suspendCoroutine
 interface FlowProvider {
     fun getFlow(): Flow<TdApi.Object>
     fun send(function: TdApi.Function, resultHandler: (TdApi.Object) -> Unit)
+    fun createClient()
+}
+
+
+sealed class TelegramException(message: String) : Throwable(message) {
+    class Error(message: String) : TelegramException(message)
+    class UnexpectedResult(result: TdApi.Object): TelegramException("unexpected result: $result")
 }
 
 @ExperimentalCoroutinesApi
@@ -21,6 +28,16 @@ open class TelegramFlow(
 ) {
 
     val mainFlow: Flow<TdApi.Object> = flowProvider.getFlow()
+
+    fun createClient() {
+        flowProvider.createClient()
+    }
+
+    suspend fun createClientWithParameters(parameters: TdApi.TdlibParameters, key: ByteArray?) {
+        flowProvider.createClient()
+        TdApi.SetTdlibParameters(parameters).launch()
+        TdApi.CheckDatabaseEncryptionKey(key).launch()
+    }
 
     // transform
 
@@ -46,6 +63,8 @@ open class TelegramFlow(
 
     //launchers
 
+
+    @Throws(TelegramException::class)
     suspend inline fun <reified ExpectedResult : TdApi.Object>
         TdApi.Function.expect(
         resultFunc: (ExpectedResult) -> Unit = {}
@@ -54,8 +73,8 @@ open class TelegramFlow(
             flowProvider.send(this) {
                 when (it) {
                     is ExpectedResult -> cont.resume(it)
-                    is Error -> cont.resumeWithException(Exception(it.message))
-                    else -> cont.resumeWithException(Exception("unexpected result $it"))
+                    is TdApi.Error -> cont.resumeWithException(TelegramException.Error(it.message))
+                    else -> cont.resumeWithException(TelegramException.UnexpectedResult(it))
                 }
             }
         }
@@ -66,7 +85,7 @@ open class TelegramFlow(
             flowProvider.send(this) {
                 when (it) {
                     is ExpectedResult -> cont.resume(it)
-                    is Error -> cont.resumeWithException(Exception(it.message))
+                    is TdApi.Error -> cont.resumeWithException(Exception(it.message))
                     else -> cont.resumeWithException(Exception("unexpected result $it"))
                 }
             }

@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'com.github.dcendents.android-maven'
-group='com.tdlibx.td-ktx'
+group='com.github.tdlibx.td-ktx'
 
 android {
     compileSdkVersion 29
