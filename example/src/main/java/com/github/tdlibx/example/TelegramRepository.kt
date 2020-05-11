@@ -1,5 +1,6 @@
 package com.github.tdlibx.example
 
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.telegram.flow.TelegramFlow
@@ -25,6 +26,10 @@ object TelegramRepository : TelegramFlow() {
                 else -> null
             }
         }
+
+    val textMessagesFlow = TdApi.UpdateNewMessage().mapAsFlow {
+        it.message.content
+    }.filterIsInstance<TdApi.MessageText>().map { it.text.text }
 
     // send required parameters or pass them using TelegramFlow.createClientWithParameters() instead
     private suspend fun checkRequiredParams(it: TdApi.AuthorizationState?) {

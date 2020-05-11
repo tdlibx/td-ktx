@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,12 +17,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         vm.authState.observe(this, Observer { state ->
-            Toast.makeText(
-                this,
-                state?.toString(),
-                Toast.LENGTH_LONG
-            )
-            if (state != null && state !is AuthState.LoggedIn) {
+            if (state == null) return@Observer //skip
+
+            Toast.makeText(this, state.toString(), Toast.LENGTH_LONG).show()
+
+            if (state !is AuthState.LoggedIn) {
                 MaterialDialog(this).show {
                     input(hint = state.dialogHint) { _, text ->
                         when (state) {
@@ -40,6 +40,10 @@ class MainActivity : AppCompatActivity() {
                 title(text = "Error!")
                 message(text = it)
             }
+        })
+
+        vm.newMessage.observe(this, Observer {
+            helloStub.text = it.joinToString("\n")
         })
     }
 }
