@@ -1,10 +1,13 @@
-package kotlinx.telegram.flow
+/*
+package kotlinx.telegram.core
 
 import android.util.Log
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.transform
+import kotlinx.telegram.flow.ClientFlowProvider
+import org.drinkless.td.libcore.telegram.Client
 import org.drinkless.td.libcore.telegram.TdApi
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -16,10 +19,8 @@ interface FlowProvider {
     fun createClient()
 }
 
-
-sealed class TelegramException(message: String) : Throwable(message) {
-    class Error(message: String) : TelegramException(message)
-    class UnexpectedResult(result: TdApi.Object): TelegramException("unexpected result: $result")
+private fun <T> Client.sendAsync(testProxy: TdApi.Function): T {
+    TODO("Not yet implemented")
 }
 
 @ExperimentalCoroutinesApi
@@ -109,3 +110,25 @@ open class TelegramFlow(
 fun String.log() {
     Log.e("=========", this)
 }
+
+*/
+/**
+ * Start a telegram flow for given [Client] to access it's functionality
+ * For example:
+ * ```
+ * client.withFlow {
+ *    TdApi.UpdateNewMessage().asFlow()
+ *        .map { it.message }
+ *        .onEach {
+ *            TdApi.DeleteChatMessagesFromUser(it.chatId, it.senderUserId).launch()
+ *        }.launchIn(scope)
+ * }
+ * ```
+ * will delete all the incoming messages
+ *//*
+
+fun Client.withFlow(function: TelegramFlow.() -> Unit) {
+    val provider = ClientFlowProvider(this)
+    val telegramFlow = TelegramFlow(provider)
+    function(telegramFlow)
+}*/

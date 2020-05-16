@@ -1,4 +1,4 @@
-package kotlinx.telegram.flow
+package kotlinx.telegram.core
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -12,19 +12,15 @@ import org.drinkless.td.libcore.telegram.Client
 import org.drinkless.td.libcore.telegram.TdApi
 
 @ExperimentalCoroutinesApi
-class ResultHandlerFlow(
-    val channel: BroadcastChannel<TdApi.Object> = BroadcastChannel(Channel.CONFLATED)
-) : Client.ResultHandler, Client.ExceptionHandler, Flow<TdApi.Object> {
-
+class ResultHandlerChannelFlow(
+    val channel: BroadcastChannel<TdApi.Object> = BroadcastChannel(
+        Channel.CONFLATED
+    )
+) : Client.ResultHandler, Flow<TdApi.Object> {
 
     override fun onResult(result: TdApi.Object?) {
         if (!channel.isClosedForSend && result != null)
             channel.offer(result)
-    }
-
-    override fun onException(throwable: Throwable?) {
-        if (!channel.isClosedForSend && throwable != null)
-            channel.offer(TdApi.Error(42, throwable.message))
     }
 
     @FlowPreview
