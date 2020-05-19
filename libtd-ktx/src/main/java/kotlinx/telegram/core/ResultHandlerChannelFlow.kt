@@ -17,7 +17,7 @@ import org.drinkless.td.libcore.telegram.TdApi
  */
 @ExperimentalCoroutinesApi
 class ResultHandlerChannelFlow(
-    val channel: BroadcastChannel<TdApi.Object> = BroadcastChannel(Channel.CONFLATED)
+    private val channel: BroadcastChannel<TdApi.Object> = BroadcastChannel(Channel.CONFLATED)
 ) : TelegramFlow.ResultHandlerFlow {
 
     override fun onResult(result: TdApi.Object?) {
