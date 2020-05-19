@@ -1,4 +1,4 @@
-$dokka.format:html
+$dokka.format:jekyll
 $dokka.linkExtension:html
 
 kotlinx.telegram.core
