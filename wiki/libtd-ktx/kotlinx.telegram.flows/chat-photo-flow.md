@@ -2,7 +2,7 @@
 
 # chatPhotoFlow
 
-`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.chatPhotoFlow(): Flow<`[`UpdateChatPhoto`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateChatPhoto.html)`>`
+`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.chatPhotoFlow(): Flow<`[`UpdateChatPhoto`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateChatPhoto.html)`>`
 
-emits [UpdateChatPhoto](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateChatPhoto.html) if a chat photo was changed.
+emits [UpdateChatPhoto](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateChatPhoto.html) if a chat photo was changed.
 

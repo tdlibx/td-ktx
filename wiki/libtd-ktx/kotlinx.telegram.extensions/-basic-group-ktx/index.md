@@ -4,7 +4,7 @@
 
 `interface BasicGroupKtx : `[`BaseKtx`](../-base-ktx/index.md)
 
-Interface for access [TdApi.BasicGroup](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/BasicGroup.html) extension functions. Can be used alongside with other
+Interface for access [TdApi.BasicGroup](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.BasicGroup.html) extension functions. Can be used alongside with other
 extension interfaces of the package. Must contain [TelegramFlow](../../kotlinx.telegram.core/-telegram-flow/index.md) instance field to access its
 functionality
 
@@ -18,9 +18,9 @@ functionality
 
 | Name | Summary |
 |---|---|
-| [createChat](create-chat.md) | Suspend function, which returns an existing chat corresponding to a known basic group.`open suspend fun `[`BasicGroup`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/BasicGroup.html)`.createChat(force: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`): `[`Chat`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html) |
-| [get](get.md) | Suspend function, which returns information about a basic group by its identifier. This is an offline request if the current user is not a bot.`open suspend fun `[`BasicGroup`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/BasicGroup.html)`.get(): `[`BasicGroup`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/BasicGroup.html) |
-| [getFullInfo](get-full-info.md) | Suspend function, which returns full information about a basic group by its identifier.`open suspend fun `[`BasicGroup`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/BasicGroup.html)`.getFullInfo(): `[`BasicGroupFullInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/BasicGroupFullInfo.html) |
+| [createChat](create-chat.md) | Suspend function, which returns an existing chat corresponding to a known basic group.`open suspend fun `[`BasicGroup`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.BasicGroup.html)`.createChat(force: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`): `[`Chat`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Chat.html) |
+| [get](get.md) | Suspend function, which returns information about a basic group by its identifier. This is an offline request if the current user is not a bot.`open suspend fun `[`BasicGroup`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.BasicGroup.html)`.get(): `[`BasicGroup`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.BasicGroup.html) |
+| [getFullInfo](get-full-info.md) | Suspend function, which returns full information about a basic group by its identifier.`open suspend fun `[`BasicGroup`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.BasicGroup.html)`.getFullInfo(): `[`BasicGroupFullInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.BasicGroupFullInfo.html) |
 
 ### Inheritors
 

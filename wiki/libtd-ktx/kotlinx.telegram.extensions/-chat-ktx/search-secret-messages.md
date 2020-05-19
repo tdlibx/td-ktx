@@ -2,7 +2,7 @@
 
 # searchSecretMessages
 
-`open suspend fun `[`Chat`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html)`.searchSecretMessages(query: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, fromSearchId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, filter: `[`SearchMessagesFilter`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/SearchMessagesFilter.html)`?): `[`FoundMessages`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/FoundMessages.html)
+`open suspend fun `[`Chat`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Chat.html)`.searchSecretMessages(query: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, fromSearchId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, filter: `[`SearchMessagesFilter`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.SearchMessagesFilter.html)`?): `[`FoundMessages`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.FoundMessages.html)
 
 Suspend function, which searches for messages in secret chats. Returns the results in reverse
 chronological order. For optimal performance the number of returned messages is chosen by the
@@ -21,5 +21,5 @@ returned than specified by the limit, even if the end of the message history has
 `filter` - A filter for the content of messages in the search results.
 
 **Return**
-[TdApi.FoundMessages](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/FoundMessages.html) Contains a list of messages found by a search.
+[TdApi.FoundMessages](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.FoundMessages.html) Contains a list of messages found by a search.
 

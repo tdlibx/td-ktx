@@ -2,13 +2,13 @@
 
 # sendFunctionAsync
 
-`suspend fun <reified ExpectedResult : `[`Object`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Object.html)`> sendFunctionAsync(function: `[`Function`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Function.html)`): ExpectedResult`
+`suspend fun <reified ExpectedResult : `[`Object`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Object.html)`> sendFunctionAsync(function: `[`Function`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Function.html)`): ExpectedResult`
 
 Sends a request to the TDLib and expect a result.
 
 ### Parameters
 
-`function` - [TdApi.Function](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Function.html) representing a TDLib interface function-class.
+`function` - [TdApi.Function](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Function.html) representing a TDLib interface function-class.
 
 `ExpectedResult` - result type expecting from given [function](send-function-async.md#kotlinx.telegram.core.TelegramFlow$sendFunctionAsync(org.drinkless.td.libcore.telegram.TdApi.Function)/function).
 

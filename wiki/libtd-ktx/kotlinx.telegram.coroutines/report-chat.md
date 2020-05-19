@@ -2,7 +2,7 @@
 
 # reportChat
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.reportChat(chatId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, reason: `[`ChatReportReason`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatReportReason.html)`?, messageIds: `[`LongArray`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long-array/index.html)`?): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.reportChat(chatId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, reason: `[`ChatReportReason`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ChatReportReason.html)`?, messageIds: `[`LongArray`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long-array/index.html)`?): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
 
 Suspend function, which reports a chat to the Telegram moderators. Supported only for
 supergroups, channels, or private chats with bots, since other chats can't be checked by moderators,

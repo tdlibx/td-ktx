@@ -2,7 +2,7 @@
 
 # userPrivacySettingRulesFlow
 
-`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.userPrivacySettingRulesFlow(): Flow<`[`UpdateUserPrivacySettingRules`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateUserPrivacySettingRules.html)`>`
+`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.userPrivacySettingRulesFlow(): Flow<`[`UpdateUserPrivacySettingRules`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateUserPrivacySettingRules.html)`>`
 
-emits [UpdateUserPrivacySettingRules](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateUserPrivacySettingRules.html) if some privacy setting rules have been changed.
+emits [UpdateUserPrivacySettingRules](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateUserPrivacySettingRules.html) if some privacy setting rules have been changed.
 

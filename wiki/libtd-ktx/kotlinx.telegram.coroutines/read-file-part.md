@@ -2,7 +2,7 @@
 
 # readFilePart
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.readFilePart(fileId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, offset: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, count: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`FilePart`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/FilePart.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.readFilePart(fileId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, offset: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, count: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`FilePart`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.FilePart.html)
 
 Suspend function, which reads a part of a file from the TDLib file cache and returns read bytes.
 This method is intended to be used only if the client has no direct access to TDLib's file system,
@@ -19,5 +19,5 @@ available in the file from the specified position. Pass 0 to read all available 
 specified position.
 
 **Return**
-[FilePart](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/FilePart.html) Contains a part of a file.
+[FilePart](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.FilePart.html) Contains a part of a file.
 

@@ -2,13 +2,13 @@
 
 # sendFunctionLaunch
 
-`suspend fun sendFunctionLaunch(function: `[`Function`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Function.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
+`suspend fun sendFunctionLaunch(function: `[`Function`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Function.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
 
-Sends a request to the TDLib and expect [TdApi.Ok](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Ok.html)
+Sends a request to the TDLib and expect [TdApi.Ok](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Ok.html)
 
 ### Parameters
 
-`function` - [TdApi.Function](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Function.html) representing a TDLib interface function-class.
+`function` - [TdApi.Function](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Function.html) representing a TDLib interface function-class.
 
 ### Exceptions
 

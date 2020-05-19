@@ -2,4 +2,4 @@
 
 # ResultHandlerFlow
 
-`interface ResultHandlerFlow : `[`ResultHandler`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/Client/ResultHandler.html)`, Flow<`[`Object`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Object.html)`>`
+`interface ResultHandlerFlow : `[`ResultHandler`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/Client/ResultHandler.html)`, Flow<`[`Object`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Object.html)`>`
