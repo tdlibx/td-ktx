@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>setInlineGameScore - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./set-inline-game-score.html">setInlineGameScore</a><br/>
+<br/>
+<h1>setInlineGameScore</h1>
+<a name="kotlinx.telegram.coroutines$setInlineGameScore(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Boolean, kotlin.Int, kotlin.Int, kotlin.Boolean)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">setInlineGameScore</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$setInlineGameScore(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Boolean, kotlin.Int, kotlin.Int, kotlin.Boolean)/inlineMessageId">inlineMessageId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$setInlineGameScore(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Boolean, kotlin.Int, kotlin.Int, kotlin.Boolean)/editMessage">editMessage</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$setInlineGameScore(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Boolean, kotlin.Int, kotlin.Int, kotlin.Boolean)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$setInlineGameScore(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Boolean, kotlin.Int, kotlin.Int, kotlin.Boolean)/score">score</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$setInlineGameScore(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Boolean, kotlin.Int, kotlin.Int, kotlin.Boolean)/force">force</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which updates the game score of the specified user in a game; for bots only.</p>
+<h3>Parameters</h3>
+<p><a name="inlineMessageId"></a>
+<code>inlineMessageId</code> - Inline message identifier.</p>
+<p><a name="editMessage"></a>
+<code>editMessage</code> - True, if the message should be edited.</p>
+<p><a name="userId"></a>
+<code>userId</code> - User identifier.</p>
+<p><a name="score"></a>
+<code>score</code> - The new score.</p>
+<p><a name="force"></a>
+<code>force</code> - Pass true to update the score even if it decreases. If the score is 0, the user will
+be deleted from the high score table.</p>
+</BODY>
+</HTML>

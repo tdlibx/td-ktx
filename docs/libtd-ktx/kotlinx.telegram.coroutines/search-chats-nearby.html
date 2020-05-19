@@ -1,0 +1,22 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>searchChatsNearby - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./search-chats-nearby.html">searchChatsNearby</a><br/>
+<br/>
+<h1>searchChatsNearby</h1>
+<a name="kotlinx.telegram.coroutines$searchChatsNearby(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.Location)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">searchChatsNearby</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$searchChatsNearby(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.Location)/location">location</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Location.html"><span class="identifier">Location</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatsNearby.html"><span class="identifier">ChatsNearby</span></a></code>
+<p>Suspend function, which returns a list of users and location-based supergroups nearby. The list
+of users nearby will be updated for 60 seconds after the request by the updates updateUsersNearby.
+The request should be sent again every 25 seconds with adjusted location to not miss new chats.</p>
+<h3>Parameters</h3>
+<p><a name="location"></a>
+<code>location</code> - Current user location.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatsNearby.html">ChatsNearby</a> Represents a list of chats located nearby.</p>
+</BODY>
+</HTML>

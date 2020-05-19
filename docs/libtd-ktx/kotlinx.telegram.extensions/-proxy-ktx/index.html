@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ProxyKtx - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="./index.html">ProxyKtx</a><br/>
+<br/>
+<h1>ProxyKtx</h1>
+<code><span class="keyword">interface </span><span class="identifier">ProxyKtx</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-base-ktx/index.html"><span class="identifier">BaseKtx</span></a></code>
+<p>Interface for access <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html">TdApi.Proxy</a> extension functions. Can be used alongside with other
+extension interfaces of the package. Must contain <a href="../../kotlinx.telegram.core/-telegram-flow/index.html">TelegramFlow</a> instance field to access its
+functionality</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="api.html">api</a></h4>
+</td>
+<td>
+<p>Instance of the <a href="../../kotlinx.telegram.core/-telegram-flow/index.html">TelegramFlow</a> connecting extensions to the Telegram Client</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">api</span><span class="symbol">: </span><a href="../../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="edit.html">edit</a></h4>
+</td>
+<td>
+<p>Suspend function, which edits an existing proxy server for network requests. Can be called
+before authorization.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">edit</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.ProxyKtx$edit(org.drinkless.td.libcore.telegram.TdApi.Proxy, kotlin.String, kotlin.Int, kotlin.Boolean, org.drinkless.td.libcore.telegram.TdApi.ProxyType)/server">server</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ProxyKtx$edit(org.drinkless.td.libcore.telegram.TdApi.Proxy, kotlin.String, kotlin.Int, kotlin.Boolean, org.drinkless.td.libcore.telegram.TdApi.ProxyType)/port">port</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ProxyKtx$edit(org.drinkless.td.libcore.telegram.TdApi.Proxy, kotlin.String, kotlin.Int, kotlin.Boolean, org.drinkless.td.libcore.telegram.TdApi.ProxyType)/enable">enable</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ProxyKtx$edit(org.drinkless.td.libcore.telegram.TdApi.Proxy, kotlin.String, kotlin.Int, kotlin.Boolean, org.drinkless.td.libcore.telegram.TdApi.ProxyType)/type">type</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ProxyType.html"><span class="identifier">ProxyType</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html"><span class="identifier">Proxy</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="enable.html">enable</a></h4>
+</td>
+<td>
+<p>Suspend function, which enables a proxy. Only one proxy can be enabled at a time. Can be called
+before authorization.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">enable</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-link.html">getLink</a></h4>
+</td>
+<td>
+<p>Suspend function, which returns an HTTPS link, which can be used to add a proxy. Available only
+for SOCKS5 and MTProto proxies. Can be called before authorization.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">getLink</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Text.html"><span class="identifier">Text</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="ping.html">ping</a></h4>
+</td>
+<td>
+<p>Suspend function, which computes time needed to receive a response from a Telegram server
+through a proxy. Can be called before authorization.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">ping</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Seconds.html"><span class="identifier">Seconds</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove.html">remove</a></h4>
+</td>
+<td>
+<p>Suspend function, which removes a proxy server. Can be called before authorization.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">remove</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-telegram-ktx/index.html">TelegramKtx</a></h4>
+</td>
+<td>
+<p>Interface for access all Telegram objects extension functions. Contains 182 extensions</p>
+<code><span class="keyword">interface </span><span class="identifier">TelegramKtx</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-basic-group-ktx/index.html"><span class="identifier">BasicGroupKtx</span></a><span class="symbol">, </span><a href="../-call-ktx/index.html"><span class="identifier">CallKtx</span></a><span class="symbol">, </span><a href="../-chat-ktx/index.html"><span class="identifier">ChatKtx</span></a><span class="symbol">, </span><a href="../-file-ktx/index.html"><span class="identifier">FileKtx</span></a><span class="symbol">, </span><a href="../-message-ktx/index.html"><span class="identifier">MessageKtx</span></a><span class="symbol">, </span><a href="../-notification-group-ktx/index.html"><span class="identifier">NotificationGroupKtx</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">ProxyKtx</span></a><span class="symbol">, </span><a href="../-secret-chat-ktx/index.html"><span class="identifier">SecretChatKtx</span></a><span class="symbol">, </span><a href="../-supergroup-ktx/index.html"><span class="identifier">SupergroupKtx</span></a><span class="symbol">, </span><a href="../-user-ktx/index.html"><span class="identifier">UserKtx</span></a><span class="symbol">, </span><a href="../-common-ktx/index.html"><span class="identifier">CommonKtx</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

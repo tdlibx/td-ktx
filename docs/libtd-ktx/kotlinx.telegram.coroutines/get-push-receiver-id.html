@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>getPushReceiverId - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./get-push-receiver-id.html">getPushReceiverId</a><br/>
+<br/>
+<h1>getPushReceiverId</h1>
+<a name="kotlinx.telegram.coroutines$getPushReceiverId(kotlinx.telegram.core.TelegramFlow, kotlin.String)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">getPushReceiverId</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$getPushReceiverId(kotlinx.telegram.core.TelegramFlow, kotlin.String)/payload">payload</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/PushReceiverId.html"><span class="identifier">PushReceiverId</span></a></code>
+<p>Suspend function, which returns a globally unique push notification subscription identifier for
+identification of an account, which has received a push notification. This is an offline method. Can
+be called before authorization. Can be called synchronously.</p>
+<h3>Parameters</h3>
+<p><a name="payload"></a>
+<code>payload</code> - JSON-encoded push notification payload.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/PushReceiverId.html">PushReceiverId</a> Contains a globally unique push receiver identifier, which can be used
+to identify which account has received a push notification.</p>
+</BODY>
+</HTML>

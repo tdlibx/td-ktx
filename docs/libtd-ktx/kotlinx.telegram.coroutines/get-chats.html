@@ -1,0 +1,30 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>getChats - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./get-chats.html">getChats</a><br/>
+<br/>
+<h1>getChats</h1>
+<a name="kotlinx.telegram.coroutines$getChats(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.ChatList, kotlin.Long, kotlin.Long, kotlin.Int)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">getChats</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$getChats(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.ChatList, kotlin.Long, kotlin.Long, kotlin.Int)/chatList">chatList</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatList.html"><span class="identifier">ChatList</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$getChats(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.ChatList, kotlin.Long, kotlin.Long, kotlin.Int)/offsetOrder">offsetOrder</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$getChats(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.ChatList, kotlin.Long, kotlin.Long, kotlin.Int)/offsetChatId">offsetChatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$getChats(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.ChatList, kotlin.Long, kotlin.Long, kotlin.Int)/limit">limit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chats.html"><span class="identifier">Chats</span></a></code>
+<p>Suspend function, which returns an ordered list of chats in a chat list. Chats are sorted by the
+pair (order, chatId) in decreasing order. (For example, to get a list of chats from the beginning,
+the offsetOrder should be equal to a biggest signed 64-bit number 9223372036854775807 == 2^63 - 1).
+For optimal performance the number of returned chats is chosen by the library.</p>
+<h3>Parameters</h3>
+<p><a name="chatList"></a>
+<code>chatList</code> - The chat list in which to return chats.</p>
+<p><a name="offsetOrder"></a>
+<code>offsetOrder</code> - Chat order to return chats from.</p>
+<p><a name="offsetChatId"></a>
+<code>offsetChatId</code> - Chat identifier to return chats from.</p>
+<p><a name="limit"></a>
+<code>limit</code> - The maximum number of chats to be returned. It is possible that fewer chats than the
+limit are returned even if the end of the list is not reached.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chats.html">Chats</a> Represents a list of chats.</p>
+</BODY>
+</HTML>

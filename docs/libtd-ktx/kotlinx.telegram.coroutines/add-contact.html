@@ -1,0 +1,25 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>addContact - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./add-contact.html">addContact</a><br/>
+<br/>
+<h1>addContact</h1>
+<a name="kotlinx.telegram.coroutines$addContact(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.Contact, kotlin.Boolean)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">addContact</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$addContact(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.Contact, kotlin.Boolean)/contact">contact</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Contact.html"><span class="identifier">Contact</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$addContact(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.Contact, kotlin.Boolean)/sharePhoneNumber">sharePhoneNumber</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which adds a user to the contact list or edits an existing contact by their
+user identifier.</p>
+<h3>Parameters</h3>
+<p><a name="contact"></a>
+<code>contact</code> - The contact to add or edit; phone number can be empty and needs to be specified
+only if known, vCard is ignored.</p>
+<p><a name="sharePhoneNumber"></a>
+<code>sharePhoneNumber</code> - True, if the new contact needs to be allowed to see current user's phone
+number. A corresponding rule to userPrivacySettingShowPhoneNumber will be added if needed. Use the
+field UserFullInfo.needPhoneNumberPrivacyException to check whether the current user needs to be
+asked to share their phone number.</p>
+</BODY>
+</HTML>

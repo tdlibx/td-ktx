@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>setCustomLanguagePack - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./set-custom-language-pack.html">setCustomLanguagePack</a><br/>
+<br/>
+<h1>setCustomLanguagePack</h1>
+<a name="kotlinx.telegram.coroutines$setCustomLanguagePack(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.LanguagePackInfo, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.LanguagePackString)))"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">setCustomLanguagePack</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$setCustomLanguagePack(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.LanguagePackInfo, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.LanguagePackString)))/info">info</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/LanguagePackInfo.html"><span class="identifier">LanguagePackInfo</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$setCustomLanguagePack(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.LanguagePackInfo, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.LanguagePackString)))/strings">strings</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/LanguagePackString.html"><span class="identifier">LanguagePackString</span></a><span class="symbol">&gt;</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which adds or changes a custom local language pack to the current localization
+target.</p>
+<h3>Parameters</h3>
+<p><a name="info"></a>
+<code>info</code> - Information about the language pack. Language pack ID must start with 'X', consist
+only of English letters, digits and hyphens, and must not exceed 64 characters. Can be called before
+authorization.</p>
+<p><a name="strings"></a>
+<code>strings</code> - Strings of the new language pack.</p>
+</BODY>
+</HTML>

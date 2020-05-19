@@ -1,0 +1,26 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>getGroupsInCommon - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./get-groups-in-common.html">getGroupsInCommon</a><br/>
+<br/>
+<h1>getGroupsInCommon</h1>
+<a name="kotlinx.telegram.coroutines$getGroupsInCommon(kotlinx.telegram.core.TelegramFlow, kotlin.Int, kotlin.Long, kotlin.Int)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">getGroupsInCommon</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$getGroupsInCommon(kotlinx.telegram.core.TelegramFlow, kotlin.Int, kotlin.Long, kotlin.Int)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$getGroupsInCommon(kotlinx.telegram.core.TelegramFlow, kotlin.Int, kotlin.Long, kotlin.Int)/offsetChatId">offsetChatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$getGroupsInCommon(kotlinx.telegram.core.TelegramFlow, kotlin.Int, kotlin.Long, kotlin.Int)/limit">limit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chats.html"><span class="identifier">Chats</span></a></code>
+<p>Suspend function, which returns a list of common group chats with a given user. Chats are sorted
+by their type and creation date.</p>
+<h3>Parameters</h3>
+<p><a name="userId"></a>
+<code>userId</code> - User identifier.</p>
+<p><a name="offsetChatId"></a>
+<code>offsetChatId</code> - Chat identifier starting from which to return chats; use 0 for the first
+request.</p>
+<p><a name="limit"></a>
+<code>limit</code> - The maximum number of chats to be returned; up to 100.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chats.html">Chats</a> Represents a list of chats.</p>
+</BODY>
+</HTML>

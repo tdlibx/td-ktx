@@ -1,0 +1,21 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>setChatLocation - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./set-chat-location.html">setChatLocation</a><br/>
+<br/>
+<h1>setChatLocation</h1>
+<a name="kotlinx.telegram.coroutines$setChatLocation(kotlinx.telegram.core.TelegramFlow, kotlin.Long, org.drinkless.td.libcore.telegram.TdApi.ChatLocation)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">setChatLocation</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$setChatLocation(kotlinx.telegram.core.TelegramFlow, kotlin.Long, org.drinkless.td.libcore.telegram.TdApi.ChatLocation)/chatId">chatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$setChatLocation(kotlinx.telegram.core.TelegramFlow, kotlin.Long, org.drinkless.td.libcore.telegram.TdApi.ChatLocation)/location">location</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatLocation.html"><span class="identifier">ChatLocation</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which changes the location of a chat. Available only for some location-based
+supergroups, use supergroupFullInfo.canSetLocation to check whether the method is allowed to use.</p>
+<h3>Parameters</h3>
+<p><a name="chatId"></a>
+<code>chatId</code> - Chat identifier.</p>
+<p><a name="location"></a>
+<code>location</code> - New location for the chat; must be valid and not null.</p>
+</BODY>
+</HTML>

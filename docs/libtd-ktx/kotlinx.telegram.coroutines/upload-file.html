@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>uploadFile - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./upload-file.html">uploadFile</a><br/>
+<br/>
+<h1>uploadFile</h1>
+<a name="kotlinx.telegram.coroutines$uploadFile(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.InputFile, org.drinkless.td.libcore.telegram.TdApi.FileType, kotlin.Int)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">uploadFile</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$uploadFile(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.InputFile, org.drinkless.td.libcore.telegram.TdApi.FileType, kotlin.Int)/file">file</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/InputFile.html"><span class="identifier">InputFile</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$uploadFile(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.InputFile, org.drinkless.td.libcore.telegram.TdApi.FileType, kotlin.Int)/fileType">fileType</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/FileType.html"><span class="identifier">FileType</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$uploadFile(kotlinx.telegram.core.TelegramFlow, org.drinkless.td.libcore.telegram.TdApi.InputFile, org.drinkless.td.libcore.telegram.TdApi.FileType, kotlin.Int)/priority">priority</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/File.html"><span class="identifier">File</span></a></code>
+<p>Suspend function, which asynchronously uploads a file to the cloud without sending it in a
+message. updateFile will be used to notify about upload progress and successful completion of the
+upload. The file will not have a persistent remote identifier until it will be sent in a message.</p>
+<h3>Parameters</h3>
+<p><a name="file"></a>
+<code>file</code> - File to upload.</p>
+<p><a name="fileType"></a>
+<code>fileType</code> - File type.</p>
+<p><a name="priority"></a>
+<code>priority</code> - Priority of the upload (1-32). The higher the priority, the earlier the file will
+be uploaded. If the priorities of two files are equal, then the first one for which uploadFile was
+called will be uploaded first.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/File.html">File</a> Represents a file.</p>
+</BODY>
+</HTML>

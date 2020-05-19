@@ -1,0 +1,26 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>setChatDiscussionGroup - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./set-chat-discussion-group.html">setChatDiscussionGroup</a><br/>
+<br/>
+<h1>setChatDiscussionGroup</h1>
+<a name="kotlinx.telegram.coroutines$setChatDiscussionGroup(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Long)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">setChatDiscussionGroup</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$setChatDiscussionGroup(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Long)/chatId">chatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$setChatDiscussionGroup(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Long)/discussionChatId">discussionChatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which changes the discussion group of a channel chat; requires canChangeInfo
+rights in the channel if it is specified.</p>
+<h3>Parameters</h3>
+<p><a name="chatId"></a>
+<code>chatId</code> - Identifier of the channel chat. Pass 0 to remove a link from the supergroup passed
+in the second argument to a linked channel chat (requires canPinMessages rights in the supergroup).</p>
+<p><a name="discussionChatId"></a>
+<code>discussionChatId</code> - Identifier of a new channel's discussion group. Use 0 to remove the
+discussion group. Use the method getSuitableDiscussionChats to find all suitable groups. Basic group
+chats needs to be first upgraded to supergroup chats. If new chat members don't have access to old
+messages in the supergroup, then toggleSupergroupIsAllHistoryAvailable needs to be used first to
+change that.</p>
+</BODY>
+</HTML>

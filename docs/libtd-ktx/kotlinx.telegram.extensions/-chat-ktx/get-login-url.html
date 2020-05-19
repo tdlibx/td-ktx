@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ChatKtx.getLoginUrl - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="index.html">ChatKtx</a>&nbsp;/&nbsp;<a href="./get-login-url.html">getLoginUrl</a><br/>
+<br/>
+<h1>getLoginUrl</h1>
+<a name="kotlinx.telegram.extensions.ChatKtx$getLoginUrl(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long, kotlin.Int, kotlin.Boolean)"></a>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html"><span class="identifier">Chat</span></a><span class="symbol">.</span><span class="identifier">getLoginUrl</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$getLoginUrl(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long, kotlin.Int, kotlin.Boolean)/messageId">messageId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$getLoginUrl(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long, kotlin.Int, kotlin.Boolean)/buttonId">buttonId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$getLoginUrl(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long, kotlin.Int, kotlin.Boolean)/allowWriteAccess">allowWriteAccess</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/HttpUrl.html"><span class="identifier">HttpUrl</span></a></code>
+<p>Suspend function, which returns an HTTP URL which can be used to automatically authorize the
+user on a website after clicking an inline button of type inlineKeyboardButtonTypeLoginUrl. Use
+the method getLoginUrlInfo to find whether a prior user confirmation is needed. If an error is
+returned, then the button must be handled as an ordinary URL button.</p>
+<h3>Parameters</h3>
+<p><a name="messageId"></a>
+<code>messageId</code> - Message identifier of the message with the button.</p>
+<p><a name="buttonId"></a>
+<code>buttonId</code> - Button identifier.</p>
+<p><a name="allowWriteAccess"></a>
+<code>allowWriteAccess</code> - True, if the user allowed the bot to send them messages.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/HttpUrl.html">TdApi.HttpUrl</a> Contains an HTTP URL.</p>
+</BODY>
+</HTML>

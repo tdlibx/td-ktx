@@ -1,0 +1,22 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>MessageKtx.setPollAnswer - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="index.html">MessageKtx</a>&nbsp;/&nbsp;<a href="./set-poll-answer.html">setPollAnswer</a><br/>
+<br/>
+<h1>setPollAnswer</h1>
+<a name="kotlinx.telegram.extensions.MessageKtx$setPollAnswer(org.drinkless.td.libcore.telegram.TdApi.Message, kotlin.Long, kotlin.IntArray)"></a>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Message.html"><span class="identifier">Message</span></a><span class="symbol">.</span><span class="identifier">setPollAnswer</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.MessageKtx$setPollAnswer(org.drinkless.td.libcore.telegram.TdApi.Message, kotlin.Long, kotlin.IntArray)/chatId">chatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.MessageKtx$setPollAnswer(org.drinkless.td.libcore.telegram.TdApi.Message, kotlin.Long, kotlin.IntArray)/optionIds">optionIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int-array/index.html"><span class="identifier">IntArray</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which changes the user answer to a poll. A poll in quiz mode can be answered
+only once.</p>
+<h3>Parameters</h3>
+<p><a name="chatId"></a>
+<code>chatId</code> - Identifier of the chat to which the poll belongs.</p>
+<p><a name="optionIds"></a>
+<code>optionIds</code> - 0-based identifiers of answer options, chosen by the user. User can choose
+more than 1 answer option only is the poll allows multiple answers.</p>
+</BODY>
+</HTML>

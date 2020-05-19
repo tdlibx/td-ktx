@@ -1,0 +1,41 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>optimizeStorage - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./optimize-storage.html">optimizeStorage</a><br/>
+<br/>
+<h1>optimizeStorage</h1>
+<a name="kotlinx.telegram.coroutines$optimizeStorage(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.FileType)), kotlin.LongArray, kotlin.LongArray, kotlin.Int)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">optimizeStorage</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$optimizeStorage(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.FileType)), kotlin.LongArray, kotlin.LongArray, kotlin.Int)/size">size</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$optimizeStorage(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.FileType)), kotlin.LongArray, kotlin.LongArray, kotlin.Int)/ttl">ttl</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$optimizeStorage(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.FileType)), kotlin.LongArray, kotlin.LongArray, kotlin.Int)/count">count</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$optimizeStorage(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.FileType)), kotlin.LongArray, kotlin.LongArray, kotlin.Int)/immunityDelay">immunityDelay</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$optimizeStorage(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.FileType)), kotlin.LongArray, kotlin.LongArray, kotlin.Int)/fileTypes">fileTypes</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/FileType.html"><span class="identifier">FileType</span></a><span class="symbol">&gt;</span><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$optimizeStorage(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.FileType)), kotlin.LongArray, kotlin.LongArray, kotlin.Int)/chatIds">chatIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long-array/index.html"><span class="identifier">LongArray</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$optimizeStorage(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.FileType)), kotlin.LongArray, kotlin.LongArray, kotlin.Int)/excludeChatIds">excludeChatIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long-array/index.html"><span class="identifier">LongArray</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$optimizeStorage(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.FileType)), kotlin.LongArray, kotlin.LongArray, kotlin.Int)/chatLimit">chatLimit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/StorageStatistics.html"><span class="identifier">StorageStatistics</span></a></code>
+<p>Suspend function, which optimizes storage usage, i.e. deletes some files and returns new storage
+usage statistics. Secret thumbnails can't be deleted.</p>
+<h3>Parameters</h3>
+<p><a name="size"></a>
+<code>size</code> - Limit on the total size of files after deletion. Pass -1 to use the default limit.</p>
+<p><a name="ttl"></a>
+<code>ttl</code> - Limit on the time that has passed since the last time a file was accessed (or creation
+time for some filesystems). Pass -1 to use the default limit.</p>
+<p><a name="count"></a>
+<code>count</code> - Limit on the total count of files after deletion. Pass -1 to use the default limit.</p>
+<p><a name="immunityDelay"></a>
+<code>immunityDelay</code> - The amount of time after the creation of a file during which it can't be
+deleted, in seconds. Pass -1 to use the default value.</p>
+<p><a name="fileTypes"></a>
+<code>fileTypes</code> - If not empty, only files with the given type(s) are considered. By default, all
+types except thumbnails, profile photos, stickers and wallpapers are deleted.</p>
+<p><a name="chatIds"></a>
+<code>chatIds</code> - If not empty, only files from the given chats are considered. Use 0 as chat
+identifier to delete files not belonging to any chat (e.g., profile photos).</p>
+<p><a name="excludeChatIds"></a>
+<code>excludeChatIds</code> - If not empty, files from the given chats are excluded. Use 0 as chat
+identifier to exclude all files not belonging to any chat (e.g., profile photos).</p>
+<p><a name="chatLimit"></a>
+<code>chatLimit</code> - Same as in getStorageStatistics. Affects only returned statistics.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/StorageStatistics.html">StorageStatistics</a> Contains the exact storage usage statistics split by chats and file
+type.</p>
+</BODY>
+</HTML>

@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ChatKtx.setDiscussionGroup - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="index.html">ChatKtx</a>&nbsp;/&nbsp;<a href="./set-discussion-group.html">setDiscussionGroup</a><br/>
+<br/>
+<h1>setDiscussionGroup</h1>
+<a name="kotlinx.telegram.extensions.ChatKtx$setDiscussionGroup(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long)"></a>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html"><span class="identifier">Chat</span></a><span class="symbol">.</span><span class="identifier">setDiscussionGroup</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$setDiscussionGroup(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long)/discussionChatId">discussionChatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which changes the discussion group of a channel chat; requires canChangeInfo
+rights in the channel if it is specified.</p>
+<h3>Parameters</h3>
+<p><a name="discussionChatId"></a>
+<code>discussionChatId</code> - Identifier of a new channel's discussion group. Use 0 to remove the
+discussion group. Use the method getSuitableDiscussionChats to find all suitable groups. Basic
+group chats needs to be first upgraded to supergroup chats. If new chat members don't have access
+to old messages in the supergroup, then toggleSupergroupIsAllHistoryAvailable needs to be used
+first to change that.</p>
+</BODY>
+</HTML>

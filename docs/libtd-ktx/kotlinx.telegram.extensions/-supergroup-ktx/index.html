@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>SupergroupKtx - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="./index.html">SupergroupKtx</a><br/>
+<br/>
+<h1>SupergroupKtx</h1>
+<code><span class="keyword">interface </span><span class="identifier">SupergroupKtx</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-base-ktx/index.html"><span class="identifier">BaseKtx</span></a></code>
+<p>Interface for access <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Supergroup.html">TdApi.Supergroup</a> extension functions. Can be used alongside with other
+extension interfaces of the package. Must contain <a href="../../kotlinx.telegram.core/-telegram-flow/index.html">TelegramFlow</a> instance field to access its
+functionality</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="api.html">api</a></h4>
+</td>
+<td>
+<p>Instance of the <a href="../../kotlinx.telegram.core/-telegram-flow/index.html">TelegramFlow</a> connecting extensions to the Telegram Client</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">api</span><span class="symbol">: </span><a href="../../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="create-chat.html">createChat</a></h4>
+</td>
+<td>
+<p>Suspend function, which returns an existing chat corresponding to a known supergroup or
+channel.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Supergroup.html"><span class="identifier">Supergroup</span></a><span class="symbol">.</span><span class="identifier">createChat</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.SupergroupKtx$createChat(org.drinkless.td.libcore.telegram.TdApi.Supergroup, kotlin.Boolean)/force">force</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html"><span class="identifier">Chat</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="delete.html">delete</a></h4>
+</td>
+<td>
+<p>Suspend function, which deletes a supergroup or channel along with all messages in the
+corresponding chat. This will release the supergroup or channel username and remove all members;
+requires owner privileges in the supergroup or channel. Chats with more than 1000 members can't be
+deleted using this method.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Supergroup.html"><span class="identifier">Supergroup</span></a><span class="symbol">.</span><span class="identifier">delete</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get.html">get</a></h4>
+</td>
+<td>
+<p>Suspend function, which returns information about a supergroup or a channel by its identifier.
+This is an offline request if the current user is not a bot.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Supergroup.html"><span class="identifier">Supergroup</span></a><span class="symbol">.</span><span class="identifier">get</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Supergroup.html"><span class="identifier">Supergroup</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-full-info.html">getFullInfo</a></h4>
+</td>
+<td>
+<p>Suspend function, which returns full information about a supergroup or a channel by its
+identifier, cached for up to 1 minute.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Supergroup.html"><span class="identifier">Supergroup</span></a><span class="symbol">.</span><span class="identifier">getFullInfo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/SupergroupFullInfo.html"><span class="identifier">SupergroupFullInfo</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-members.html">getMembers</a></h4>
+</td>
+<td>
+<p>Suspend function, which returns information about members or banned users in a supergroup or
+channel. Can be used only if SupergroupFullInfo.canGetMembers == true; additionally, administrator
+privileges may be required for some filters.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Supergroup.html"><span class="identifier">Supergroup</span></a><span class="symbol">.</span><span class="identifier">getMembers</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.SupergroupKtx$getMembers(org.drinkless.td.libcore.telegram.TdApi.Supergroup, org.drinkless.td.libcore.telegram.TdApi.SupergroupMembersFilter, kotlin.Int, kotlin.Int)/filter">filter</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/SupergroupMembersFilter.html"><span class="identifier">SupergroupMembersFilter</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.SupergroupKtx$getMembers(org.drinkless.td.libcore.telegram.TdApi.Supergroup, org.drinkless.td.libcore.telegram.TdApi.SupergroupMembersFilter, kotlin.Int, kotlin.Int)/offset">offset</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.SupergroupKtx$getMembers(org.drinkless.td.libcore.telegram.TdApi.Supergroup, org.drinkless.td.libcore.telegram.TdApi.SupergroupMembersFilter, kotlin.Int, kotlin.Int)/limit">limit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatMembers.html"><span class="identifier">ChatMembers</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="report-spam.html">reportSpam</a></h4>
+</td>
+<td>
+<p>Suspend function, which reports some messages from a user in a supergroup as spam; requires
+administrator rights in the supergroup.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Supergroup.html"><span class="identifier">Supergroup</span></a><span class="symbol">.</span><span class="identifier">reportSpam</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.SupergroupKtx$reportSpam(org.drinkless.td.libcore.telegram.TdApi.Supergroup, kotlin.Int, kotlin.LongArray)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.SupergroupKtx$reportSpam(org.drinkless.td.libcore.telegram.TdApi.Supergroup, kotlin.Int, kotlin.LongArray)/messageIds">messageIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long-array/index.html"><span class="identifier">LongArray</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="set-sticker-set.html">setStickerSet</a></h4>
+</td>
+<td>
+<p>Suspend function, which changes the sticker set of a supergroup; requires canChangeInfo rights.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Supergroup.html"><span class="identifier">Supergroup</span></a><span class="symbol">.</span><span class="identifier">setStickerSet</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.SupergroupKtx$setStickerSet(org.drinkless.td.libcore.telegram.TdApi.Supergroup, kotlin.Long)/stickerSetId">stickerSetId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="set-username.html">setUsername</a></h4>
+</td>
+<td>
+<p>Suspend function, which changes the username of a supergroup or channel, requires owner
+privileges in the supergroup or channel.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Supergroup.html"><span class="identifier">Supergroup</span></a><span class="symbol">.</span><span class="identifier">setUsername</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.SupergroupKtx$setUsername(org.drinkless.td.libcore.telegram.TdApi.Supergroup, kotlin.String)/username">username</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="toggle-is-all-history-available.html">toggleIsAllHistoryAvailable</a></h4>
+</td>
+<td>
+<p>Suspend function, which toggles whether the message history of a supergroup is available to new
+members; requires canChangeInfo rights.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Supergroup.html"><span class="identifier">Supergroup</span></a><span class="symbol">.</span><span class="identifier">toggleIsAllHistoryAvailable</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.SupergroupKtx$toggleIsAllHistoryAvailable(org.drinkless.td.libcore.telegram.TdApi.Supergroup, kotlin.Boolean)/isAllHistoryAvailable">isAllHistoryAvailable</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="toggle-sign-messages.html">toggleSignMessages</a></h4>
+</td>
+<td>
+<p>Suspend function, which toggles sender signatures messages sent in a channel; requires
+canChangeInfo rights.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Supergroup.html"><span class="identifier">Supergroup</span></a><span class="symbol">.</span><span class="identifier">toggleSignMessages</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.SupergroupKtx$toggleSignMessages(org.drinkless.td.libcore.telegram.TdApi.Supergroup, kotlin.Boolean)/signMessages">signMessages</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-telegram-ktx/index.html">TelegramKtx</a></h4>
+</td>
+<td>
+<p>Interface for access all Telegram objects extension functions. Contains 182 extensions</p>
+<code><span class="keyword">interface </span><span class="identifier">TelegramKtx</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-basic-group-ktx/index.html"><span class="identifier">BasicGroupKtx</span></a><span class="symbol">, </span><a href="../-call-ktx/index.html"><span class="identifier">CallKtx</span></a><span class="symbol">, </span><a href="../-chat-ktx/index.html"><span class="identifier">ChatKtx</span></a><span class="symbol">, </span><a href="../-file-ktx/index.html"><span class="identifier">FileKtx</span></a><span class="symbol">, </span><a href="../-message-ktx/index.html"><span class="identifier">MessageKtx</span></a><span class="symbol">, </span><a href="../-notification-group-ktx/index.html"><span class="identifier">NotificationGroupKtx</span></a><span class="symbol">, </span><a href="../-proxy-ktx/index.html"><span class="identifier">ProxyKtx</span></a><span class="symbol">, </span><a href="../-secret-chat-ktx/index.html"><span class="identifier">SecretChatKtx</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">SupergroupKtx</span></a><span class="symbol">, </span><a href="../-user-ktx/index.html"><span class="identifier">UserKtx</span></a><span class="symbol">, </span><a href="../-common-ktx/index.html"><span class="identifier">CommonKtx</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

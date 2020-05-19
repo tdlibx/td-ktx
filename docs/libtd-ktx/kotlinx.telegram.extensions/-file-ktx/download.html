@@ -1,0 +1,33 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>FileKtx.download - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="index.html">FileKtx</a>&nbsp;/&nbsp;<a href="./download.html">download</a><br/>
+<br/>
+<h1>download</h1>
+<a name="kotlinx.telegram.extensions.FileKtx$download(org.drinkless.td.libcore.telegram.TdApi.File, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Boolean)"></a>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/File.html"><span class="identifier">File</span></a><span class="symbol">.</span><span class="identifier">download</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.FileKtx$download(org.drinkless.td.libcore.telegram.TdApi.File, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Boolean)/priority">priority</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.FileKtx$download(org.drinkless.td.libcore.telegram.TdApi.File, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Boolean)/offset">offset</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.FileKtx$download(org.drinkless.td.libcore.telegram.TdApi.File, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Boolean)/limit">limit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.FileKtx$download(org.drinkless.td.libcore.telegram.TdApi.File, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Boolean)/synchronous">synchronous</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/File.html"><span class="identifier">File</span></a></code>
+<p>Suspend function, which downloads a file from the cloud. Download progress and completion of
+the download will be notified through updateFile updates.</p>
+<h3>Parameters</h3>
+<p><a name="priority"></a>
+<code>priority</code> - Priority of the download (1-32). The higher the priority, the earlier the file
+will be downloaded. If the priorities of two files are equal, then the last one for which
+downloadFile was called will be downloaded first.</p>
+<p><a name="offset"></a>
+<code>offset</code> - The starting position from which the file should be downloaded.</p>
+<p><a name="limit"></a>
+<code>limit</code> - Number of bytes which should be downloaded starting from the &amp;quot;offset&amp;quot;
+position before the download will be automatically cancelled; use 0 to download without a limit.</p>
+<p><a name="synchronous"></a>
+<code>synchronous</code> - If false, this request returns file state just after the download has been
+started. If true, this request returns file state only after the download has succeeded, has
+failed, has been cancelled or a new downloadFile request with different offset/limit parameters
+was sent.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/File.html">TdApi.File</a> Represents a file.</p>
+</BODY>
+</HTML>

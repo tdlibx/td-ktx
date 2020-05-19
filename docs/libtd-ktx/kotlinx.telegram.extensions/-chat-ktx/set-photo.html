@@ -1,0 +1,21 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ChatKtx.setPhoto - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="index.html">ChatKtx</a>&nbsp;/&nbsp;<a href="./set-photo.html">setPhoto</a><br/>
+<br/>
+<h1>setPhoto</h1>
+<a name="kotlinx.telegram.extensions.ChatKtx$setPhoto(org.drinkless.td.libcore.telegram.TdApi.Chat, org.drinkless.td.libcore.telegram.TdApi.InputFile)"></a>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html"><span class="identifier">Chat</span></a><span class="symbol">.</span><span class="identifier">setPhoto</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$setPhoto(org.drinkless.td.libcore.telegram.TdApi.Chat, org.drinkless.td.libcore.telegram.TdApi.InputFile)/photo">photo</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/InputFile.html"><span class="identifier">InputFile</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which changes the photo of a chat. Supported only for basic groups,
+supergroups and channels. Requires canChangeInfo rights. The photo will not be changed before
+request to the server has been completed.</p>
+<h3>Parameters</h3>
+<p><a name="photo"></a>
+<code>photo</code> - New chat photo. You can use a zero InputFileId to delete the chat photo. Files
+that are accessible only by HTTP URL are not acceptable.</p>
+</BODY>
+</HTML>

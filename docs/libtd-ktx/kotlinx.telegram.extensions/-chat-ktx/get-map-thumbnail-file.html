@@ -1,0 +1,29 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ChatKtx.getMapThumbnailFile - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="index.html">ChatKtx</a>&nbsp;/&nbsp;<a href="./get-map-thumbnail-file.html">getMapThumbnailFile</a><br/>
+<br/>
+<h1>getMapThumbnailFile</h1>
+<a name="kotlinx.telegram.extensions.ChatKtx$getMapThumbnailFile(org.drinkless.td.libcore.telegram.TdApi.Chat, org.drinkless.td.libcore.telegram.TdApi.Location, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)"></a>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html"><span class="identifier">Chat</span></a><span class="symbol">.</span><span class="identifier">getMapThumbnailFile</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$getMapThumbnailFile(org.drinkless.td.libcore.telegram.TdApi.Chat, org.drinkless.td.libcore.telegram.TdApi.Location, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/location">location</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Location.html"><span class="identifier">Location</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$getMapThumbnailFile(org.drinkless.td.libcore.telegram.TdApi.Chat, org.drinkless.td.libcore.telegram.TdApi.Location, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/zoom">zoom</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$getMapThumbnailFile(org.drinkless.td.libcore.telegram.TdApi.Chat, org.drinkless.td.libcore.telegram.TdApi.Location, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/width">width</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$getMapThumbnailFile(org.drinkless.td.libcore.telegram.TdApi.Chat, org.drinkless.td.libcore.telegram.TdApi.Location, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/height">height</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$getMapThumbnailFile(org.drinkless.td.libcore.telegram.TdApi.Chat, org.drinkless.td.libcore.telegram.TdApi.Location, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/scale">scale</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/File.html"><span class="identifier">File</span></a></code>
+<p>Suspend function, which returns information about a file with a map thumbnail in PNG format.
+Only map thumbnail files with size less than 1MB can be downloaded.</p>
+<h3>Parameters</h3>
+<p><a name="location"></a>
+<code>location</code> - Location of the map center.</p>
+<p><a name="zoom"></a>
+<code>zoom</code> - Map zoom level; 13-20.</p>
+<p><a name="width"></a>
+<code>width</code> - Map width in pixels before applying scale; 16-1024.</p>
+<p><a name="height"></a>
+<code>height</code> - Map height in pixels before applying scale; 16-1024.</p>
+<p><a name="scale"></a>
+<code>scale</code> - Map scale; 1-3.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/File.html">TdApi.File</a> Represents a file.</p>
+</BODY>
+</HTML>

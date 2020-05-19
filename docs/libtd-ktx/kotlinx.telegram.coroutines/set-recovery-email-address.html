@@ -1,0 +1,26 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>setRecoveryEmailAddress - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./set-recovery-email-address.html">setRecoveryEmailAddress</a><br/>
+<br/>
+<h1>setRecoveryEmailAddress</h1>
+<a name="kotlinx.telegram.coroutines$setRecoveryEmailAddress(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.String)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">setRecoveryEmailAddress</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$setRecoveryEmailAddress(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.String)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$setRecoveryEmailAddress(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.String)/newRecoveryEmailAddress">newRecoveryEmailAddress</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/PasswordState.html"><span class="identifier">PasswordState</span></a></code>
+<p>Suspend function, which changes the 2-step verification recovery email address of the user. If a
+new recovery email address is specified, then the change will not be applied until the new recovery
+email address is confirmed. If newRecoveryEmailAddress is the same as the email address that is
+currently set up, this call succeeds immediately and aborts all other requests waiting for an email
+confirmation.</p>
+<h3>Parameters</h3>
+<p><a name="password"></a>
+<code>password</code> - Password of the current user.</p>
+<p><a name="newRecoveryEmailAddress"></a>
+<code>newRecoveryEmailAddress</code> - New recovery email address.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/PasswordState.html">PasswordState</a> Represents the current state of 2-step verification.</p>
+</BODY>
+</HTML>

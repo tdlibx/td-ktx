@@ -1,0 +1,36 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ChatKtx.forwardMessages - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="index.html">ChatKtx</a>&nbsp;/&nbsp;<a href="./forward-messages.html">forwardMessages</a><br/>
+<br/>
+<h1>forwardMessages</h1>
+<a name="kotlinx.telegram.extensions.ChatKtx$forwardMessages(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long, kotlin.LongArray, org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions, kotlin.Boolean, kotlin.Boolean, kotlin.Boolean)"></a>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html"><span class="identifier">Chat</span></a><span class="symbol">.</span><span class="identifier">forwardMessages</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$forwardMessages(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long, kotlin.LongArray, org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions, kotlin.Boolean, kotlin.Boolean, kotlin.Boolean)/fromChatId">fromChatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$forwardMessages(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long, kotlin.LongArray, org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions, kotlin.Boolean, kotlin.Boolean, kotlin.Boolean)/messageIds">messageIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long-array/index.html"><span class="identifier">LongArray</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$forwardMessages(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long, kotlin.LongArray, org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions, kotlin.Boolean, kotlin.Boolean, kotlin.Boolean)/options">options</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/SendMessageOptions.html"><span class="identifier">SendMessageOptions</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$forwardMessages(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long, kotlin.LongArray, org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions, kotlin.Boolean, kotlin.Boolean, kotlin.Boolean)/asAlbum">asAlbum</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$forwardMessages(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long, kotlin.LongArray, org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions, kotlin.Boolean, kotlin.Boolean, kotlin.Boolean)/sendCopy">sendCopy</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$forwardMessages(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.Long, kotlin.LongArray, org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions, kotlin.Boolean, kotlin.Boolean, kotlin.Boolean)/removeCaption">removeCaption</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Messages.html"><span class="identifier">Messages</span></a></code>
+<p>Suspend function, which forwards previously sent messages. Returns the forwarded messages in
+the same order as the message identifiers passed in messageIds. If a message can't be forwarded,
+null will be returned instead of the message.</p>
+<h3>Parameters</h3>
+<p><a name="fromChatId"></a>
+<code>fromChatId</code> - Identifier of the chat from which to forward messages.</p>
+<p><a name="messageIds"></a>
+<code>messageIds</code> - Identifiers of the messages to forward.</p>
+<p><a name="options"></a>
+<code>options</code> - Options to be used to send the messages.</p>
+<p><a name="asAlbum"></a>
+<code>asAlbum</code> - True, if the messages should be grouped into an album after forwarding. For this
+to work, no more than 10 messages may be forwarded, and all of them must be photo or video
+messages.</p>
+<p><a name="sendCopy"></a>
+<code>sendCopy</code> - True, if content of the messages needs to be copied without links to the
+original messages. Always true if the messages are forwarded to a secret chat.</p>
+<p><a name="removeCaption"></a>
+<code>removeCaption</code> - True, if media captions of message copies needs to be removed. Ignored if
+sendCopy is false.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Messages.html">TdApi.Messages</a> Contains a list of messages.</p>
+</BODY>
+</HTML>

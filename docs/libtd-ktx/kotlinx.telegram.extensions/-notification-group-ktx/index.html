@@ -1,0 +1,65 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>NotificationGroupKtx - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="./index.html">NotificationGroupKtx</a><br/>
+<br/>
+<h1>NotificationGroupKtx</h1>
+<code><span class="keyword">interface </span><span class="identifier">NotificationGroupKtx</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-base-ktx/index.html"><span class="identifier">BaseKtx</span></a></code>
+<p>Interface for access <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/NotificationGroup.html">TdApi.NotificationGroup</a> extension functions. Can be used alongside with
+other extension interfaces of the package. Must contain <a href="../../kotlinx.telegram.core/-telegram-flow/index.html">TelegramFlow</a> instance field to access its
+functionality</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="api.html">api</a></h4>
+</td>
+<td>
+<p>Instance of the <a href="../../kotlinx.telegram.core/-telegram-flow/index.html">TelegramFlow</a> connecting extensions to the Telegram Client</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">api</span><span class="symbol">: </span><a href="../../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="remove.html">remove</a></h4>
+</td>
+<td>
+<p>Suspend function, which removes a group of active notifications. Needs to be called only if the
+notification group is removed by the current user.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/NotificationGroup.html"><span class="identifier">NotificationGroup</span></a><span class="symbol">.</span><span class="identifier">remove</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.NotificationGroupKtx$remove(org.drinkless.td.libcore.telegram.TdApi.NotificationGroup, kotlin.Int)/maxNotificationId">maxNotificationId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-notification.html">removeNotification</a></h4>
+</td>
+<td>
+<p>Suspend function, which removes an active notification from notification list. Needs to be
+called only if the notification is removed by the current user.</p>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/NotificationGroup.html"><span class="identifier">NotificationGroup</span></a><span class="symbol">.</span><span class="identifier">removeNotification</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.NotificationGroupKtx$removeNotification(org.drinkless.td.libcore.telegram.TdApi.NotificationGroup, kotlin.Int)/notificationId">notificationId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-telegram-ktx/index.html">TelegramKtx</a></h4>
+</td>
+<td>
+<p>Interface for access all Telegram objects extension functions. Contains 182 extensions</p>
+<code><span class="keyword">interface </span><span class="identifier">TelegramKtx</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-basic-group-ktx/index.html"><span class="identifier">BasicGroupKtx</span></a><span class="symbol">, </span><a href="../-call-ktx/index.html"><span class="identifier">CallKtx</span></a><span class="symbol">, </span><a href="../-chat-ktx/index.html"><span class="identifier">ChatKtx</span></a><span class="symbol">, </span><a href="../-file-ktx/index.html"><span class="identifier">FileKtx</span></a><span class="symbol">, </span><a href="../-message-ktx/index.html"><span class="identifier">MessageKtx</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">NotificationGroupKtx</span></a><span class="symbol">, </span><a href="../-proxy-ktx/index.html"><span class="identifier">ProxyKtx</span></a><span class="symbol">, </span><a href="../-secret-chat-ktx/index.html"><span class="identifier">SecretChatKtx</span></a><span class="symbol">, </span><a href="../-supergroup-ktx/index.html"><span class="identifier">SupergroupKtx</span></a><span class="symbol">, </span><a href="../-user-ktx/index.html"><span class="identifier">UserKtx</span></a><span class="symbol">, </span><a href="../-common-ktx/index.html"><span class="identifier">CommonKtx</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

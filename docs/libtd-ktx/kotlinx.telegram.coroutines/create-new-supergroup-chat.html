@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>createNewSupergroupChat - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./create-new-supergroup-chat.html">createNewSupergroupChat</a><br/>
+<br/>
+<h1>createNewSupergroupChat</h1>
+<a name="kotlinx.telegram.coroutines$createNewSupergroupChat(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Boolean, kotlin.String, org.drinkless.td.libcore.telegram.TdApi.ChatLocation)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">createNewSupergroupChat</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$createNewSupergroupChat(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Boolean, kotlin.String, org.drinkless.td.libcore.telegram.TdApi.ChatLocation)/title">title</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$createNewSupergroupChat(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Boolean, kotlin.String, org.drinkless.td.libcore.telegram.TdApi.ChatLocation)/isChannel">isChannel</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$createNewSupergroupChat(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Boolean, kotlin.String, org.drinkless.td.libcore.telegram.TdApi.ChatLocation)/description">description</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$createNewSupergroupChat(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Boolean, kotlin.String, org.drinkless.td.libcore.telegram.TdApi.ChatLocation)/location">location</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatLocation.html"><span class="identifier">ChatLocation</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html"><span class="identifier">Chat</span></a></code>
+<p>Suspend function, which creates a new supergroup or channel and sends a corresponding
+messageSupergroupChatCreate. Returns the newly created chat.</p>
+<h3>Parameters</h3>
+<p><a name="title"></a>
+<code>title</code> - Title of the new chat; 1-128 characters.</p>
+<p><a name="isChannel"></a>
+<code>isChannel</code> - True, if a channel chat should be created.</p>
+<p><a name="description"></a>
+<code>description</code> - Chat description; 0-255 characters.</p>
+<p><a name="location"></a>
+<code>location</code> - Chat location if a location-based supergroup is being created.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html">Chat</a> A chat. (Can be a private chat, basic group, supergroup, or secret chat.)</p>
+</BODY>
+</HTML>

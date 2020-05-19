@@ -1,0 +1,26 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ChatKtx.resendMessages - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="index.html">ChatKtx</a>&nbsp;/&nbsp;<a href="./resend-messages.html">resendMessages</a><br/>
+<br/>
+<h1>resendMessages</h1>
+<a name="kotlinx.telegram.extensions.ChatKtx$resendMessages(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.LongArray)"></a>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html"><span class="identifier">Chat</span></a><span class="symbol">.</span><span class="identifier">resendMessages</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$resendMessages(org.drinkless.td.libcore.telegram.TdApi.Chat, kotlin.LongArray)/messageIds">messageIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long-array/index.html"><span class="identifier">LongArray</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Messages.html"><span class="identifier">Messages</span></a></code>
+<p>Suspend function, which resends messages which failed to send. Can be called only for messages
+for which messageSendingStateFailed.canRetry is true and after specified in
+messageSendingStateFailed.retryAfter time passed. If a message is re-sent, the corresponding
+failed to send message is deleted. Returns the sent messages in the same order as the message
+identifiers passed in messageIds. If a message can't be re-sent, null will be returned instead of
+the message.</p>
+<h3>Parameters</h3>
+<p><a name="messageIds"></a>
+<code>messageIds</code> - Identifiers of the messages to resend. Message identifiers must be in a
+strictly increasing order.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Messages.html">TdApi.Messages</a> Contains a list of messages.</p>
+</BODY>
+</HTML>

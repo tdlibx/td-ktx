@@ -1,0 +1,22 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>deleteChatReplyMarkup - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./delete-chat-reply-markup.html">deleteChatReplyMarkup</a><br/>
+<br/>
+<h1>deleteChatReplyMarkup</h1>
+<a name="kotlinx.telegram.coroutines$deleteChatReplyMarkup(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Long)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">deleteChatReplyMarkup</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$deleteChatReplyMarkup(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Long)/chatId">chatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$deleteChatReplyMarkup(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Long)/messageId">messageId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which deletes the default reply markup from a chat. Must be called after a
+one-time keyboard or a ForceReply reply markup has been used. UpdateChatReplyMarkup will be sent if
+the reply markup will be changed.</p>
+<h3>Parameters</h3>
+<p><a name="chatId"></a>
+<code>chatId</code> - Chat identifier.</p>
+<p><a name="messageId"></a>
+<code>messageId</code> - The message identifier of the used keyboard.</p>
+</BODY>
+</HTML>

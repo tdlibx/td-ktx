@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>getStickers - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./get-stickers.html">getStickers</a><br/>
+<br/>
+<h1>getStickers</h1>
+<a name="kotlinx.telegram.coroutines$getStickers(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Int)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">getStickers</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$getStickers(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Int)/emoji">emoji</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$getStickers(kotlinx.telegram.core.TelegramFlow, kotlin.String, kotlin.Int)/limit">limit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Stickers.html"><span class="identifier">Stickers</span></a></code>
+<p>Suspend function, which returns stickers from the installed sticker sets that correspond to a
+given emoji. If the emoji is not empty, favorite and recently used stickers may also be returned.</p>
+<h3>Parameters</h3>
+<p><a name="emoji"></a>
+<code>emoji</code> - String representation of emoji. If empty, returns all known installed stickers.</p>
+<p><a name="limit"></a>
+<code>limit</code> - The maximum number of stickers to be returned.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Stickers.html">Stickers</a> Represents a list of stickers.</p>
+</BODY>
+</HTML>

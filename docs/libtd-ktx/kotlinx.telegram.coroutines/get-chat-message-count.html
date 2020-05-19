@@ -1,0 +1,26 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>getChatMessageCount - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./get-chat-message-count.html">getChatMessageCount</a><br/>
+<br/>
+<h1>getChatMessageCount</h1>
+<a name="kotlinx.telegram.coroutines$getChatMessageCount(kotlinx.telegram.core.TelegramFlow, kotlin.Long, org.drinkless.td.libcore.telegram.TdApi.SearchMessagesFilter, kotlin.Boolean)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">getChatMessageCount</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$getChatMessageCount(kotlinx.telegram.core.TelegramFlow, kotlin.Long, org.drinkless.td.libcore.telegram.TdApi.SearchMessagesFilter, kotlin.Boolean)/chatId">chatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$getChatMessageCount(kotlinx.telegram.core.TelegramFlow, kotlin.Long, org.drinkless.td.libcore.telegram.TdApi.SearchMessagesFilter, kotlin.Boolean)/filter">filter</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/SearchMessagesFilter.html"><span class="identifier">SearchMessagesFilter</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$getChatMessageCount(kotlinx.telegram.core.TelegramFlow, kotlin.Long, org.drinkless.td.libcore.telegram.TdApi.SearchMessagesFilter, kotlin.Boolean)/returnLocal">returnLocal</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Count.html"><span class="identifier">Count</span></a></code>
+<p>Suspend function, which returns approximate number of messages of the specified type in the chat.</p>
+<h3>Parameters</h3>
+<p><a name="chatId"></a>
+<code>chatId</code> - Identifier of the chat in which to count messages.</p>
+<p><a name="filter"></a>
+<code>filter</code> - Filter for message content; searchMessagesFilterEmpty is unsupported in this
+function.</p>
+<p><a name="returnLocal"></a>
+<code>returnLocal</code> - If true, returns count that is available locally without sending network
+requests, returning -1 if the number of messages is unknown.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Count.html">Count</a> Contains a counter.</p>
+</BODY>
+</HTML>

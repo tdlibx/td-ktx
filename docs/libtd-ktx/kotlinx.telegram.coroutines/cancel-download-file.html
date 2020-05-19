@@ -1,0 +1,22 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>cancelDownloadFile - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./cancel-download-file.html">cancelDownloadFile</a><br/>
+<br/>
+<h1>cancelDownloadFile</h1>
+<a name="kotlinx.telegram.coroutines$cancelDownloadFile(kotlinx.telegram.core.TelegramFlow, kotlin.Int, kotlin.Boolean)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">cancelDownloadFile</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$cancelDownloadFile(kotlinx.telegram.core.TelegramFlow, kotlin.Int, kotlin.Boolean)/fileId">fileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$cancelDownloadFile(kotlinx.telegram.core.TelegramFlow, kotlin.Int, kotlin.Boolean)/onlyIfPending">onlyIfPending</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which stops the downloading of a file. If a file has already been downloaded,
+does nothing.</p>
+<h3>Parameters</h3>
+<p><a name="fileId"></a>
+<code>fileId</code> - Identifier of a file to stop downloading.</p>
+<p><a name="onlyIfPending"></a>
+<code>onlyIfPending</code> - Pass true to stop downloading only if it hasn't been started, i.e. request
+hasn't been sent to server.</p>
+</BODY>
+</HTML>

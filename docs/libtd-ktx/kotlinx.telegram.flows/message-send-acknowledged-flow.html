@@ -1,0 +1,18 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>messageSendAcknowledgedFlow - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.flows</a>&nbsp;/&nbsp;<a href="./message-send-acknowledged-flow.html">messageSendAcknowledgedFlow</a><br/>
+<br/>
+<h1>messageSendAcknowledgedFlow</h1>
+<a name="kotlinx.telegram.flows$messageSendAcknowledgedFlow(kotlinx.telegram.core.TelegramFlow)"></a>
+<code><span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">messageSendAcknowledgedFlow</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Flow</span><span class="symbol">&lt;</span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateMessageSendAcknowledged.html"><span class="identifier">UpdateMessageSendAcknowledged</span></a><span class="symbol">&gt;</span></code>
+<p>emits <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateMessageSendAcknowledged.html">UpdateMessageSendAcknowledged</a> if a request to send a message has reached the Telegram
+server. This doesn't mean that the message will be sent successfully or even that the send message
+request will be processed. This update will be sent only if the option &amp;quot;use_quick_ack&amp;quot; is
+set to true. This update may be sent multiple times for the same message.</p>
+</BODY>
+</HTML>

@@ -1,0 +1,22 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>getDeepLinkInfo - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./get-deep-link-info.html">getDeepLinkInfo</a><br/>
+<br/>
+<h1>getDeepLinkInfo</h1>
+<a name="kotlinx.telegram.coroutines$getDeepLinkInfo(kotlinx.telegram.core.TelegramFlow, kotlin.String)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">getDeepLinkInfo</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$getDeepLinkInfo(kotlinx.telegram.core.TelegramFlow, kotlin.String)/link">link</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/DeepLinkInfo.html"><span class="identifier">DeepLinkInfo</span></a></code>
+<p>Suspend function, which returns information about a tg:// deep link. Use
+&amp;quot;tg://need_update_for_some_feature&amp;quot; or &amp;quot;tg:someUnsupportedFeature&amp;quot; for testing.
+Returns a 404 error for unknown links. Can be called before authorization.</p>
+<h3>Parameters</h3>
+<p><a name="link"></a>
+<code>link</code> - The link.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/DeepLinkInfo.html">DeepLinkInfo</a> Contains information about a tg:// deep link.</p>
+</BODY>
+</HTML>

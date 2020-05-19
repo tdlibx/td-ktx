@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>searchChatMembers - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./search-chat-members.html">searchChatMembers</a><br/>
+<br/>
+<h1>searchChatMembers</h1>
+<a name="kotlinx.telegram.coroutines$searchChatMembers(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.String, kotlin.Int, org.drinkless.td.libcore.telegram.TdApi.ChatMembersFilter)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">searchChatMembers</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$searchChatMembers(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.String, kotlin.Int, org.drinkless.td.libcore.telegram.TdApi.ChatMembersFilter)/chatId">chatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$searchChatMembers(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.String, kotlin.Int, org.drinkless.td.libcore.telegram.TdApi.ChatMembersFilter)/query">query</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$searchChatMembers(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.String, kotlin.Int, org.drinkless.td.libcore.telegram.TdApi.ChatMembersFilter)/limit">limit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$searchChatMembers(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.String, kotlin.Int, org.drinkless.td.libcore.telegram.TdApi.ChatMembersFilter)/filter">filter</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatMembersFilter.html"><span class="identifier">ChatMembersFilter</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatMembers.html"><span class="identifier">ChatMembers</span></a></code>
+<p>Suspend function, which searches for a specified query in the first name, last name and username
+of the members of a specified chat. Requires administrator rights in channels.</p>
+<h3>Parameters</h3>
+<p><a name="chatId"></a>
+<code>chatId</code> - Chat identifier.</p>
+<p><a name="query"></a>
+<code>query</code> - Query to search for.</p>
+<p><a name="limit"></a>
+<code>limit</code> - The maximum number of users to be returned.</p>
+<p><a name="filter"></a>
+<code>filter</code> - The type of users to return. By default, chatMembersFilterMembers.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatMembers.html">ChatMembers</a> Contains a list of chat members.</p>
+</BODY>
+</HTML>

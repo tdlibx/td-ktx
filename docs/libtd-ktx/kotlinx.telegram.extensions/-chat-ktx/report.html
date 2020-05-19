@@ -1,0 +1,22 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ChatKtx.report - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="index.html">ChatKtx</a>&nbsp;/&nbsp;<a href="./report.html">report</a><br/>
+<br/>
+<h1>report</h1>
+<a name="kotlinx.telegram.extensions.ChatKtx$report(org.drinkless.td.libcore.telegram.TdApi.Chat, org.drinkless.td.libcore.telegram.TdApi.ChatReportReason, kotlin.LongArray)"></a>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html"><span class="identifier">Chat</span></a><span class="symbol">.</span><span class="identifier">report</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$report(org.drinkless.td.libcore.telegram.TdApi.Chat, org.drinkless.td.libcore.telegram.TdApi.ChatReportReason, kotlin.LongArray)/reason">reason</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatReportReason.html"><span class="identifier">ChatReportReason</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ChatKtx$report(org.drinkless.td.libcore.telegram.TdApi.Chat, org.drinkless.td.libcore.telegram.TdApi.ChatReportReason, kotlin.LongArray)/messageIds">messageIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long-array/index.html"><span class="identifier">LongArray</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which reports a chat to the Telegram moderators. Supported only for
+supergroups, channels, or private chats with bots, since other chats can't be checked by
+moderators, or when the report is done from the chat action bar.</p>
+<h3>Parameters</h3>
+<p><a name="reason"></a>
+<code>reason</code> - The reason for reporting the chat.</p>
+<p><a name="messageIds"></a>
+<code>messageIds</code> - Identifiers of reported messages, if any.</p>
+</BODY>
+</HTML>

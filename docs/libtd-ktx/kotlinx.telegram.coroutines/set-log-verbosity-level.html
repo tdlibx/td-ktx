@@ -1,0 +1,22 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>setLogVerbosityLevel - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./set-log-verbosity-level.html">setLogVerbosityLevel</a><br/>
+<br/>
+<h1>setLogVerbosityLevel</h1>
+<a name="kotlinx.telegram.coroutines$setLogVerbosityLevel(kotlinx.telegram.core.TelegramFlow, kotlin.Int)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">setLogVerbosityLevel</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$setLogVerbosityLevel(kotlinx.telegram.core.TelegramFlow, kotlin.Int)/newVerbosityLevel">newVerbosityLevel</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which sets the verbosity level of the internal logging of TDLib. This is an
+offline method. Can be called before authorization. Can be called synchronously.</p>
+<h3>Parameters</h3>
+<p><a name="newVerbosityLevel"></a>
+<code>newVerbosityLevel</code> - New value of the verbosity level for logging. Value 0 corresponds to
+fatal errors, value 1 corresponds to errors, value 2 corresponds to warnings and debug warnings,
+value 3 corresponds to informational, value 4 corresponds to debug, value 5 corresponds to verbose
+debug, value greater than 5 and up to 1023 can be used to enable even more logging.</p>
+</BODY>
+</HTML>

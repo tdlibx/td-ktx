@@ -1,0 +1,47 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>kotlinx.telegram.core - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="./index.html">kotlinx.telegram.core</a><br/>
+<br/>
+<h2>Package kotlinx.telegram.core</h2>
+<p>Contains core elements of the library to communicate with Telegram API.</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-result-handler-channel-flow/index.html">ResultHandlerChannelFlow</a></h4>
+</td>
+<td>
+<p>Class that converts results handler from <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.html">TdApi</a> client to <a href="#">Flow</a>
+of the <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Object.html">TdApi.Object</a> using <a href="#">ConflatedBroadcastChannel</a></p>
+<code><span class="keyword">class </span><span class="identifier">ResultHandlerChannelFlow</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">ResultHandlerFlow</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-telegram-flow/index.html">TelegramFlow</a></h4>
+</td>
+<td>
+<p>Main class to interact with Telegram API client</p>
+<code><span class="keyword">class </span><span class="identifier">TelegramFlow</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">Flow</span><span class="symbol">&lt;</span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Object.html"><span class="identifier">Object</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><a href="https://docs.oracle.com/javase/6/docs/api/java/io/Closeable.html"><span class="identifier">Closeable</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Exceptions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-telegram-exception/index.html">TelegramException</a></h4>
+</td>
+<td>
+<code><span class="keyword">sealed</span> <span class="keyword">class </span><span class="identifier">TelegramException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html"><span class="identifier">Throwable</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

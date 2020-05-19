@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>getStorageStatistics - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./get-storage-statistics.html">getStorageStatistics</a><br/>
+<br/>
+<h1>getStorageStatistics</h1>
+<a name="kotlinx.telegram.coroutines$getStorageStatistics(kotlinx.telegram.core.TelegramFlow, kotlin.Int)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">getStorageStatistics</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$getStorageStatistics(kotlinx.telegram.core.TelegramFlow, kotlin.Int)/chatLimit">chatLimit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/StorageStatistics.html"><span class="identifier">StorageStatistics</span></a></code>
+<p>Suspend function, which returns storage usage statistics. Can be called before authorization.</p>
+<h3>Parameters</h3>
+<p><a name="chatLimit"></a>
+<code>chatLimit</code> - The maximum number of chats with the largest storage usage for which separate
+statistics should be returned. All other chats will be grouped in entries with chatId == 0. If the
+chat info database is not used, the chatLimit is ignored and is always set to 0.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/StorageStatistics.html">StorageStatistics</a> Contains the exact storage usage statistics split by chats and file
+type.</p>
+</BODY>
+</HTML>

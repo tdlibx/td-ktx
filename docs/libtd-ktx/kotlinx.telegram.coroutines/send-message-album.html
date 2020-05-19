@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>sendMessageAlbum - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./send-message-album.html">sendMessageAlbum</a><br/>
+<br/>
+<h1>sendMessageAlbum</h1>
+<a name="kotlinx.telegram.coroutines$sendMessageAlbum(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Long, org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.InputMessageContent)))"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">sendMessageAlbum</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$sendMessageAlbum(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Long, org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.InputMessageContent)))/chatId">chatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$sendMessageAlbum(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Long, org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.InputMessageContent)))/replyToMessageId">replyToMessageId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$sendMessageAlbum(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Long, org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.InputMessageContent)))/options">options</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/SendMessageOptions.html"><span class="identifier">SendMessageOptions</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$sendMessageAlbum(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Long, org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions, kotlin.Array((org.drinkless.td.libcore.telegram.TdApi.InputMessageContent)))/inputMessageContents">inputMessageContents</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/InputMessageContent.html"><span class="identifier">InputMessageContent</span></a><span class="symbol">&gt;</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Messages.html"><span class="identifier">Messages</span></a></code>
+<p>Suspend function, which sends messages grouped together into an album. Currently only photo and
+video messages can be grouped into an album. Returns sent messages.</p>
+<h3>Parameters</h3>
+<p><a name="chatId"></a>
+<code>chatId</code> - Target chat.</p>
+<p><a name="replyToMessageId"></a>
+<code>replyToMessageId</code> - Identifier of a message to reply to or 0.</p>
+<p><a name="options"></a>
+<code>options</code> - Options to be used to send the messages.</p>
+<p><a name="inputMessageContents"></a>
+<code>inputMessageContents</code> - Contents of messages to be sent.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Messages.html">Messages</a> Contains a list of messages.</p>
+</BODY>
+</HTML>

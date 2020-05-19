@@ -1,0 +1,24 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>writeGeneratedFilePart - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./write-generated-file-part.html">writeGeneratedFilePart</a><br/>
+<br/>
+<h1>writeGeneratedFilePart</h1>
+<a name="kotlinx.telegram.coroutines$writeGeneratedFilePart(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.ByteArray)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">writeGeneratedFilePart</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$writeGeneratedFilePart(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.ByteArray)/generationId">generationId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$writeGeneratedFilePart(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.ByteArray)/offset">offset</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$writeGeneratedFilePart(kotlinx.telegram.core.TelegramFlow, kotlin.Long, kotlin.Int, kotlin.ByteArray)/data">data</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Suspend function, which writes a part of a generated file. This method is intended to be used
+only if the client has no direct access to TDLib's file system, because it is usually slower than a
+direct write to the destination file.</p>
+<h3>Parameters</h3>
+<p><a name="generationId"></a>
+<code>generationId</code> - The identifier of the generation process.</p>
+<p><a name="offset"></a>
+<code>offset</code> - The offset from which to write the data to the file.</p>
+<p><a name="data"></a>
+<code>data</code> - The data to write.</p>
+</BODY>
+</HTML>

@@ -1,0 +1,24 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>MessageKtx.getPublicLink - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="index.html">MessageKtx</a>&nbsp;/&nbsp;<a href="./get-public-link.html">getPublicLink</a><br/>
+<br/>
+<h1>getPublicLink</h1>
+<a name="kotlinx.telegram.extensions.MessageKtx$getPublicLink(org.drinkless.td.libcore.telegram.TdApi.Message, kotlin.Long, kotlin.Boolean)"></a>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Message.html"><span class="identifier">Message</span></a><span class="symbol">.</span><span class="identifier">getPublicLink</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.MessageKtx$getPublicLink(org.drinkless.td.libcore.telegram.TdApi.Message, kotlin.Long, kotlin.Boolean)/chatId">chatId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.MessageKtx$getPublicLink(org.drinkless.td.libcore.telegram.TdApi.Message, kotlin.Long, kotlin.Boolean)/forAlbum">forAlbum</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/PublicMessageLink.html"><span class="identifier">PublicMessageLink</span></a></code>
+<p>Suspend function, which returns a public HTTPS link to a message. Available only for messages
+in supergroups and channels with a username.</p>
+<h3>Parameters</h3>
+<p><a name="chatId"></a>
+<code>chatId</code> - Identifier of the chat to which the message belongs.</p>
+<p><a name="forAlbum"></a>
+<code>forAlbum</code> - Pass true if a link for a whole media album should be returned.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/PublicMessageLink.html">TdApi.PublicMessageLink</a> Contains a public HTTPS link to a message in a supergroup or
+channel with a username.</p>
+</BODY>
+</HTML>

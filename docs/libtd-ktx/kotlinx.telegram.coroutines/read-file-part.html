@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>readFilePart - libtd-ktx</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.telegram.coroutines</a>&nbsp;/&nbsp;<a href="./read-file-part.html">readFilePart</a><br/>
+<br/>
+<h1>readFilePart</h1>
+<a name="kotlinx.telegram.coroutines$readFilePart(kotlinx.telegram.core.TelegramFlow, kotlin.Int, kotlin.Int, kotlin.Int)"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../kotlinx.telegram.core/-telegram-flow/index.html"><span class="identifier">TelegramFlow</span></a><span class="symbol">.</span><span class="identifier">readFilePart</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.coroutines$readFilePart(kotlinx.telegram.core.TelegramFlow, kotlin.Int, kotlin.Int, kotlin.Int)/fileId">fileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$readFilePart(kotlinx.telegram.core.TelegramFlow, kotlin.Int, kotlin.Int, kotlin.Int)/offset">offset</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.coroutines$readFilePart(kotlinx.telegram.core.TelegramFlow, kotlin.Int, kotlin.Int, kotlin.Int)/count">count</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/FilePart.html"><span class="identifier">FilePart</span></a></code>
+<p>Suspend function, which reads a part of a file from the TDLib file cache and returns read bytes.
+This method is intended to be used only if the client has no direct access to TDLib's file system,
+because it is usually slower than a direct read from the file.</p>
+<h3>Parameters</h3>
+<p><a name="fileId"></a>
+<code>fileId</code> - Identifier of the file. The file must be located in the TDLib file cache.</p>
+<p><a name="offset"></a>
+<code>offset</code> - The offset from which to read the file.</p>
+<p><a name="count"></a>
+<code>count</code> - Number of bytes to read. An error will be returned if there are not enough bytes
+available in the file from the specified position. Pass 0 to read all available data from the
+specified position.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/FilePart.html">FilePart</a> Contains a part of a file.</p>
+</BODY>
+</HTML>

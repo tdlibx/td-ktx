@@ -1,0 +1,21 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>UserKtx.createPrivateChat - libtd-ktx</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">libtd-ktx</a>&nbsp;/&nbsp;<a href="../index.html">kotlinx.telegram.extensions</a>&nbsp;/&nbsp;<a href="index.html">UserKtx</a>&nbsp;/&nbsp;<a href="./create-private-chat.html">createPrivateChat</a><br/>
+<br/>
+<h1>createPrivateChat</h1>
+<a name="kotlinx.telegram.extensions.UserKtx$createPrivateChat(org.drinkless.td.libcore.telegram.TdApi.User, kotlin.Boolean)"></a>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/User.html"><span class="identifier">User</span></a><span class="symbol">.</span><span class="identifier">createPrivateChat</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.UserKtx$createPrivateChat(org.drinkless.td.libcore.telegram.TdApi.User, kotlin.Boolean)/force">force</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html"><span class="identifier">Chat</span></a></code>
+<p>Suspend function, which returns an existing chat corresponding to a given user.</p>
+<h3>Parameters</h3>
+<p><a name="force"></a>
+<code>force</code> - If true, the chat will be created without network request. In this case all
+information about the chat except its type, title and photo can be incorrect.</p>
+<p><strong>Return</strong><br/>
+<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html">TdApi.Chat</a> A chat. (Can be a private chat, basic group, supergroup, or secret chat.)</p>
+</BODY>
+</HTML>
