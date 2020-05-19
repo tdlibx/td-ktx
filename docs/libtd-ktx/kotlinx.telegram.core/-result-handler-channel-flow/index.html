@@ -10,7 +10,7 @@
 <h1>ResultHandlerChannelFlow</h1>
 <code><span class="identifier">@ExperimentalCoroutinesApi</span> <span class="keyword">class </span><span class="identifier">ResultHandlerChannelFlow</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">ResultHandlerFlow</span></code>
 <p>Class that converts results handler from <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.html">TdApi</a> client to <a href="#">Flow</a>
-of the <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Object.html">TdApi.Object</a> using <a href="#">ConflatedBroadcastChannel</a></p>
+of the <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Object.html">TdApi.Object</a> using <a href="#">ConflatedBroadcastChannel</a></p>
 <h3>Constructors</h3>
 <table>
 <tbody>
@@ -20,8 +20,8 @@ of the <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegr
 </td>
 <td>
 <p>Class that converts results handler from <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.html">TdApi</a> client to <a href="#">Flow</a>
-of the <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Object.html">TdApi.Object</a> using <a href="#">ConflatedBroadcastChannel</a></p>
-<code><span class="identifier">ResultHandlerChannelFlow</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.core.ResultHandlerChannelFlow$<init>(kotlinx.coroutines.channels.BroadcastChannel((org.drinkless.td.libcore.telegram.TdApi.Object)))/channel">channel</span><span class="symbol">:</span>&nbsp;<span class="identifier">BroadcastChannel</span><span class="symbol">&lt;</span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Object.html"><span class="identifier">Object</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;BroadcastChannel(Channel.CONFLATED)<span class="symbol">)</span></code></td>
+of the <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Object.html">TdApi.Object</a> using <a href="#">ConflatedBroadcastChannel</a></p>
+<code><span class="identifier">ResultHandlerChannelFlow</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.core.ResultHandlerChannelFlow$<init>(kotlinx.coroutines.channels.BroadcastChannel((org.drinkless.td.libcore.telegram.TdApi.Object)))/channel">channel</span><span class="symbol">:</span>&nbsp;<span class="identifier">BroadcastChannel</span><span class="symbol">&lt;</span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Object.html"><span class="identifier">Object</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;BroadcastChannel(Channel.CONFLATED)<span class="symbol">)</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -33,14 +33,14 @@ of the <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegr
 <h4><a href="collect.html">collect</a></h4>
 </td>
 <td>
-<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">collect</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.core.ResultHandlerChannelFlow$collect(kotlinx.coroutines.flow.FlowCollector((org.drinkless.td.libcore.telegram.TdApi.Object)))/collector">collector</span><span class="symbol">:</span>&nbsp;<span class="identifier">FlowCollector</span><span class="symbol">&lt;</span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Object.html"><span class="identifier">Object</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">collect</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.core.ResultHandlerChannelFlow$collect(kotlinx.coroutines.flow.FlowCollector((org.drinkless.td.libcore.telegram.TdApi.Object)))/collector">collector</span><span class="symbol">:</span>&nbsp;<span class="identifier">FlowCollector</span><span class="symbol">&lt;</span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Object.html"><span class="identifier">Object</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 <tr>
 <td>
 <h4><a href="on-result.html">onResult</a></h4>
 </td>
 <td>
-<code><span class="keyword">fun </span><span class="identifier">onResult</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.core.ResultHandlerChannelFlow$onResult(org.drinkless.td.libcore.telegram.TdApi.Object)/result">result</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Object.html"><span class="identifier">Object</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">fun </span><span class="identifier">onResult</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.core.ResultHandlerChannelFlow$onResult(org.drinkless.td.libcore.telegram.TdApi.Object)/result">result</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Object.html"><span class="identifier">Object</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 </tbody>
 </table>

@@ -9,7 +9,7 @@
 <br/>
 <h1>ProxyKtx</h1>
 <code><span class="keyword">interface </span><span class="identifier">ProxyKtx</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-base-ktx/index.html"><span class="identifier">BaseKtx</span></a></code>
-<p>Interface for access <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html">TdApi.Proxy</a> extension functions. Can be used alongside with other
+<p>Interface for access <a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Proxy.html">TdApi.Proxy</a> extension functions. Can be used alongside with other
 extension interfaces of the package. Must contain <a href="../../kotlinx.telegram.core/-telegram-flow/index.html">TelegramFlow</a> instance field to access its
 functionality</p>
 <h3>Properties</h3>
@@ -35,7 +35,7 @@ functionality</p>
 <td>
 <p>Suspend function, which edits an existing proxy server for network requests. Can be called
 before authorization.</p>
-<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">edit</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.ProxyKtx$edit(org.drinkless.td.libcore.telegram.TdApi.Proxy, kotlin.String, kotlin.Int, kotlin.Boolean, org.drinkless.td.libcore.telegram.TdApi.ProxyType)/server">server</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ProxyKtx$edit(org.drinkless.td.libcore.telegram.TdApi.Proxy, kotlin.String, kotlin.Int, kotlin.Boolean, org.drinkless.td.libcore.telegram.TdApi.ProxyType)/port">port</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ProxyKtx$edit(org.drinkless.td.libcore.telegram.TdApi.Proxy, kotlin.String, kotlin.Int, kotlin.Boolean, org.drinkless.td.libcore.telegram.TdApi.ProxyType)/enable">enable</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ProxyKtx$edit(org.drinkless.td.libcore.telegram.TdApi.Proxy, kotlin.String, kotlin.Int, kotlin.Boolean, org.drinkless.td.libcore.telegram.TdApi.ProxyType)/type">type</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ProxyType.html"><span class="identifier">ProxyType</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html"><span class="identifier">Proxy</span></a></code></td>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">edit</span><span class="symbol">(</span><span class="identifier" id="kotlinx.telegram.extensions.ProxyKtx$edit(org.drinkless.td.libcore.telegram.TdApi.Proxy, kotlin.String, kotlin.Int, kotlin.Boolean, org.drinkless.td.libcore.telegram.TdApi.ProxyType)/server">server</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ProxyKtx$edit(org.drinkless.td.libcore.telegram.TdApi.Proxy, kotlin.String, kotlin.Int, kotlin.Boolean, org.drinkless.td.libcore.telegram.TdApi.ProxyType)/port">port</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ProxyKtx$edit(org.drinkless.td.libcore.telegram.TdApi.Proxy, kotlin.String, kotlin.Int, kotlin.Boolean, org.drinkless.td.libcore.telegram.TdApi.ProxyType)/enable">enable</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="kotlinx.telegram.extensions.ProxyKtx$edit(org.drinkless.td.libcore.telegram.TdApi.Proxy, kotlin.String, kotlin.Int, kotlin.Boolean, org.drinkless.td.libcore.telegram.TdApi.ProxyType)/type">type</span><span class="symbol">:</span>&nbsp;<a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ProxyType.html"><span class="identifier">ProxyType</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Proxy.html"><span class="identifier">Proxy</span></a></code></td>
 </tr>
 <tr>
 <td>
@@ -44,7 +44,7 @@ before authorization.</p>
 <td>
 <p>Suspend function, which enables a proxy. Only one proxy can be enabled at a time. Can be called
 before authorization.</p>
-<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">enable</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">enable</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 <tr>
 <td>
@@ -53,7 +53,7 @@ before authorization.</p>
 <td>
 <p>Suspend function, which returns an HTTPS link, which can be used to add a proxy. Available only
 for SOCKS5 and MTProto proxies. Can be called before authorization.</p>
-<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">getLink</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Text.html"><span class="identifier">Text</span></a></code></td>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">getLink</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Text.html"><span class="identifier">Text</span></a></code></td>
 </tr>
 <tr>
 <td>
@@ -62,7 +62,7 @@ for SOCKS5 and MTProto proxies. Can be called before authorization.</p>
 <td>
 <p>Suspend function, which computes time needed to receive a response from a Telegram server
 through a proxy. Can be called before authorization.</p>
-<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">ping</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Seconds.html"><span class="identifier">Seconds</span></a></code></td>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">ping</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Seconds.html"><span class="identifier">Seconds</span></a></code></td>
 </tr>
 <tr>
 <td>
@@ -70,7 +70,7 @@ through a proxy. Can be called before authorization.</p>
 </td>
 <td>
 <p>Suspend function, which removes a proxy server. Can be called before authorization.</p>
-<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">remove</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">open</span> <span class="keyword">suspend</span> <span class="keyword">fun </span><a href="https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Proxy.html"><span class="identifier">Proxy</span></a><span class="symbol">.</span><span class="identifier">remove</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 </tbody>
 </table>
