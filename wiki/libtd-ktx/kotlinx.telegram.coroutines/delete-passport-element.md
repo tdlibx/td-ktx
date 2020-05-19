@@ -2,7 +2,7 @@
 
 # deletePassportElement
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.deletePassportElement(type: `[`PassportElementType`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.PassportElementType.html)`?): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.deletePassportElement(type: `[`PassportElementType`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/PassportElementType.html)`?): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
 
 Suspend function, which deletes a Telegram Passport element.
 

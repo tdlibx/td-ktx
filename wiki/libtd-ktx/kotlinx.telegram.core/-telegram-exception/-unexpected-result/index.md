@@ -6,5 +6,6 @@
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.md) | `UnexpectedResult(result: `[`Object`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Object.html)`)` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `UnexpectedResult(result: `[`Object`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Object.html)`)` |

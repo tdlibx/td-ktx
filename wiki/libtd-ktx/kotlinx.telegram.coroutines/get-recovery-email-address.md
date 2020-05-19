@@ -2,7 +2,7 @@
 
 # getRecoveryEmailAddress
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.getRecoveryEmailAddress(password: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?): `[`RecoveryEmailAddress`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.RecoveryEmailAddress.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.getRecoveryEmailAddress(password: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?): `[`RecoveryEmailAddress`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/RecoveryEmailAddress.html)
 
 Suspend function, which returns a 2-step verification recovery email address that was previously
 set up. This method can be used to verify a password provided by the user.
@@ -12,5 +12,5 @@ set up. This method can be used to verify a password provided by the user.
 `password` - The password for the current user.
 
 **Return**
-[RecoveryEmailAddress](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.RecoveryEmailAddress.html) Contains information about the current recovery email address.
+[RecoveryEmailAddress](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/RecoveryEmailAddress.html) Contains information about the current recovery email address.
 

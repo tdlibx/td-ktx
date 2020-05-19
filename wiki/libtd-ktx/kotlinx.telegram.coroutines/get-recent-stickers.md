@@ -2,7 +2,7 @@
 
 # getRecentStickers
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.getRecentStickers(isAttached: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`): `[`Stickers`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Stickers.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.getRecentStickers(isAttached: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`): `[`Stickers`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Stickers.html)
 
 Suspend function, which returns a list of recently used stickers.
 
@@ -12,5 +12,5 @@ Suspend function, which returns a list of recently used stickers.
 video files; pass false to return recently sent stickers.
 
 **Return**
-[Stickers](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Stickers.html) Represents a list of stickers.
+[Stickers](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Stickers.html) Represents a list of stickers.
 

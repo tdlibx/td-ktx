@@ -2,7 +2,7 @@
 
 # getMessageLinkInfo
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.getMessageLinkInfo(url: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?): `[`MessageLinkInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.MessageLinkInfo.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.getMessageLinkInfo(url: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?): `[`MessageLinkInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/MessageLinkInfo.html)
 
 Suspend function, which returns information about a public or private message link.
 
@@ -13,5 +13,5 @@ Suspend function, which returns information about a public or private message li
 &amp;quot;tg://resolve?...&amp;quot;.
 
 **Return**
-[MessageLinkInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.MessageLinkInfo.html) Contains information about a link to a message in a chat.
+[MessageLinkInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/MessageLinkInfo.html) Contains information about a link to a message in a chat.
 

@@ -2,7 +2,7 @@
 
 # changeImportedContacts
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.changeImportedContacts(contacts: `[`Array`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)`<`[`Contact`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Contact.html)`>?): `[`ImportedContacts`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ImportedContacts.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.changeImportedContacts(contacts: `[`Array`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)`<`[`Contact`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Contact.html)`>?): `[`ImportedContacts`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ImportedContacts.html)
 
 Suspend function, which changes imported contacts using the list of current user contacts saved
 on the device. Imports newly added contacts and, if at least the file database is enabled, deletes
@@ -14,5 +14,5 @@ query is possible at the same time.
 `contacts` - The new list of contacts, contact's vCard are ignored and are not imported.
 
 **Return**
-[ImportedContacts](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ImportedContacts.html) Represents the result of an ImportContacts request.
+[ImportedContacts](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ImportedContacts.html) Represents the result of an ImportContacts request.
 

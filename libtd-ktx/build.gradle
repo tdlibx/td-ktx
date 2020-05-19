@@ -29,7 +29,7 @@ android {
     }
 
     task dokkaMarkdown(type: org.jetbrains.dokka.gradle.DokkaTask) {
-        outputFormat = 'markdown'
+        outputFormat = 'gfm'
         outputDirectory = "$rootDir/wiki"
         configuration {
             includes = ['src/main/java/kotlinx/telegram/index.md']

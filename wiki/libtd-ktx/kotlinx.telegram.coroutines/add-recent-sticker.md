@@ -2,7 +2,7 @@
 
 # addRecentSticker
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.addRecentSticker(isAttached: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`, sticker: `[`InputFile`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.InputFile.html)`?): `[`Stickers`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Stickers.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.addRecentSticker(isAttached: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`, sticker: `[`InputFile`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/InputFile.html)`?): `[`Stickers`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Stickers.html)
 
 Suspend function, which manually adds a new sticker to the list of recently used stickers. The
 new sticker is added to the top of the list. If the sticker was already in the list, it is removed
@@ -16,5 +16,5 @@ or video files; pass false to add the sticker to the list of recently sent stick
 `sticker` - Sticker file to add.
 
 **Return**
-[Stickers](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Stickers.html) Represents a list of stickers.
+[Stickers](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Stickers.html) Represents a list of stickers.
 

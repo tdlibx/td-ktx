@@ -2,7 +2,7 @@
 
 # getChatMessageCount
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.getChatMessageCount(chatId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, filter: `[`SearchMessagesFilter`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.SearchMessagesFilter.html)`?, returnLocal: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`): `[`Count`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Count.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.getChatMessageCount(chatId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, filter: `[`SearchMessagesFilter`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/SearchMessagesFilter.html)`?, returnLocal: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`): `[`Count`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Count.html)
 
 Suspend function, which returns approximate number of messages of the specified type in the chat.
 
@@ -17,5 +17,5 @@ function.
 requests, returning -1 if the number of messages is unknown.
 
 **Return**
-[Count](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Count.html) Contains a counter.
+[Count](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Count.html) Contains a counter.
 

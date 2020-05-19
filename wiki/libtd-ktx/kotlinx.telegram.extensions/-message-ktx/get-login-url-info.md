@@ -2,7 +2,7 @@
 
 # getLoginUrlInfo
 
-`open suspend fun `[`Message`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Message.html)`.getLoginUrlInfo(chatId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, buttonId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`LoginUrlInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.LoginUrlInfo.html)
+`open suspend fun `[`Message`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Message.html)`.getLoginUrlInfo(chatId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, buttonId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`LoginUrlInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/LoginUrlInfo.html)
 
 Suspend function, which returns information about a button of type
 inlineKeyboardButtonTypeLoginUrl. The method needs to be called when the user presses the button.
@@ -14,5 +14,5 @@ inlineKeyboardButtonTypeLoginUrl. The method needs to be called when the user pr
 `buttonId` - Button identifier.
 
 **Return**
-[TdApi.LoginUrlInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.LoginUrlInfo.html) This class is an abstract base class.
+[TdApi.LoginUrlInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/LoginUrlInfo.html) This class is an abstract base class.
 

@@ -2,7 +2,7 @@
 
 # checkChatInviteLink
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.checkChatInviteLink(inviteLink: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?): `[`ChatInviteLinkInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ChatInviteLinkInfo.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.checkChatInviteLink(inviteLink: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?): `[`ChatInviteLinkInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatInviteLinkInfo.html)
 
 Suspend function, which checks the validity of an invite link for a chat and returns information
 about the corresponding chat.
@@ -14,5 +14,5 @@ about the corresponding chat.
 &amp;quot;https://telegram.dog/joinchat/&amp;quot;.
 
 **Return**
-[ChatInviteLinkInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ChatInviteLinkInfo.html) Contains information about a chat invite link.
+[ChatInviteLinkInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatInviteLinkInfo.html) Contains information about a chat invite link.
 

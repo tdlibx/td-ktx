@@ -2,7 +2,7 @@
 
 # supergroupFullInfoFlow
 
-`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.supergroupFullInfoFlow(): Flow<`[`UpdateSupergroupFullInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateSupergroupFullInfo.html)`>`
+`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.md)`.supergroupFullInfoFlow(): Flow<`[`UpdateSupergroupFullInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateSupergroupFullInfo.html)`>`
 
-emits [UpdateSupergroupFullInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateSupergroupFullInfo.html) if some data from supergroupFullInfo has been changed.
+emits [UpdateSupergroupFullInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateSupergroupFullInfo.html) if some data from supergroupFullInfo has been changed.
 

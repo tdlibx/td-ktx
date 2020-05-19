@@ -8,5 +8,6 @@ Interface for access all Telegram objects extension functions. Contains 182 exte
 
 ### Properties
 
+| Name | Summary |
+|---|---|
 | [api](api.md) | Instance of the [TelegramFlow](../../kotlinx.telegram.core/-telegram-flow/index.md) connecting extensions to the Telegram Client`abstract val api: `[`TelegramFlow`](../../kotlinx.telegram.core/-telegram-flow/index.md) |
-
