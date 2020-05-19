@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'org.jetbrains.dokka'
 
 apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.tdlibx.td-ktx'
@@ -25,6 +26,17 @@ android {
     lintOptions {
         // use this line to check all rules except those listed
         disable 'InvalidPackage'
+    }
+
+    task dokkaMarkdown(type: org.jetbrains.dokka.gradle.DokkaTask) {
+        outputFormat = 'markdown'
+        outputDirectory = "$rootDir/wiki"
+        configuration {
+            includes = ['src/main/java/kotlinx/telegram/index.md']
+            externalDocumentationLink {
+                url = new URL("https://tdlibx.github.io/td/docs/")
+            }
+        }
     }
 }
 

@@ -23,7 +23,7 @@ class MainViewModel : ViewModel() {
     val newMessage = TelegramRepository.textMessagesFlow.asLiveList()
 
     init {
-        TelegramRepository.createClient()
+        TelegramRepository.api.attachClient()
     }
 
 

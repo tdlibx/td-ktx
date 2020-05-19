@@ -1,16 +1,27 @@
 package com.github.tdlibx.example
 
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.telegram.flow.TelegramFlow
+import android.util.Log
+import kotlinx.coroutines.GlobalScope
+import kotlinx.telegram.core.TelegramFlow
+import kotlinx.telegram.coroutines.checkAuthenticationCode
+import kotlinx.telegram.coroutines.checkAuthenticationPassword
+import kotlinx.telegram.coroutines.checkDatabaseEncryptionKey
+import kotlinx.telegram.coroutines.getChat
+import kotlinx.telegram.coroutines.getUser
+import kotlinx.telegram.coroutines.setAuthenticationPhoneNumber
+import kotlinx.telegram.coroutines.setTdlibParameters
+import kotlinx.telegram.flows.authorizationStateFlow
+import kotlinx.telegram.flows.newMessageFlow
+import kotlinx.telegram.flows.userFlow
+import kotlinx.telegram.extensions.ChatKtx
+import kotlinx.telegram.extensions.UserKtx
 import org.drinkless.td.libcore.telegram.TdApi
 
-object TelegramRepository : TelegramFlow() {
+object TelegramRepository : UserKtx, ChatKtx {
 
-    val flow = TdApi.UpdateAuthorizationState()
-        .asFlow()
-        .map { it.authorizationState }
+    override val api = TelegramFlow()
+
+    val flow = api.authorizationStateFlow()
         .onEach {
             // send required parameters or use TelegramFlow.createClientWithParameters() instead
             checkRequiredParams(it)
@@ -19,43 +30,38 @@ object TelegramRepository : TelegramFlow() {
             when (it) {
                 is TdApi.AuthorizationStateReady -> AuthState.LoggedIn
                 is TdApi.AuthorizationStateWaitCode -> AuthState.EnterCode
-                is TdApi.AuthorizationStateWaitPassword -> AuthState.EnterPassword(
-                    it.passwordHint
-                )
+                is TdApi.AuthorizationStateWaitPassword -> AuthState.EnterPassword(it.passwordHint)
                 is TdApi.AuthorizationStateWaitPhoneNumber -> AuthState.EnterPhone
                 else -> null
             }
         }
 
-    val textMessagesFlow = TdApi.UpdateNewMessage().mapAsFlow {
-        it.message.content
-    }.filterIsInstance<TdApi.MessageText>().map { it.text.text }
 
     // send required parameters or pass them using TelegramFlow.createClientWithParameters() instead
     private suspend fun checkRequiredParams(it: TdApi.AuthorizationState?) {
         when (it) {
             is TdApi.AuthorizationStateWaitTdlibParameters ->
-                TdApi.SetTdlibParameters(TelegramCredentials.parameters).expect<TdApi.Ok>()
+                api.setTdlibParameters(TelegramCredentials.parameters)
             is TdApi.AuthorizationStateWaitEncryptionKey ->
-                TdApi.CheckDatabaseEncryptionKey().expect<TdApi.Ok>()
+                api.checkDatabaseEncryptionKey(null)
         }
     }
 
     suspend fun sendPhone(phone: String) {
-        TdApi.SetAuthenticationPhoneNumber(
-            phone,
-            null
-        ).expect<TdApi.Ok>()
+        api.setAuthenticationPhoneNumber(phone, null)
     }
 
     suspend fun sendCode(code: String) {
-        TdApi.CheckAuthenticationCode(code)
-            .expect<TdApi.Ok>()
+        api.checkAuthenticationCode(code)
     }
 
     suspend fun sendPassword(password: String) {
-        TdApi.CheckAuthenticationPassword(
+        api.checkAuthenticationPassword(
             password
-        ).expect<TdApi.Ok>()
+        )
     }
+}
+
+fun String.log() {
+    Log.e("=========", this)
 }

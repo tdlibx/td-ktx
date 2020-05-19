@@ -1,134 +1,109 @@
-/*
 package kotlinx.telegram.core
 
-import android.util.Log
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.transform
-import kotlinx.telegram.flow.ClientFlowProvider
 import org.drinkless.td.libcore.telegram.Client
 import org.drinkless.td.libcore.telegram.TdApi
+import java.io.Closeable
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-interface FlowProvider {
-    fun getFlow(): Flow<TdApi.Object>
-    fun send(function: TdApi.Function, resultHandler: (TdApi.Object) -> Unit)
-    fun createClient()
-}
-
-private fun <T> Client.sendAsync(testProxy: TdApi.Function): T {
-    TODO("Not yet implemented")
-}
-
-@ExperimentalCoroutinesApi
-open class TelegramFlow(
-    val flowProvider: FlowProvider = ClientFlowProvider()
-) {
-
-    val mainFlow: Flow<TdApi.Object> = flowProvider.getFlow()
-
-    fun createClient() {
-        flowProvider.createClient()
-    }
-
-    suspend fun createClientWithParameters(parameters: TdApi.TdlibParameters, key: ByteArray?) {
-        flowProvider.createClient()
-        TdApi.SetTdlibParameters(parameters).launch()
-        TdApi.CheckDatabaseEncryptionKey(key).launch()
-    }
-
-    // transform
-
-    inline fun <reified UpdateType : TdApi.Update> UpdateType.asFlow(): Flow<UpdateType> =
-        mainFlow.filterIsInstance<UpdateType>()
-
-    inline fun <reified UpdateType : TdApi.Update, ResultType>
-        UpdateType.mapAsFlow(crossinline block: suspend (UpdateType) -> ResultType): Flow<ResultType> =
-        mainFlow.transform { value ->
-            if (value is UpdateType) emit(block(value))
-        }
-
-
-    //live data
-
-//    inline fun <reified UpdateType : TdApi.Update, LiveDataType>
-//        UpdateType.mapAsLiveData(crossinline block: (UpdateType) -> LiveDataType) =
-//        this.mapAsFlow { block(this) }.asLiveData()
-//    fun <LiveDataType : TdApi.Object> Flow<LiveDataType>.asLiveData() =
-//        liveData {
-//            collect { emit(it) }
-//        }
-
-    //launchers
-
-
-    @Throws(TelegramException::class)
-    suspend inline fun <reified ExpectedResult : TdApi.Object>
-        TdApi.Function.expect(
-        resultFunc: (ExpectedResult) -> Unit = {}
-    ) = resultFunc(
-        suspendCoroutine { cont ->
-            flowProvider.send(this) {
-                when (it) {
-                    is ExpectedResult -> cont.resume(it)
-                    is TdApi.Error -> cont.resumeWithException(TelegramException.Error(it.message))
-                    else -> cont.resumeWithException(TelegramException.UnexpectedResult(it))
-                }
-            }
-        }
-    )
-
-    suspend inline fun <reified ExpectedResult : TdApi.Object>
-        TdApi.Function.async() : ExpectedResult = suspendCoroutine { cont ->
-            flowProvider.send(this) {
-                when (it) {
-                    is ExpectedResult -> cont.resume(it)
-                    is TdApi.Error -> cont.resumeWithException(Exception(it.message))
-                    else -> cont.resumeWithException(Exception("unexpected result $it"))
-                }
-            }
-        }
-
-    suspend inline fun TdApi.Function.launch() = suspendCoroutine<Boolean> { cont ->
-        flowProvider.send(this) {
-            when (it) {
-                is TdApi.Ok -> {
-                    "$this returns true".log()
-                    cont.resume(true)
-                }
-
-                is TdApi.Error -> cont.resume(false)
-                else -> cont.resumeWithException(Exception("unexpected result $it"))
-            }
-        }
-    }
-}
-
-fun String.log() {
-    Log.e("=========", this)
-}
-
-*/
 /**
- * Start a telegram flow for given [Client] to access it's functionality
- * For example:
- * ```
- * client.withFlow {
- *    TdApi.UpdateNewMessage().asFlow()
- *        .map { it.message }
- *        .onEach {
- *            TdApi.DeleteChatMessagesFromUser(it.chatId, it.senderUserId).launch()
- *        }.launchIn(scope)
- * }
- * ```
- * will delete all the incoming messages
- *//*
+ * Main class to interact with Telegram API client
+ * @param resultHandler transforms results from [TdApi] client to [Flow] of the [TdApi.Object]
+ */
+class TelegramFlow(
+    private val resultHandler: ResultHandlerFlow = ResultHandlerChannelFlow()
+) : Flow<TdApi.Object> by resultHandler, Closeable {
 
-fun Client.withFlow(function: TelegramFlow.() -> Unit) {
-    val provider = ClientFlowProvider(this)
-    val telegramFlow = TelegramFlow(provider)
-    function(telegramFlow)
-}*/
+    interface ResultHandlerFlow : Client.ResultHandler, Flow<TdApi.Object>
+
+    /**
+     * Telegram [Client] instance. Null if instance is not attached
+     */
+    var client: Client? = null
+
+    /**
+     * Attach instance to the existing native Telegram client or create one
+     * @param existingClient set an existing client to attach, null by default
+     */
+    fun attachClient(
+        existingClient: Client? = null
+    ) {
+        if (client != null) return // client is already attached
+
+        client = existingClient
+            ?.also { it.setUpdatesHandler { resultHandler } }
+            ?: Client.create(
+                resultHandler,
+                null,
+                null
+            )
+    }
+
+    /**
+     * Return data flow from Telegram API of the given type [T]
+     */
+    inline fun <reified T : TdApi.Object> getUpdatesFlowOfType() =
+        buffer(64).filterIsInstance<T>()
+
+    /**
+     * Sends a request to the TDLib and expect a result.
+     *
+     * @param function [TdApi.Function] representing a TDLib interface function-class.
+     * @param ExpectedResult result type expecting from given [function].
+     * @throws TelegramException.Error if TdApi request returns an exception
+     * @throws TelegramException.UnexpectedResult if TdApi request returns an unexpected result
+     * @throws TelegramException.ClientNotAttached if TdApi client has not attached yet
+     */
+    suspend inline fun <reified ExpectedResult : TdApi.Object>
+        sendFunctionAsync(function: TdApi.Function): ExpectedResult =
+        suspendCoroutine { cont ->
+            client?.send(
+                function,
+                { result ->
+                    when (result) {
+                        is ExpectedResult -> cont.resume(result)
+                        is TdApi.Error -> cont.resumeWithException(
+                            TelegramException.Error(result.message)
+                        )
+                        else -> cont.resumeWithException(
+                            TelegramException.UnexpectedResult(
+                                result
+                            )
+                        )
+                    }
+                },
+                { throwable ->
+                    cont.resumeWithException(
+                        TelegramException.Error(
+                            throwable?.message ?: "unknown"
+                        )
+                    )
+                }
+            ) ?: throw TelegramException.ClientNotAttached
+
+        }
+
+    /**
+     * Sends a request to the TDLib and expect [TdApi.Ok]
+     *
+     * @param function [TdApi.Function] representing a TDLib interface function-class.
+     * @throws TelegramException.Error if TdApi request returns an exception
+     * @throws TelegramException.UnexpectedResult if TdApi request returns an unexpected result
+     * @throws TelegramException.ClientNotAttached if TdApi client has not attached yet
+     */
+    suspend fun sendFunctionLaunch(function: TdApi.Function) {
+        sendFunctionAsync<TdApi.Ok>(function)
+    }
+
+
+    /**
+     * Closes Client.
+     */
+    override fun close() {
+        client?.close()
+    }
+}
