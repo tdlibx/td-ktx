@@ -1,0 +1,7 @@
+$dokka.format:markdown
+$dokka.linkExtension:md
+
+kotlinx.telegram.core
+kotlinx.telegram.coroutines
+kotlinx.telegram.extensions
+kotlinx.telegram.flows
