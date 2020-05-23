@@ -1,7 +1,11 @@
 package com.github.tdlibx.example
 
+import kotlinx.coroutines.flow.flattenMerge
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.retryWhen
+import kotlinx.telegram.core.TelegramException
 import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.checkAuthenticationCode
 import kotlinx.telegram.coroutines.checkAuthenticationPassword
@@ -15,6 +19,7 @@ import kotlinx.telegram.extensions.ChatKtx
 import kotlinx.telegram.extensions.UserKtx
 import kotlinx.telegram.flows.authorizationStateFlow
 import kotlinx.telegram.flows.userFlow
+import kotlinx.telegram.flows.userStatusFlow
 import org.drinkless.td.libcore.telegram.TdApi
 
 object TelegramRepository : UserKtx, ChatKtx {
@@ -58,7 +63,12 @@ object TelegramRepository : UserKtx, ChatKtx {
         )
     }
 
-    val userInfoFlow = api.userFlow().map { user ->
+    val userInfoFlow = flowOf(
+        api.userFlow(),
+        api.userStatusFlow().map {
+            api.getUser(it.userId)
+        }
+    ).flattenMerge().map { user: TdApi.User ->
 
         if (api.getMe().id == user.id) "it's me!"
         else {
@@ -66,11 +76,11 @@ object TelegramRepository : UserKtx, ChatKtx {
 
             if (user.getFullInfo().groupInCommonCount > 0) {
                 user.getGroupsInCommon(0, 10).chatIds.map {
-                    api.getChat(it).let {
-                        val admins = it.getAdministrators().administrators.map { admin ->
+                    api.getChat(it).let { chat ->
+                        val admins = chat.getAdministrators().administrators.map { admin ->
                             api.getUser(admin.userId).firstName
                         }.joinToString()
-                        "    '${it.title}'" +
+                        "    '${chat.title}'" +
                             (" admins: $admins".takeIf { admins.isNotBlank() } ?: "")
                     }
                 }.joinToString("\n").let {
@@ -80,5 +90,5 @@ object TelegramRepository : UserKtx, ChatKtx {
 
             userInfo.joinToString()
         }
-    }
+    }.retryWhen { cause, _ -> cause is TelegramException }
 }
