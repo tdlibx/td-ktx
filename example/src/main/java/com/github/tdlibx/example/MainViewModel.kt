@@ -8,6 +8,7 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -18,9 +19,11 @@ class MainViewModel : ViewModel() {
 
     val error = MutableLiveData<String>()
 
-    val authState = TelegramRepository.flow.asLiveData()
+    val authState = TelegramRepository.authFlow.asLiveData()
 
-    val newMessage = TelegramRepository.textMessagesFlow.asLiveList()
+    val newMessage = TelegramRepository.userInfoFlow.catch {
+        error.postValue("message error ${it.message}")
+    }.asLiveList()
 
     init {
         TelegramRepository.api.attachClient()
@@ -52,7 +55,7 @@ class MainViewModel : ViewModel() {
         TelegramRepository.sendCode(code)
     }
 
-    fun sendPassword(passsord: String) = scope.launch {
-        TelegramRepository.sendPassword(passsord)
+    fun sendPassword(password: String) = scope.launch {
+        TelegramRepository.sendPassword(password)
     }
 }

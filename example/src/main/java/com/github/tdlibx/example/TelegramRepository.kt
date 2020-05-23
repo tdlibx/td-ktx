@@ -1,29 +1,28 @@
 package com.github.tdlibx.example
 
-import android.util.Log
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.checkAuthenticationCode
 import kotlinx.telegram.coroutines.checkAuthenticationPassword
 import kotlinx.telegram.coroutines.checkDatabaseEncryptionKey
 import kotlinx.telegram.coroutines.getChat
+import kotlinx.telegram.coroutines.getMe
 import kotlinx.telegram.coroutines.getUser
 import kotlinx.telegram.coroutines.setAuthenticationPhoneNumber
 import kotlinx.telegram.coroutines.setTdlibParameters
-import kotlinx.telegram.flows.authorizationStateFlow
-import kotlinx.telegram.flows.newMessageFlow
-import kotlinx.telegram.flows.userFlow
 import kotlinx.telegram.extensions.ChatKtx
 import kotlinx.telegram.extensions.UserKtx
+import kotlinx.telegram.flows.authorizationStateFlow
+import kotlinx.telegram.flows.userFlow
 import org.drinkless.td.libcore.telegram.TdApi
 
 object TelegramRepository : UserKtx, ChatKtx {
 
     override val api = TelegramFlow()
 
-    val flow = api.authorizationStateFlow()
+    val authFlow = api.authorizationStateFlow()
         .onEach {
-            // send required parameters or use TelegramFlow.createClientWithParameters() instead
             checkRequiredParams(it)
         }
         .map {
@@ -36,8 +35,6 @@ object TelegramRepository : UserKtx, ChatKtx {
             }
         }
 
-
-    // send required parameters or pass them using TelegramFlow.createClientWithParameters() instead
     private suspend fun checkRequiredParams(it: TdApi.AuthorizationState?) {
         when (it) {
             is TdApi.AuthorizationStateWaitTdlibParameters ->
@@ -60,8 +57,28 @@ object TelegramRepository : UserKtx, ChatKtx {
             password
         )
     }
-}
 
-fun String.log() {
-    Log.e("=========", this)
+    val userInfoFlow = api.userFlow().map { user ->
+
+        if (api.getMe().id == user.id) "it's me!"
+        else {
+            val userInfo = arrayListOf(user.firstName)
+
+            if (user.getFullInfo().groupInCommonCount > 0) {
+                user.getGroupsInCommon(0, 10).chatIds.map {
+                    api.getChat(it).let {
+                        val admins = it.getAdministrators().administrators.map { admin ->
+                            api.getUser(admin.userId).firstName
+                        }.joinToString()
+                        "    '${it.title}'" +
+                            (" admins: $admins".takeIf { admins.isNotBlank() } ?: "")
+                    }
+                }.joinToString("\n").let {
+                    userInfo.add(" has chats in common:\n$it")
+                }
+            }
+
+            userInfo.joinToString()
+        }
+    }
 }
