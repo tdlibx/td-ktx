@@ -1,6 +1,6 @@
 # Telegram Flow
 
-Kotlin Coroutines extensions for Telagram API [TDLib](https://github.com/tdlib/td) (Telegram Database
+Kotlin Coroutines extensions for Telegram API [TDLib](https://github.com/tdlib/td) (Telegram Database
  library)
 
 ## Using library
