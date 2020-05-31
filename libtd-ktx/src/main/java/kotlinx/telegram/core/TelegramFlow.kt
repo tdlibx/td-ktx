@@ -15,7 +15,7 @@ import kotlin.coroutines.suspendCoroutine
  * @param resultHandler transforms results from [TdApi] client to [Flow] of the [TdApi.Object]
  */
 class TelegramFlow(
-    private val resultHandler: ResultHandlerFlow = ResultHandlerChannelFlow()
+    private val resultHandler: ResultHandlerFlow = ResultHandlerStateFlow()
 ) : Flow<TdApi.Object> by resultHandler, Closeable {
 
     interface ResultHandlerFlow : Client.ResultHandler, Flow<TdApi.Object>
@@ -60,31 +60,23 @@ class TelegramFlow(
      */
     suspend inline fun <reified ExpectedResult : TdApi.Object>
         sendFunctionAsync(function: TdApi.Function): ExpectedResult =
-        suspendCoroutine { cont ->
-            client?.send(
-                function,
-                { result ->
-                    when (result) {
-                        is ExpectedResult -> cont.resume(result)
-                        is TdApi.Error -> cont.resumeWithException(
-                            TelegramException.Error(result.message)
-                        )
-                        else -> cont.resumeWithException(
-                            TelegramException.UnexpectedResult(
-                                result
-                            )
-                        )
-                    }
-                },
-                { throwable ->
-                    cont.resumeWithException(
-                        TelegramException.Error(
-                            throwable?.message ?: "unknown"
-                        )
+        suspendCoroutine { continuation ->
+            val resultHandler: (TdApi.Object) -> Unit = { result ->
+                when (result) {
+                    is ExpectedResult -> continuation.resume(result)
+                    is TdApi.Error -> continuation.resumeWithException(
+                        TelegramException.Error(result.message)
+                    )
+                    else -> continuation.resumeWithException(
+                        TelegramException.UnexpectedResult(result)
                     )
                 }
-            ) ?: throw TelegramException.ClientNotAttached
-
+            }
+            client?.send(function, resultHandler) { throwable ->
+                continuation.resumeWithException(
+                    TelegramException.Error(throwable?.message ?: "unknown")
+                )
+            } ?: throw TelegramException.ClientNotAttached
         }
 
     /**
@@ -98,7 +90,6 @@ class TelegramFlow(
     suspend fun sendFunctionLaunch(function: TdApi.Function) {
         sendFunctionAsync<TdApi.Ok>(function)
     }
-
 
     /**
      * Closes Client.

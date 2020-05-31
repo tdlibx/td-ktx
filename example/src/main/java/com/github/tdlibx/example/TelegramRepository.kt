@@ -24,7 +24,7 @@ import org.drinkless.td.libcore.telegram.TdApi
 
 object TelegramRepository : UserKtx, ChatKtx {
 
-    override val api = TelegramFlow()
+    override val api: TelegramFlow = TelegramFlow()
 
     val authFlow = api.authorizationStateFlow()
         .onEach {
@@ -40,8 +40,8 @@ object TelegramRepository : UserKtx, ChatKtx {
             }
         }
 
-    private suspend fun checkRequiredParams(it: TdApi.AuthorizationState?) {
-        when (it) {
+    private suspend fun checkRequiredParams(state: TdApi.AuthorizationState?) {
+        when (state) {
             is TdApi.AuthorizationStateWaitTdlibParameters ->
                 api.setTdlibParameters(TelegramCredentials.parameters)
             is TdApi.AuthorizationStateWaitEncryptionKey ->
