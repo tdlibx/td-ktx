@@ -6,7 +6,7 @@ title: MessageKtx.getPollVoters - libtd-ktx
 
 # getPollVoters
 
-`open suspend fun `[`Message`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Message.html)`.getPollVoters(chatId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, optionId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, offset: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Users`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Users.html)
+`open suspend fun `[`Message`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Message.html)`.getPollVoters(chatId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, optionId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, offset: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Users`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Users.html)
 
 Suspend function, which returns users voted for the specified option in a non-anonymous polls.
 For the optimal performance the number of returned users is chosen by the library.
@@ -24,5 +24,5 @@ than 50. Fewer users may be returned than specified by the limit, even if the en
 list has not been reached.
 
 **Return**
-[TdApi.Users](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Users.html) Represents a list of users.
+[TdApi.Users](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Users.html) Represents a list of users.
 

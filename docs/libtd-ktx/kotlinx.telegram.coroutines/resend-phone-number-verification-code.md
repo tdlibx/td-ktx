@@ -6,11 +6,11 @@ title: resendPhoneNumberVerificationCode - libtd-ktx
 
 # resendPhoneNumberVerificationCode
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.resendPhoneNumberVerificationCode(): `[`AuthenticationCodeInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/AuthenticationCodeInfo.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.resendPhoneNumberVerificationCode(): `[`AuthenticationCodeInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.AuthenticationCodeInfo.html)
 
 Suspend function, which re-sends the code to verify a phone number to be added to a user's
 Telegram Passport.
 
 **Return**
-[AuthenticationCodeInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/AuthenticationCodeInfo.html) Information about the authentication code that was sent.
+[AuthenticationCodeInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.AuthenticationCodeInfo.html) Information about the authentication code that was sent.
 

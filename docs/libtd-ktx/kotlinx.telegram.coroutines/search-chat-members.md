@@ -6,7 +6,7 @@ title: searchChatMembers - libtd-ktx
 
 # searchChatMembers
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.searchChatMembers(chatId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, query: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, filter: `[`ChatMembersFilter`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatMembersFilter.html)`?): `[`ChatMembers`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatMembers.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.searchChatMembers(chatId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, query: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, filter: `[`ChatMembersFilter`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ChatMembersFilter.html)`?): `[`ChatMembers`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ChatMembers.html)
 
 Suspend function, which searches for a specified query in the first name, last name and username
 of the members of a specified chat. Requires administrator rights in channels.
@@ -22,5 +22,5 @@ of the members of a specified chat. Requires administrator rights in channels.
 `filter` - The type of users to return. By default, chatMembersFilterMembers.
 
 **Return**
-[ChatMembers](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatMembers.html) Contains a list of chat members.
+[ChatMembers](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ChatMembers.html) Contains a list of chat members.
 

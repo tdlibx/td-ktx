@@ -6,11 +6,11 @@ title: getConnectedWebsites - libtd-ktx
 
 # getConnectedWebsites
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getConnectedWebsites(): `[`ConnectedWebsites`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ConnectedWebsites.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getConnectedWebsites(): `[`ConnectedWebsites`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ConnectedWebsites.html)
 
 Suspend function, which returns all website where the current user used Telegram to log in.
 
 **Return**
-[ConnectedWebsites](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ConnectedWebsites.html) Contains a list of websites the current user is logged in with
+[ConnectedWebsites](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ConnectedWebsites.html) Contains a list of websites the current user is logged in with
 Telegram.
 

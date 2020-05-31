@@ -6,7 +6,7 @@ title: getJsonString - libtd-ktx
 
 # getJsonString
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getJsonString(jsonValue: `[`JsonValue`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/JsonValue.html)`?): `[`Text`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Text.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getJsonString(jsonValue: `[`JsonValue`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.JsonValue.html)`?): `[`Text`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Text.html)
 
 Suspend function, which converts a JsonValue object to corresponding JSON-serialized string. This
 is an offline method. Can be called before authorization. Can be called synchronously.
@@ -16,5 +16,5 @@ is an offline method. Can be called before authorization. Can be called synchron
 `jsonValue` - The JsonValue object.
 
 **Return**
-[Text](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Text.html) Contains some text.
+[Text](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Text.html) Contains some text.
 

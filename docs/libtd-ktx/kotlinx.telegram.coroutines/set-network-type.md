@@ -6,7 +6,7 @@ title: setNetworkType - libtd-ktx
 
 # setNetworkType
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.setNetworkType(type: `[`NetworkType`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/NetworkType.html)`?): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.setNetworkType(type: `[`NetworkType`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.NetworkType.html)`?): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
 
 Suspend function, which sets the current network type. Can be called before authorization.
 Calling this method forces all network connections to reopen, mitigating the delay in switching

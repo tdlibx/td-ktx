@@ -6,7 +6,7 @@ title: checkCreatedPublicChatsLimit - libtd-ktx
 
 # checkCreatedPublicChatsLimit
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.checkCreatedPublicChatsLimit(type: `[`PublicChatType`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/PublicChatType.html)`?): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.checkCreatedPublicChatsLimit(type: `[`PublicChatType`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.PublicChatType.html)`?): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
 
 Suspend function, which checks whether the maximum number of owned public chats has been reached.
 Returns corresponding error if the limit was reached.

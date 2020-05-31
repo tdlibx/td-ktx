@@ -6,7 +6,7 @@ title: createNewSupergroupChat - libtd-ktx
 
 # createNewSupergroupChat
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.createNewSupergroupChat(title: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, isChannel: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`, description: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, location: `[`ChatLocation`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatLocation.html)`?): `[`Chat`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.createNewSupergroupChat(title: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, isChannel: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`, description: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, location: `[`ChatLocation`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ChatLocation.html)`?): `[`Chat`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Chat.html)
 
 Suspend function, which creates a new supergroup or channel and sends a corresponding
 messageSupergroupChatCreate. Returns the newly created chat.
@@ -22,5 +22,5 @@ messageSupergroupChatCreate. Returns the newly created chat.
 `location` - Chat location if a location-based supergroup is being created.
 
 **Return**
-[Chat](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Chat.html) A chat. (Can be a private chat, basic group, supergroup, or secret chat.)
+[Chat](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Chat.html) A chat. (Can be a private chat, basic group, supergroup, or secret chat.)
 

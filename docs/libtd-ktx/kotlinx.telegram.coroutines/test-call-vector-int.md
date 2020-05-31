@@ -6,7 +6,7 @@ title: testCallVectorInt - libtd-ktx
 
 # testCallVectorInt
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.testCallVectorInt(x: `[`IntArray`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int-array/index.html)`?): `[`TestVectorInt`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/TestVectorInt.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.testCallVectorInt(x: `[`IntArray`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int-array/index.html)`?): `[`TestVectorInt`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.TestVectorInt.html)
 
 Suspend function, which returns the received vector of numbers; for testing only. This is an
 offline method. Can be called before authorization.
@@ -16,5 +16,5 @@ offline method. Can be called before authorization.
 `x` - Vector of numbers to return.
 
 **Return**
-[TestVectorInt](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/TestVectorInt.html) A simple object containing a vector of numbers; for testing only.
+[TestVectorInt](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.TestVectorInt.html) A simple object containing a vector of numbers; for testing only.
 

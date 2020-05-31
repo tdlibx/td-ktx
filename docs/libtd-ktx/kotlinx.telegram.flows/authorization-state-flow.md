@@ -6,7 +6,7 @@ title: authorizationStateFlow - libtd-ktx
 
 # authorizationStateFlow
 
-`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.authorizationStateFlow(): Flow<`[`AuthorizationState`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/AuthorizationState.html)`>`
+`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.authorizationStateFlow(): Flow<`[`AuthorizationState`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.AuthorizationState.html)`>`
 
-emits [AuthorizationState](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/AuthorizationState.html) if the user authorization state has changed.
+emits [AuthorizationState](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.AuthorizationState.html) if the user authorization state has changed.
 

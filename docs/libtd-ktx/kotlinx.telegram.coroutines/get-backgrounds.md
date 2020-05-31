@@ -6,7 +6,7 @@ title: getBackgrounds - libtd-ktx
 
 # getBackgrounds
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getBackgrounds(forDarkTheme: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`): `[`Backgrounds`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Backgrounds.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getBackgrounds(forDarkTheme: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`): `[`Backgrounds`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Backgrounds.html)
 
 Suspend function, which returns backgrounds installed by the user.
 
@@ -15,5 +15,5 @@ Suspend function, which returns backgrounds installed by the user.
 `forDarkTheme` - True, if the backgrounds needs to be ordered for dark theme.
 
 **Return**
-[Backgrounds](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Backgrounds.html) Contains a list of backgrounds.
+[Backgrounds](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Backgrounds.html) Contains a list of backgrounds.
 

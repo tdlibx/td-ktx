@@ -6,7 +6,7 @@ title: optionFlow - libtd-ktx
 
 # optionFlow
 
-`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.optionFlow(): Flow<`[`UpdateOption`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateOption.html)`>`
+`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.optionFlow(): Flow<`[`UpdateOption`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateOption.html)`>`
 
-emits [UpdateOption](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateOption.html) if an option changed its value.
+emits [UpdateOption](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateOption.html) if an option changed its value.
 

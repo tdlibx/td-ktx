@@ -6,7 +6,7 @@ title: getLocalizationTargetInfo - libtd-ktx
 
 # getLocalizationTargetInfo
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getLocalizationTargetInfo(onlyLocal: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`): `[`LocalizationTargetInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/LocalizationTargetInfo.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getLocalizationTargetInfo(onlyLocal: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`): `[`LocalizationTargetInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.LocalizationTargetInfo.html)
 
 Suspend function, which returns information about the current localization target. This is an
 offline request if onlyLocal is true. Can be called before authorization.
@@ -17,5 +17,5 @@ offline request if onlyLocal is true. Can be called before authorization.
 requests.
 
 **Return**
-[LocalizationTargetInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/LocalizationTargetInfo.html) Contains information about the current localization target.
+[LocalizationTargetInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.LocalizationTargetInfo.html) Contains information about the current localization target.
 

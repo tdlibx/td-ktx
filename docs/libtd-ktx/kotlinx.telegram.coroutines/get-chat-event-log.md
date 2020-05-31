@@ -6,7 +6,7 @@ title: getChatEventLog - libtd-ktx
 
 # getChatEventLog
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getChatEventLog(chatId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, query: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, fromEventId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, filters: `[`ChatEventLogFilters`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatEventLogFilters.html)`?, userIds: `[`IntArray`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int-array/index.html)`?): `[`ChatEvents`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatEvents.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getChatEventLog(chatId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, query: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, fromEventId: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, filters: `[`ChatEventLogFilters`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ChatEventLogFilters.html)`?, userIds: `[`IntArray`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int-array/index.html)`?): `[`ChatEvents`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ChatEvents.html)
 
 Suspend function, which returns a list of service actions taken by chat members and
 administrators in the last 48 hours. Available only for supergroups and channels. Requires
@@ -30,5 +30,5 @@ the latest events.
 users will be returned.
 
 **Return**
-[ChatEvents](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/ChatEvents.html) Contains a list of chat events.
+[ChatEvents](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.ChatEvents.html) Contains a list of chat events.
 

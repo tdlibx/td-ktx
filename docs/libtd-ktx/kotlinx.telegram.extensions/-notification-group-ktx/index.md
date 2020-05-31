@@ -8,7 +8,7 @@ title: NotificationGroupKtx - libtd-ktx
 
 `interface NotificationGroupKtx : `[`BaseKtx`](../-base-ktx/index.html)
 
-Interface for access [TdApi.NotificationGroup](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/NotificationGroup.html) extension functions. Can be used alongside with
+Interface for access [TdApi.NotificationGroup](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.NotificationGroup.html) extension functions. Can be used alongside with
 other extension interfaces of the package. Must contain [TelegramFlow](../../kotlinx.telegram.core/-telegram-flow/index.html) instance field to access its
 functionality
 
@@ -18,8 +18,8 @@ functionality
 
 ### Functions
 
-| [remove](remove.html) | Suspend function, which removes a group of active notifications. Needs to be called only if the notification group is removed by the current user.`open suspend fun `[`NotificationGroup`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/NotificationGroup.html)`.remove(maxNotificationId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
-| [removeNotification](remove-notification.html) | Suspend function, which removes an active notification from notification list. Needs to be called only if the notification is removed by the current user.`open suspend fun `[`NotificationGroup`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/NotificationGroup.html)`.removeNotification(notificationId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
+| [remove](remove.html) | Suspend function, which removes a group of active notifications. Needs to be called only if the notification group is removed by the current user.`open suspend fun `[`NotificationGroup`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.NotificationGroup.html)`.remove(maxNotificationId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
+| [removeNotification](remove-notification.html) | Suspend function, which removes an active notification from notification list. Needs to be called only if the notification is removed by the current user.`open suspend fun `[`NotificationGroup`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.NotificationGroup.html)`.removeNotification(notificationId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
 
 ### Inheritors
 

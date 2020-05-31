@@ -6,7 +6,7 @@ title: newCallbackQueryFlow - libtd-ktx
 
 # newCallbackQueryFlow
 
-`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.newCallbackQueryFlow(): Flow<`[`UpdateNewCallbackQuery`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateNewCallbackQuery.html)`>`
+`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.newCallbackQueryFlow(): Flow<`[`UpdateNewCallbackQuery`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateNewCallbackQuery.html)`>`
 
-emits [UpdateNewCallbackQuery](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateNewCallbackQuery.html) if a new incoming callback query; for bots only.
+emits [UpdateNewCallbackQuery](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateNewCallbackQuery.html) if a new incoming callback query; for bots only.
 

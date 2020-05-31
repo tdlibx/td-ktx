@@ -6,4 +6,4 @@ title: TelegramException.UnexpectedResult.<init> - libtd-ktx
 
 # &lt;init&gt;
 
-`UnexpectedResult(result: `[`Object`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Object.html)`)`
+`UnexpectedResult(result: `[`Object`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Object.html)`)`

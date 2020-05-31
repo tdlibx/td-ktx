@@ -6,7 +6,7 @@ title: searchContacts - libtd-ktx
 
 # searchContacts
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.searchContacts(query: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Users`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Users.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.searchContacts(query: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Users`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Users.html)
 
 Suspend function, which searches for the specified query in the first names, last names and
 usernames of the known user contacts.
@@ -18,5 +18,5 @@ usernames of the known user contacts.
 `limit` - The maximum number of users to be returned.
 
 **Return**
-[Users](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Users.html) Represents a list of users.
+[Users](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Users.html) Represents a list of users.
 

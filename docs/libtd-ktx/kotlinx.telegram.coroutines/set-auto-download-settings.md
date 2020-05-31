@@ -6,7 +6,7 @@ title: setAutoDownloadSettings - libtd-ktx
 
 # setAutoDownloadSettings
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.setAutoDownloadSettings(settings: `[`AutoDownloadSettings`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/AutoDownloadSettings.html)`?, type: `[`NetworkType`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/NetworkType.html)`?): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.setAutoDownloadSettings(settings: `[`AutoDownloadSettings`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.AutoDownloadSettings.html)`?, type: `[`NetworkType`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.NetworkType.html)`?): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
 
 Suspend function, which sets auto-download settings.
 

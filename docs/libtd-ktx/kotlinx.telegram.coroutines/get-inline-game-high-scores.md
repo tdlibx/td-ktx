@@ -6,7 +6,7 @@ title: getInlineGameHighScores - libtd-ktx
 
 # getInlineGameHighScores
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getInlineGameHighScores(inlineMessageId: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, userId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`GameHighScores`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/GameHighScores.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getInlineGameHighScores(inlineMessageId: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, userId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`GameHighScores`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.GameHighScores.html)
 
 Suspend function, which returns game high scores and some part of the high score table in the
 range of the specified user; for bots only.
@@ -18,5 +18,5 @@ range of the specified user; for bots only.
 `userId` - User identifier.
 
 **Return**
-[GameHighScores](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/GameHighScores.html) Contains a list of game high scores.
+[GameHighScores](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.GameHighScores.html) Contains a list of game high scores.
 

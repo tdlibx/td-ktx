@@ -6,8 +6,8 @@ title: newChosenInlineResultFlow - libtd-ktx
 
 # newChosenInlineResultFlow
 
-`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.newChosenInlineResultFlow(): Flow<`[`UpdateNewChosenInlineResult`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateNewChosenInlineResult.html)`>`
+`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.newChosenInlineResultFlow(): Flow<`[`UpdateNewChosenInlineResult`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateNewChosenInlineResult.html)`>`
 
-emits [UpdateNewChosenInlineResult](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateNewChosenInlineResult.html) if the user has chosen a result of an inline query; for bots
+emits [UpdateNewChosenInlineResult](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateNewChosenInlineResult.html) if the user has chosen a result of an inline query; for bots
 only.
 

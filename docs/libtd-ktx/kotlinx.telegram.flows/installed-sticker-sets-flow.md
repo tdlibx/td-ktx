@@ -6,7 +6,7 @@ title: installedStickerSetsFlow - libtd-ktx
 
 # installedStickerSetsFlow
 
-`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.installedStickerSetsFlow(): Flow<`[`UpdateInstalledStickerSets`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateInstalledStickerSets.html)`>`
+`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.installedStickerSetsFlow(): Flow<`[`UpdateInstalledStickerSets`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateInstalledStickerSets.html)`>`
 
-emits [UpdateInstalledStickerSets](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateInstalledStickerSets.html) if the list of installed sticker sets was updated.
+emits [UpdateInstalledStickerSets](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateInstalledStickerSets.html) if the list of installed sticker sets was updated.
 

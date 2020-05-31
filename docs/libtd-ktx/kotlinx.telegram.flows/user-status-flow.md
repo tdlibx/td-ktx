@@ -6,7 +6,7 @@ title: userStatusFlow - libtd-ktx
 
 # userStatusFlow
 
-`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.userStatusFlow(): Flow<`[`UpdateUserStatus`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateUserStatus.html)`>`
+`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.userStatusFlow(): Flow<`[`UpdateUserStatus`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateUserStatus.html)`>`
 
-emits [UpdateUserStatus](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateUserStatus.html) if the user went online or offline.
+emits [UpdateUserStatus](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateUserStatus.html) if the user went online or offline.
 

@@ -6,7 +6,7 @@ title: messageViewsFlow - libtd-ktx
 
 # messageViewsFlow
 
-`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.messageViewsFlow(): Flow<`[`UpdateMessageViews`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateMessageViews.html)`>`
+`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.messageViewsFlow(): Flow<`[`UpdateMessageViews`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateMessageViews.html)`>`
 
-emits [UpdateMessageViews](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateMessageViews.html) if the view count of the message has changed.
+emits [UpdateMessageViews](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateMessageViews.html) if the view count of the message has changed.
 

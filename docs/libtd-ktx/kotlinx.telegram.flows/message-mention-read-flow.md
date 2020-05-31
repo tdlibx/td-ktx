@@ -6,7 +6,7 @@ title: messageMentionReadFlow - libtd-ktx
 
 # messageMentionReadFlow
 
-`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.messageMentionReadFlow(): Flow<`[`UpdateMessageMentionRead`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateMessageMentionRead.html)`>`
+`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.messageMentionReadFlow(): Flow<`[`UpdateMessageMentionRead`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateMessageMentionRead.html)`>`
 
-emits [UpdateMessageMentionRead](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateMessageMentionRead.html) if a message with an unread mention was read.
+emits [UpdateMessageMentionRead](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateMessageMentionRead.html) if a message with an unread mention was read.
 

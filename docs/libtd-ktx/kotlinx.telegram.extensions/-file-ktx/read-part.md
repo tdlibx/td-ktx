@@ -6,7 +6,7 @@ title: FileKtx.readPart - libtd-ktx
 
 # readPart
 
-`open suspend fun `[`File`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/File.html)`.readPart(offset: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, count: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`FilePart`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/FilePart.html)
+`open suspend fun `[`File`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.File.html)`.readPart(offset: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, count: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`FilePart`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.FilePart.html)
 
 Suspend function, which reads a part of a file from the TDLib file cache and returns read
 bytes. This method is intended to be used only if the client has no direct access to TDLib's file
@@ -21,5 +21,5 @@ available in the file from the specified position. Pass 0 to read all available 
 specified position.
 
 **Return**
-[TdApi.FilePart](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/FilePart.html) Contains a part of a file.
+[TdApi.FilePart](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.FilePart.html) Contains a part of a file.
 

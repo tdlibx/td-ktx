@@ -6,7 +6,7 @@ title: chatUnreadMentionCountFlow - libtd-ktx
 
 # chatUnreadMentionCountFlow
 
-`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.chatUnreadMentionCountFlow(): Flow<`[`UpdateChatUnreadMentionCount`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateChatUnreadMentionCount.html)`>`
+`fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.chatUnreadMentionCountFlow(): Flow<`[`UpdateChatUnreadMentionCount`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateChatUnreadMentionCount.html)`>`
 
-emits [UpdateChatUnreadMentionCount](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/UpdateChatUnreadMentionCount.html) if the chat unreadMentionCount has changed.
+emits [UpdateChatUnreadMentionCount](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.UpdateChatUnreadMentionCount.html) if the chat unreadMentionCount has changed.
 

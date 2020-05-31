@@ -6,7 +6,7 @@ title: getBlockedUsers - libtd-ktx
 
 # getBlockedUsers
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getBlockedUsers(offset: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Users`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Users.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getBlockedUsers(offset: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Users`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Users.html)
 
 Suspend function, which returns users that were blocked by the current user.
 
@@ -17,5 +17,5 @@ Suspend function, which returns users that were blocked by the current user.
 `limit` - The maximum number of users to return; up to 100.
 
 **Return**
-[Users](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/Users.html) Represents a list of users.
+[Users](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.Users.html) Represents a list of users.
 

@@ -6,7 +6,7 @@ title: getBasicGroupFullInfo - libtd-ktx
 
 # getBasicGroupFullInfo
 
-`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getBasicGroupFullInfo(basicGroupId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`BasicGroupFullInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/BasicGroupFullInfo.html)
+`suspend fun `[`TelegramFlow`](../kotlinx.telegram.core/-telegram-flow/index.html)`.getBasicGroupFullInfo(basicGroupId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`BasicGroupFullInfo`](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.BasicGroupFullInfo.html)
 
 Suspend function, which returns full information about a basic group by its identifier.
 
@@ -15,5 +15,5 @@ Suspend function, which returns full information about a basic group by its iden
 `basicGroupId` - Basic group identifier.
 
 **Return**
-[BasicGroupFullInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi/BasicGroupFullInfo.html) Contains full information about a basic group.
+[BasicGroupFullInfo](https://tdlibx.github.io/td/docs/org/drinkless/td/libcore/telegram/TdApi.BasicGroupFullInfo.html) Contains full information about a basic group.
 
