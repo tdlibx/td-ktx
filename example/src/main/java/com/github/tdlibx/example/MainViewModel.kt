@@ -7,31 +7,24 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 class MainViewModel : ViewModel() {
 
     val error = MutableLiveData<String>()
-
-    val authState = TelegramRepository.authFlow.asLiveData()
-
+    val authState = TelegramRepository.authFlow.asLiveData(Dispatchers.Main)
     val newMessage = TelegramRepository.userInfoFlow.catch {
         error.postValue("message error ${it.message}")
     }.asLiveList()
 
-    init {
-        TelegramRepository.api.attachClient()
-    }
-
-
     fun <T> Flow<T>.asLiveList(
-        context: CoroutineContext = EmptyCoroutineContext,
+        context: CoroutineContext = Dispatchers.Main,
         timeoutInMs: Long = 5000L
     ): LiveData<List<T>> = liveData(context, timeoutInMs) {
         val arrayList = ArrayList<T>()

@@ -26,6 +26,10 @@ object TelegramRepository : UserKtx, ChatKtx {
 
     override val api: TelegramFlow = TelegramFlow()
 
+    init {
+        api.attachClient()
+    }
+
     val authFlow = api.authorizationStateFlow()
         .onEach {
             checkRequiredParams(it)
@@ -65,9 +69,7 @@ object TelegramRepository : UserKtx, ChatKtx {
 
     val userInfoFlow = flowOf(
         api.userFlow(),
-        api.userStatusFlow().map {
-            api.getUser(it.userId)
-        }
+        api.userStatusFlow().map { api.getUser(it.userId) }
     ).flattenMerge().map { user: TdApi.User ->
 
         if (api.getMe().id == user.id) "it's me!"
