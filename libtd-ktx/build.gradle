@@ -1,18 +1,15 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'org.jetbrains.dokka'
-
-apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.tdlibx.td-ktx'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+}
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "28.0.3"
+    compileSdk 31
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 29
+        minSdk 14
+        targetSdk 30
         versionCode 1
         versionName "1.0"
     }
@@ -27,24 +24,13 @@ android {
         // use this line to check all rules except those listed
         disable 'InvalidPackage'
     }
-
-    task dokkaMarkdown(type: org.jetbrains.dokka.gradle.DokkaTask) {
-        outputFormat = 'gfm'
-        outputDirectory = "$rootDir/wiki"
-        configuration {
-            includes = ['src/main/java/kotlinx/telegram/index.md']
-            externalDocumentationLink {
-                url = new URL("https://tdlibx.github.io/td/docs/")
-            }
-        }
-    }
 }
 
 dependencies {
     implementation 'com.github.tdlibx:td:1.6.0'
-    implementation "androidx.core:core-ktx:1.2.0"
+    implementation "androidx.core:core-ktx:1.6.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1"
 }
 repositories {
     mavenCentral()
