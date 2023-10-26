@@ -1,13 +1,13 @@
 package com.github.tdlibx.example
 
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
                             AuthState.EnterPhone -> vm.sendPhone(text.toString())
                             AuthState.EnterCode -> vm.sendCode(text.toString())
                             is AuthState.EnterPassword -> vm.sendPassword(text.toString())
+                            else -> {}
                         }
                     }
                     positiveButton(R.string.send)
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         vm.newMessage.observe(this, Observer {
-            helloStub.text = it.joinToString("\n")
+            findViewById<TextView>(R.id.helloStub).text = it.joinToString("\n")
         })
     }
 }
