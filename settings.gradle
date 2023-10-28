@@ -1,3 +1,4 @@
 rootProject.name='Telegram Flow'
 include ':libtd-ktx'
 include ':example'
+include ':app'
