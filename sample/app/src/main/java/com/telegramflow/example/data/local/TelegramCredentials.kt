@@ -6,7 +6,7 @@ import org.drinkless.td.libcore.telegram.TdApi
 
 object TelegramCredentials {
     val parameters = TdApi.TdlibParameters().apply {
-        databaseDirectory = "/data/user/0/com.telegramflow.example/files/td"
+        databaseDirectory = "/data/user/0/${BuildConfig.APPLICATION_ID}/files/td"
         useMessageDatabase = false
         useSecretChats = false
         useFileDatabase = true
