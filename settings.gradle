@@ -1,4 +1,4 @@
-rootProject.name='Telegram Flow'
-include ':libtd-ktx'
-include ':example'
-include ':app'
+rootProject.name = "Telegram Flow"
+include(":libtd-ktx")
+include(":sample:app")
+project(":sample:app").projectDir = file("sample/app")

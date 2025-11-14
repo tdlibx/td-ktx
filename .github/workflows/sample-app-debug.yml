@@ -1,0 +1,46 @@
+name: Sample app deep-debug build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  assemble-deep-debug:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build deepDebug APK
+        run: ./gradlew --no-daemon clean :sample:app:assembleDeepDebug
+
+      - name: Upload deepDebug APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sample-app-deep-debug
+          path: sample/app/build/outputs/apk/deepDebug/app-deep-debug.apk
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: deep-debug-${{ github.run_number }}
+          name: DeepDebug build #${{ github.run_number }}
+          body: |
+            Automated deepDebug build for commit ${{ github.sha }} on master.
+            This release contains the sample Compose client APK built from sample/app's deepDebug variant.
+          prerelease: true
+          files: sample/app/build/outputs/apk/deepDebug/app-deep-debug.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
