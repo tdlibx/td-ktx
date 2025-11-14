@@ -3,6 +3,38 @@
 Kotlin Coroutines extensions for Telegram API [TDLib](https://github.com/tdlib/td) (Telegram Database
  library)
 
+## Sample Compose client
+
+The legacy XML sample has been removed and the modern Compose-only sample application now lives under
+[`sample/app`](sample/app). It targets the latest Android SDKs, uses Material 3 components, and is the
+source that is built in CI for every `master` update. You can open the root project in Android Studio
+and run the `sample-app` configuration to try it locally.
+
+## Automated debug releases
+
+Each push to the `master` branch triggers the [Sample app deep-debug build](.github/workflows/sample-app-debug.yml)
+workflow. The pipeline builds the dedicated `deepDebug` variant from `sample/app`, stores the generated
+`app-deep-debug.apk` as a workflow artifact, and publishes a prerelease on the repository's Releases page.
+Binary artifacts are intentionally not committed to source control; download the latest debug APK directly
+from the Releases tab after CI finishes.
+
+If you need the TDLib Java bindings locally, download the prebuilt archive from the
+[tdlibx/td releases page](https://github.com/tdlibx/td/releases) or declare the existing dependency
+`com.github.tdlibx:td:1.6.0` in your Gradle project instead of adding `.jar` files to this repository.
+
+### Gradle wrapper
+
+The repository keeps only the `gradlew` scripts and wrapper properties in Git. Fetch the
+matching `gradle-wrapper.jar` from the official Gradle distribution service if you need to run
+the wrapper locally:
+
+1. Download [`gradle-8.2.1-bin.zip`](https://services.gradle.org/distributions/gradle-8.2.1-bin.zip).
+2. Extract `gradle-8.2.1/lib/gradle-wrapper.jar` from the archive.
+3. Copy it into `gradle/wrapper/gradle-wrapper.jar` before invoking `./gradlew`.
+
+Alternatively, run `gradle wrapper --gradle-version 8.2.1` from a machine with Gradle installed to
+regenerate the file.
+
 ## Using library
 
 The main class of the library is [TelegramFlow]. It converts Telegram Updates handlers to the
