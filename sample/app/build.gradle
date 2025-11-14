@@ -24,16 +24,16 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         benchmark {
             signingConfig signingConfigs.debug
             matchingFallbacks = ['release']
-            isDebuggable = false
+            debuggable = false
         }
         debug {
-            isDebuggable = true
+            debuggable = true
         }
         create("deepDebug") {
             initWith(getByName("debug"))
@@ -41,7 +41,7 @@ android {
             versionNameSuffix "-deep-debug"
             matchingFallbacks = ['debug']
             signingConfig signingConfigs.debug
-            isDebuggable = true
+            debuggable = true
         }
     }
     compileOptions {
