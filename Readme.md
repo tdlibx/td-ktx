@@ -28,11 +28,11 @@ The repository keeps only the `gradlew` scripts and wrapper properties in Git. F
 matching `gradle-wrapper.jar` from the official Gradle distribution service if you need to run
 the wrapper locally:
 
-1. Download [`gradle-8.2.1-bin.zip`](https://services.gradle.org/distributions/gradle-8.2.1-bin.zip).
-2. Extract `gradle-8.2.1/lib/gradle-wrapper.jar` from the archive.
+1. Download [`gradle-8.14.3-bin.zip`](https://services.gradle.org/distributions/gradle-8.14.3-bin.zip).
+2. Extract `gradle-8.14.3/lib/gradle-wrapper.jar` from the archive.
 3. Copy it into `gradle/wrapper/gradle-wrapper.jar` before invoking `./gradlew`.
 
-Alternatively, run `gradle wrapper --gradle-version 8.2.1` from a machine with Gradle installed to
+Alternatively, run `gradle wrapper --gradle-version 8.14.3` from a machine with Gradle installed to
 regenerate the file.
 
 ## Using library
