@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sample-app-deep-debug
-          path: sample/app/build/outputs/apk/deepDebug/app-deep-debug.apk
+          path: sample/app/build/outputs/apk/deepDebug/*.apk
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v1
@@ -41,6 +41,6 @@ jobs:
             Automated deepDebug build for commit ${{ github.sha }} on master.
             This release contains the sample Compose client APK built from sample/app's deepDebug variant.
           prerelease: true
-          files: sample/app/build/outputs/apk/deepDebug/app-deep-debug.apk
+          files: sample/app/build/outputs/apk/deepDebug/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
