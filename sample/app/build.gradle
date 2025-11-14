@@ -5,6 +5,20 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+def readTelegramCredential(String propertyKey, String envKey) {
+    def propertyValue = project.findProperty(propertyKey)?.toString()?.trim()
+    if (propertyValue) {
+        return propertyValue
+    }
+
+    def envValue = System.getenv(envKey)?.toString()?.trim()
+    if (envValue) {
+        return envValue
+    }
+
+    throw new GradleException("Missing Telegram credential. Provide '$propertyKey' Gradle property or '$envKey' environment variable.")
+}
+
 android {
     namespace 'com.telegramflow.example'
     compileSdk 34
@@ -15,6 +29,12 @@ android {
         targetSdk 34
         versionCode 20240621
         versionName "0.1.0"
+
+        def telegramAppId = readTelegramCredential("telegramAppId", "TELEGRAM_APP_ID").toInteger()
+        def telegramAppHash = readTelegramCredential("telegramAppHash", "TELEGRAM_APP_HASH")
+
+        buildConfigField "int", "TELEGRAM_APP_ID", telegramAppId.toString()
+        buildConfigField "String", "TELEGRAM_APP_HASH", "\"${telegramAppHash}\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -53,6 +73,7 @@ android {
     }
     buildFeatures {
         compose true
+        buildConfig true
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_compiler_version

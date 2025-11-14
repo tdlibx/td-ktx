@@ -1,9 +1,9 @@
 package com.telegramflow.example.data.local
 
+import com.telegramflow.example.BuildConfig
 import org.drinkless.td.libcore.telegram.TdApi
 
 
-//Replace with your personal telegram credentials
 object TelegramCredentials {
     val parameters = TdApi.TdlibParameters().apply {
         databaseDirectory = "/data/user/0/com.telegramflow.example/files/td"
@@ -14,6 +14,8 @@ object TelegramCredentials {
         deviceModel = "Android"
         systemVersion = "Example"
         applicationVersion = "1.0"
+        apiId = BuildConfig.TELEGRAM_APP_ID
+        apiHash = BuildConfig.TELEGRAM_APP_HASH
         enableStorageOptimizer = true
     }
 }
