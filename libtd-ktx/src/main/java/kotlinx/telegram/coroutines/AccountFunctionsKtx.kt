@@ -8,7 +8,7 @@ import kotlin.Boolean
 import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.AccountTtl
 import org.drinkless.tdlib.TdApi.GiftSettings
 import org.drinkless.tdlib.TdApi.HttpUrl

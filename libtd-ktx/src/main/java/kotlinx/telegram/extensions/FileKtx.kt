@@ -27,7 +27,7 @@ import kotlinx.telegram.coroutines.removeProfileAudio
 import kotlinx.telegram.coroutines.reportChatPhoto
 import kotlinx.telegram.coroutines.setProfileAudioPosition
 import kotlinx.telegram.coroutines.toggleDownloadIsPaused
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.File
 import org.drinkless.tdlib.TdApi.InputStoryContent
 import org.drinkless.tdlib.TdApi.ReportReason

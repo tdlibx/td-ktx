@@ -7,7 +7,7 @@ package kotlinx.telegram.coroutines
 import kotlin.Int
 import kotlin.Long
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 
 /**
  * Suspend function, which changes accent color and background custom emoji for the current user;

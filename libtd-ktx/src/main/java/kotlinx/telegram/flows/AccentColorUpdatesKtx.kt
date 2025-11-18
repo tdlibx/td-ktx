@@ -6,7 +6,7 @@ package kotlinx.telegram.flows
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.UpdateAccentColors
 import org.drinkless.tdlib.TdApi.UpdateProfileAccentColors
 

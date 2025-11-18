@@ -10,7 +10,7 @@ import kotlin.Long
 import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.ChatEventLogFilters
 import org.drinkless.tdlib.TdApi.ChatEvents
 import org.drinkless.tdlib.TdApi.HttpUrl

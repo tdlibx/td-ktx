@@ -9,7 +9,7 @@ import kotlin.Double
 import kotlin.Int
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.HttpUrl
 import org.drinkless.tdlib.TdApi.Proxy
 import org.drinkless.tdlib.TdApi.ProxyType

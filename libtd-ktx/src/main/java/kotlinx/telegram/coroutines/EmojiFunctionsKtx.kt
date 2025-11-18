@@ -10,7 +10,7 @@ import kotlin.Long
 import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.AnimatedEmoji
 import org.drinkless.tdlib.TdApi.EmojiCategories
 import org.drinkless.tdlib.TdApi.EmojiCategoryType

@@ -8,7 +8,7 @@ import kotlin.Long
 import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.setChatProfileAccentColor
 import kotlinx.telegram.coroutines.setProfileAccentColor
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.ProfileAccentColor
 
 /**

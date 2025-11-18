@@ -3,8 +3,8 @@ package kotlinx.telegram.core
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.filterIsInstance
-import org.drinkless.td.libcore.telegram.Client
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.Client
+import org.drinkless.tdlib.TdApi
 import java.io.Closeable
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -35,7 +35,6 @@ class TelegramFlow(
         if (client != null) return // client is already attached
 
         client = existingClient
-            ?.also { it.setUpdatesHandler { resultHandler } }
             ?: Client.create(
                 resultHandler,
                 null,
@@ -59,7 +58,7 @@ class TelegramFlow(
      * @throws TelegramException.ClientNotAttached if TdApi client has not attached yet
      */
     suspend inline fun <reified ExpectedResult : TdApi.Object>
-        sendFunctionAsync(function: TdApi.Function): ExpectedResult =
+        sendFunctionAsync(function: TdApi.Function<ExpectedResult>): ExpectedResult =
         suspendCoroutine { continuation ->
             val resultHandler: (TdApi.Object) -> Unit = { result ->
                 when (result) {
@@ -87,7 +86,7 @@ class TelegramFlow(
      * @throws TelegramException.UnexpectedResult if TdApi request returns an unexpected result
      * @throws TelegramException.ClientNotAttached if TdApi client has not attached yet
      */
-    suspend fun sendFunctionLaunch(function: TdApi.Function) {
+    suspend fun sendFunctionLaunch(function: TdApi.Function<TdApi.Ok>) {
         sendFunctionAsync<TdApi.Ok>(function)
     }
 
@@ -95,6 +94,6 @@ class TelegramFlow(
      * Closes Client.
      */
     override fun close() {
-        client?.close()
+//        client?.close()
     }
 }

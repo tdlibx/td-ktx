@@ -27,7 +27,7 @@ import kotlinx.telegram.coroutines.reportStory
 import kotlinx.telegram.coroutines.setStoryPrivacySettings
 import kotlinx.telegram.coroutines.setStoryReaction
 import kotlinx.telegram.coroutines.toggleStoryIsPostedToChatPage
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.FormattedText
 import org.drinkless.tdlib.TdApi.InputStoryAreas
 import org.drinkless.tdlib.TdApi.InputStoryContent

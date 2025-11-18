@@ -16,7 +16,7 @@ import kotlinx.telegram.coroutines.searchPublicStoriesByVenue
 import kotlinx.telegram.coroutines.sendPaymentForm
 import kotlinx.telegram.coroutines.setSupergroupStickerSet
 import kotlinx.telegram.coroutines.setUpgradedGiftColors
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.Background
 import org.drinkless.tdlib.TdApi.FileType
 import org.drinkless.tdlib.TdApi.InputCredentials

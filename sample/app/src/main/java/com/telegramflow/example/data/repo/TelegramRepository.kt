@@ -1,7 +1,7 @@
 package com.telegramflow.example.data.repo
 
+import com.telegramflow.example.BuildConfig
 import com.telegramflow.example.data.local.AuthState
-import com.telegramflow.example.data.local.TelegramCredentials
 import kotlinx.coroutines.flow.flattenMerge
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -12,7 +12,6 @@ import kotlinx.telegram.core.TelegramException
 import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.checkAuthenticationCode
 import kotlinx.telegram.coroutines.checkAuthenticationPassword
-import kotlinx.telegram.coroutines.checkDatabaseEncryptionKey
 import kotlinx.telegram.coroutines.getChat
 import kotlinx.telegram.coroutines.getChats
 import kotlinx.telegram.coroutines.getMe
@@ -26,9 +25,8 @@ import kotlinx.telegram.flows.authorizationStateFlow
 import kotlinx.telegram.flows.chatLastMessageFlow
 import kotlinx.telegram.flows.userFlow
 import kotlinx.telegram.flows.userStatusFlow
-import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.ChatListMain
-import org.drinkless.td.libcore.telegram.TdApi.MessageText
+import org.drinkless.tdlib.TdApi
+import org.drinkless.tdlib.TdApi.MessageText
 
 // TODO Hilt injection
 object TelegramRepository : UserKtx, ChatKtx {
@@ -52,10 +50,25 @@ object TelegramRepository : UserKtx, ChatKtx {
     private suspend fun checkRequiredParams(state: TdApi.AuthorizationState?) {
         when (state) {
             is TdApi.AuthorizationStateWaitTdlibParameters ->
-                api.setTdlibParameters(TelegramCredentials.parameters)
+                api.setTdlibParameters(
+                    databaseDirectory = "/data/user/0/${BuildConfig.APPLICATION_ID}/files/td",
+                    useMessageDatabase = false,
+                    useSecretChats = false,
+                    useFileDatabase = true,
+                    systemLanguageCode = "en",
+                    deviceModel = "Android",
+                    systemVersion = "Example",
+                    applicationVersion = "1.1",
+                    apiId = BuildConfig.TELEGRAM_APP_ID,
+                    apiHash = BuildConfig.TELEGRAM_APP_HASH,
+                    useTestDc = false,
+                    filesDirectory = "/data/user/0/${BuildConfig.APPLICATION_ID}/files/td",
+                    databaseEncryptionKey = null,
+                    useChatInfoDatabase = false
+                )
 
-            is TdApi.AuthorizationStateWaitEncryptionKey ->
-                api.checkDatabaseEncryptionKey(null)
+//            is TdApi.AuthorizationStateWaitEncryptionKey ->
+//                api.checkDatabaseEncryptionKey(null)
         }
     }
 
@@ -73,15 +86,6 @@ object TelegramRepository : UserKtx, ChatKtx {
         )
     }
 
-    suspend fun searchMessages(page: Int, loadSize: Long): Any {
-        val chats = api.getChats(ChatListMain(), page * loadSize, loadSize, 0)
-        return chats.chatIds
-    }
-
-    suspend fun getRecentChats() {
-        api.getChats(ChatListMain(), 0, 0, 10)
-    }
-
     val userOnlineFlow = api.userStatusFlow().map {
         api.getUser(it.userId)
     }
@@ -89,7 +93,8 @@ object TelegramRepository : UserKtx, ChatKtx {
     //chatmess huitter
     val messageFlow = api.chatLastMessageFlow().mapNotNull { message ->
         val chat = api.getChat(message.chatId)
-        val messageText = message.lastMessage?.id?.let { api.getMessage(chat.id, it).content } as? MessageText
+        val messageText =
+            message.lastMessage?.id?.let { api.getMessage(chat.id, it).content } as? MessageText
         messageText
     }
 

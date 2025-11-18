@@ -52,7 +52,7 @@ import kotlinx.telegram.coroutines.suggestUserBirthdate
 import kotlinx.telegram.coroutines.suggestUserProfilePhoto
 import kotlinx.telegram.coroutines.transferChatOwnership
 import kotlinx.telegram.coroutines.uploadStickerFile
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.Birthdate
 import org.drinkless.tdlib.TdApi.BotMenuButton
 import org.drinkless.tdlib.TdApi.CallProtocol

@@ -37,7 +37,7 @@ import kotlinx.telegram.coroutines.stopBusinessPoll
 import kotlinx.telegram.coroutines.transferBusinessAccountStars
 import kotlinx.telegram.coroutines.transferGift
 import kotlinx.telegram.coroutines.upgradeGift
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.BusinessConnection
 import org.drinkless.tdlib.TdApi.ChatAction
 import org.drinkless.tdlib.TdApi.FormattedText

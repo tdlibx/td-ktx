@@ -5,7 +5,7 @@
 package kotlinx.telegram.coroutines
 
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.AutosaveSettings
 import org.drinkless.tdlib.TdApi.AutosaveSettingsScope
 import org.drinkless.tdlib.TdApi.ScopeAutosaveSettings

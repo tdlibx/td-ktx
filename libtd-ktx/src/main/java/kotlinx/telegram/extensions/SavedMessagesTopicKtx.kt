@@ -17,7 +17,7 @@ import kotlinx.telegram.coroutines.getSavedMessagesTopicHistory
 import kotlinx.telegram.coroutines.getSavedMessagesTopicMessageByDate
 import kotlinx.telegram.coroutines.searchSavedMessages
 import kotlinx.telegram.coroutines.toggleSavedMessagesTopicIsPinned
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.ReactionType
 import org.drinkless.tdlib.TdApi.SavedMessagesTopic
 import org.drinkless.tdlib.TdApi.SearchMessagesFilter

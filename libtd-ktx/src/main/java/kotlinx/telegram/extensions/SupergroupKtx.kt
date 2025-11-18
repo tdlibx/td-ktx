@@ -35,7 +35,7 @@ import kotlinx.telegram.coroutines.toggleSupergroupJoinByRequest
 import kotlinx.telegram.coroutines.toggleSupergroupJoinToSendMessages
 import kotlinx.telegram.coroutines.toggleSupergroupSignMessages
 import kotlinx.telegram.coroutines.toggleSupergroupUsernameIsActive
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.ProfileTab
 import org.drinkless.tdlib.TdApi.Supergroup
 import org.drinkless.tdlib.TdApi.SupergroupMembersFilter

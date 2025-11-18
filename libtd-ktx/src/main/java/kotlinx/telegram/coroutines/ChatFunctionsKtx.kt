@@ -12,7 +12,7 @@ import kotlin.Long
 import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.AffiliateProgramParameters
 import org.drinkless.tdlib.TdApi.ArchiveChatListSettings
 import org.drinkless.tdlib.TdApi.BackgroundType

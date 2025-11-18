@@ -5,7 +5,7 @@
 package kotlinx.telegram.extensions
 
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 
 /**
  * Base extensions interface

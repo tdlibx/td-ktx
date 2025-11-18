@@ -7,7 +7,7 @@ package kotlinx.telegram.coroutines
 import kotlin.Array
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.LanguagePackInfo
 import org.drinkless.tdlib.TdApi.LanguagePackString
 import org.drinkless.tdlib.TdApi.LanguagePackStringValue

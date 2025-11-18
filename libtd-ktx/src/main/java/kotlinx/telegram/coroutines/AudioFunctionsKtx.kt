@@ -6,7 +6,7 @@ package kotlinx.telegram.coroutines
 
 import kotlin.Int
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 
 /**
  * Suspend function, which adds an audio file to the beginning of the profile audio files of the

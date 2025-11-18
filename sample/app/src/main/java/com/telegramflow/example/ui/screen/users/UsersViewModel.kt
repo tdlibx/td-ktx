@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.drinkless.td.libcore.telegram.TdApi.UserStatusOnline
+import org.drinkless.tdlib.TdApi
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +23,7 @@ class UsersViewModel @Inject constructor() : ViewModel() {
                             User(
                                 it.firstName,
                                 it.lastName,
-                                it.status is UserStatusOnline
+                                it.status is TdApi.UserStatusOnline
                             )
                 )
             }

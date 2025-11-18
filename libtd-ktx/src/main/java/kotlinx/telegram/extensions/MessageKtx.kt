@@ -88,7 +88,7 @@ import kotlinx.telegram.coroutines.stopBusinessPoll
 import kotlinx.telegram.coroutines.stopPoll
 import kotlinx.telegram.coroutines.translateMessageText
 import kotlinx.telegram.coroutines.unpinChatMessage
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.CallbackQueryPayload
 import org.drinkless.tdlib.TdApi.FormattedText
 import org.drinkless.tdlib.TdApi.InputChecklist

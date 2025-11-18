@@ -8,7 +8,7 @@ import kotlin.Array
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.Chat
 import org.drinkless.tdlib.TdApi.ChatActiveStories
 import org.drinkless.tdlib.TdApi.DirectMessagesChatTopic

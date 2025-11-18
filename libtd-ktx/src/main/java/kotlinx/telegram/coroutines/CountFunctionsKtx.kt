@@ -8,7 +8,7 @@ import kotlin.Boolean
 import kotlin.Int
 import kotlin.Long
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.Count
 import org.drinkless.tdlib.TdApi.Countries
 import org.drinkless.tdlib.TdApi.Text

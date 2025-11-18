@@ -10,7 +10,7 @@ import kotlinx.telegram.coroutines.confirmSession
 import kotlinx.telegram.coroutines.terminateSession
 import kotlinx.telegram.coroutines.toggleSessionCanAcceptCalls
 import kotlinx.telegram.coroutines.toggleSessionCanAcceptSecretChats
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.Session
 
 /**

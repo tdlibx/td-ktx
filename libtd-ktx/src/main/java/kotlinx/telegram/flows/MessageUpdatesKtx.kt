@@ -9,7 +9,7 @@ import kotlin.Long
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.Message
 import org.drinkless.tdlib.TdApi.SavedMessagesTopic
 import org.drinkless.tdlib.TdApi.UpdateAnimatedEmojiMessageClicked

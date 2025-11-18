@@ -8,7 +8,7 @@ import kotlin.Int
 import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.FoundStories
 import org.drinkless.tdlib.TdApi.LocationAddress
 import org.drinkless.tdlib.TdApi.StoryList

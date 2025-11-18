@@ -13,7 +13,7 @@ import kotlinx.telegram.coroutines.enableProxy
 import kotlinx.telegram.coroutines.getProxyLink
 import kotlinx.telegram.coroutines.pingProxy
 import kotlinx.telegram.coroutines.removeProxy
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.Proxy
 import org.drinkless.tdlib.TdApi.ProxyType
 

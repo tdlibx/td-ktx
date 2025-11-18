@@ -11,7 +11,7 @@ import kotlin.IntArray
 import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.AvailableGifts
 import org.drinkless.tdlib.TdApi.CanSendGiftResult
 import org.drinkless.tdlib.TdApi.FormattedText

@@ -8,7 +8,7 @@ import kotlin.Int
 import kotlin.IntArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 
 /**
  * Suspend function, which checks validness of a name for a quick reply shortcut. Can be called

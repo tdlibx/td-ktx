@@ -9,7 +9,7 @@ import kotlin.Int
 import kotlin.Long
 import kotlin.LongArray
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.ChatMembers
 import org.drinkless.tdlib.TdApi.Supergroup
 import org.drinkless.tdlib.TdApi.SupergroupFullInfo

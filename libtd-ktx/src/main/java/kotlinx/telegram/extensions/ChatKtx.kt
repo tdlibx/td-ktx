@@ -261,7 +261,7 @@ import kotlinx.telegram.coroutines.unpinAllForumTopicMessages
 import kotlinx.telegram.coroutines.unpinChatMessage
 import kotlinx.telegram.coroutines.upgradeBasicGroupChatToSupergroupChat
 import kotlinx.telegram.coroutines.viewMessages
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.AffiliateProgramParameters
 import org.drinkless.tdlib.TdApi.BackgroundType
 import org.drinkless.tdlib.TdApi.CallbackQueryPayload

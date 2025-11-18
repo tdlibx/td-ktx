@@ -7,7 +7,7 @@ package kotlinx.telegram.extensions
 import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.getSavedNotificationSound
 import kotlinx.telegram.coroutines.removeSavedNotificationSound
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.NotificationSound
 
 /**

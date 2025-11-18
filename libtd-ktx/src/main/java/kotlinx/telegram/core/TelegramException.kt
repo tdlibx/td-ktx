@@ -1,6 +1,6 @@
 package kotlinx.telegram.core
 
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 
 sealed class TelegramException(message: String) : Throwable(message) {
     object ClientNotAttached :

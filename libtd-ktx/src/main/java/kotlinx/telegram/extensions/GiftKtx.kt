@@ -13,7 +13,7 @@ import kotlinx.telegram.coroutines.canSendGift
 import kotlinx.telegram.coroutines.getGiftUpgradePreview
 import kotlinx.telegram.coroutines.searchGiftsForResale
 import kotlinx.telegram.coroutines.sendGift
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.FormattedText
 import org.drinkless.tdlib.TdApi.Gift
 import org.drinkless.tdlib.TdApi.GiftForResaleOrder

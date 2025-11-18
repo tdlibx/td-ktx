@@ -9,7 +9,7 @@ import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.createBasicGroupChat
 import kotlinx.telegram.coroutines.getBasicGroup
 import kotlinx.telegram.coroutines.getBasicGroupFullInfo
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.BasicGroup
 
 /**

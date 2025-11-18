@@ -7,7 +7,7 @@ package kotlinx.telegram.coroutines
 import kotlin.ByteArray
 import kotlin.Long
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.ReportSponsoredResult
 import org.drinkless.tdlib.TdApi.VideoMessageAdvertisements
 

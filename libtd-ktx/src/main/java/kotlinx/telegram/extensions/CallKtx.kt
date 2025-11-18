@@ -17,7 +17,7 @@ import kotlinx.telegram.coroutines.sendCallDebugInformation
 import kotlinx.telegram.coroutines.sendCallLog
 import kotlinx.telegram.coroutines.sendCallRating
 import kotlinx.telegram.coroutines.sendCallSignalingData
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.Call
 import org.drinkless.tdlib.TdApi.CallProblem
 import org.drinkless.tdlib.TdApi.CallProtocol

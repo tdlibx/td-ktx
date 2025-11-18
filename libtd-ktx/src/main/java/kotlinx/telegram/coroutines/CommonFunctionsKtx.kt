@@ -13,7 +13,7 @@ import kotlin.Long
 import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.AffiliateProgramSortOrder
 import org.drinkless.tdlib.TdApi.AffiliateType
 import org.drinkless.tdlib.TdApi.AttachmentMenuBot

@@ -8,7 +8,7 @@ import kotlin.Int
 import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.removeNotification
 import kotlinx.telegram.coroutines.removeNotificationGroup
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.NotificationGroup
 
 /**

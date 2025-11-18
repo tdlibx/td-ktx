@@ -42,7 +42,7 @@ import kotlinx.telegram.coroutines.toggleGroupCallParticipantIsMuted
 import kotlinx.telegram.coroutines.toggleGroupCallScreenSharingIsPaused
 import kotlinx.telegram.coroutines.toggleVideoChatEnabledStartNotification
 import kotlinx.telegram.coroutines.toggleVideoChatMuteNewParticipants
-import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.FormattedText
 import org.drinkless.tdlib.TdApi.GroupCall
 import org.drinkless.tdlib.TdApi.GroupCallDataChannel
