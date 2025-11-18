@@ -20,7 +20,7 @@ from the Releases tab after CI finishes.
 
 If you need the TDLib Java bindings locally, download the prebuilt archive from the
 [tdlibx/td releases page](https://github.com/tdlibx/td/releases) or declare the existing dependency
-`com.github.tdlibx:td:1.6.0` in your Gradle project instead of adding `.jar` files to this repository.
+`com.github.tdlibx:td:1.8.6` in your Gradle project instead of adding `.jar` files to this repository.
 
 ### Gradle wrapper
 
