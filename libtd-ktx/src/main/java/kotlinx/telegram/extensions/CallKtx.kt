@@ -18,10 +18,10 @@ import kotlinx.telegram.coroutines.sendCallLog
 import kotlinx.telegram.coroutines.sendCallRating
 import kotlinx.telegram.coroutines.sendCallSignalingData
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Call
-import org.drinkless.td.libcore.telegram.TdApi.CallProblem
-import org.drinkless.td.libcore.telegram.TdApi.CallProtocol
-import org.drinkless.td.libcore.telegram.TdApi.InputFile
+import org.drinkless.tdlib.TdApi.Call
+import org.drinkless.tdlib.TdApi.CallProblem
+import org.drinkless.tdlib.TdApi.CallProtocol
+import org.drinkless.tdlib.TdApi.InputFile
 
 /**
  * Interface for access [TdApi.Call] extension functions. Can be used alongside with other extension

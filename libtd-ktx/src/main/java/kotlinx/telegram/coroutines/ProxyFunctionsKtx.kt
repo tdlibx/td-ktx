@@ -10,10 +10,10 @@ import kotlin.Int
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.HttpUrl
-import org.drinkless.td.libcore.telegram.TdApi.Proxy
-import org.drinkless.td.libcore.telegram.TdApi.ProxyType
-import org.drinkless.td.libcore.telegram.TdApi.Seconds
+import org.drinkless.tdlib.TdApi.HttpUrl
+import org.drinkless.tdlib.TdApi.Proxy
+import org.drinkless.tdlib.TdApi.ProxyType
+import org.drinkless.tdlib.TdApi.Seconds
 
 /**
  * Suspend function, which adds a proxy server for network requests. Can be called before

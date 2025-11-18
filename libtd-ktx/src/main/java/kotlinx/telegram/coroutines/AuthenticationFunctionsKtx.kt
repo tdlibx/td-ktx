@@ -10,9 +10,9 @@ import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.ResendCodeReason
-import org.drinkless.td.libcore.telegram.TdApi.Session
-import org.drinkless.td.libcore.telegram.TdApi.StoreTransaction
+import org.drinkless.tdlib.TdApi.ResendCodeReason
+import org.drinkless.tdlib.TdApi.Session
+import org.drinkless.tdlib.TdApi.StoreTransaction
 
 /**
  * Suspend function, which checks the authentication token of a bot; to log in as a bot. Works only

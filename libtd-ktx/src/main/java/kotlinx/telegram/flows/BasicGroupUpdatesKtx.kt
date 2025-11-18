@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.BasicGroup
-import org.drinkless.td.libcore.telegram.TdApi.UpdateBasicGroupFullInfo
+import org.drinkless.tdlib.TdApi.BasicGroup
+import org.drinkless.tdlib.TdApi.UpdateBasicGroupFullInfo
 
 /**
  * emits [BasicGroup] if some data of a basic group has changed. This update is guaranteed to come

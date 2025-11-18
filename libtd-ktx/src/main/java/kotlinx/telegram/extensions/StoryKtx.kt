@@ -28,12 +28,12 @@ import kotlinx.telegram.coroutines.setStoryPrivacySettings
 import kotlinx.telegram.coroutines.setStoryReaction
 import kotlinx.telegram.coroutines.toggleStoryIsPostedToChatPage
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.FormattedText
-import org.drinkless.td.libcore.telegram.TdApi.InputStoryAreas
-import org.drinkless.td.libcore.telegram.TdApi.InputStoryContent
-import org.drinkless.td.libcore.telegram.TdApi.ReactionType
-import org.drinkless.td.libcore.telegram.TdApi.Story
-import org.drinkless.td.libcore.telegram.TdApi.StoryPrivacySettings
+import org.drinkless.tdlib.TdApi.FormattedText
+import org.drinkless.tdlib.TdApi.InputStoryAreas
+import org.drinkless.tdlib.TdApi.InputStoryContent
+import org.drinkless.tdlib.TdApi.ReactionType
+import org.drinkless.tdlib.TdApi.Story
+import org.drinkless.tdlib.TdApi.StoryPrivacySettings
 
 /**
  * Interface for access [TdApi.Story] extension functions. Can be used alongside with other

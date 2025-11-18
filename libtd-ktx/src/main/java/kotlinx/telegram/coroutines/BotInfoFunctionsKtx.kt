@@ -8,7 +8,7 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Text
+import org.drinkless.tdlib.TdApi.Text
 
 /**
  * Suspend function, which returns the text shown in the chat with a bot if the chat is empty in the

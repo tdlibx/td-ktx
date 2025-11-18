@@ -11,17 +11,17 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Data
-import org.drinkless.td.libcore.telegram.TdApi.Error
-import org.drinkless.td.libcore.telegram.TdApi.File
-import org.drinkless.td.libcore.telegram.TdApi.FileDownloadedPrefixSize
-import org.drinkless.td.libcore.telegram.TdApi.FileType
-import org.drinkless.td.libcore.telegram.TdApi.FoundFileDownloads
-import org.drinkless.td.libcore.telegram.TdApi.InputFile
-import org.drinkless.td.libcore.telegram.TdApi.Location
-import org.drinkless.td.libcore.telegram.TdApi.MessageFileType
-import org.drinkless.td.libcore.telegram.TdApi.StickerFormat
-import org.drinkless.td.libcore.telegram.TdApi.Text
+import org.drinkless.tdlib.TdApi.Data
+import org.drinkless.tdlib.TdApi.Error
+import org.drinkless.tdlib.TdApi.File
+import org.drinkless.tdlib.TdApi.FileDownloadedPrefixSize
+import org.drinkless.tdlib.TdApi.FileType
+import org.drinkless.tdlib.TdApi.FoundFileDownloads
+import org.drinkless.tdlib.TdApi.InputFile
+import org.drinkless.tdlib.TdApi.Location
+import org.drinkless.tdlib.TdApi.MessageFileType
+import org.drinkless.tdlib.TdApi.StickerFormat
+import org.drinkless.tdlib.TdApi.Text
 
 /**
  * Suspend function, which adds a file from a message to the list of file downloads. Download

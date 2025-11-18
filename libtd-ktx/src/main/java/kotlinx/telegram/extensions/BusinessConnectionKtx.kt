@@ -38,18 +38,18 @@ import kotlinx.telegram.coroutines.transferBusinessAccountStars
 import kotlinx.telegram.coroutines.transferGift
 import kotlinx.telegram.coroutines.upgradeGift
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.BusinessConnection
-import org.drinkless.td.libcore.telegram.TdApi.ChatAction
-import org.drinkless.td.libcore.telegram.TdApi.FormattedText
-import org.drinkless.td.libcore.telegram.TdApi.GiftSettings
-import org.drinkless.td.libcore.telegram.TdApi.InputChatPhoto
-import org.drinkless.td.libcore.telegram.TdApi.InputChecklist
-import org.drinkless.td.libcore.telegram.TdApi.InputMessageContent
-import org.drinkless.td.libcore.telegram.TdApi.InputMessageReplyTo
-import org.drinkless.td.libcore.telegram.TdApi.Location
-import org.drinkless.td.libcore.telegram.TdApi.MessageSender
-import org.drinkless.td.libcore.telegram.TdApi.MessageTopic
-import org.drinkless.td.libcore.telegram.TdApi.ReplyMarkup
+import org.drinkless.tdlib.TdApi.BusinessConnection
+import org.drinkless.tdlib.TdApi.ChatAction
+import org.drinkless.tdlib.TdApi.FormattedText
+import org.drinkless.tdlib.TdApi.GiftSettings
+import org.drinkless.tdlib.TdApi.InputChatPhoto
+import org.drinkless.tdlib.TdApi.InputChecklist
+import org.drinkless.tdlib.TdApi.InputMessageContent
+import org.drinkless.tdlib.TdApi.InputMessageReplyTo
+import org.drinkless.tdlib.TdApi.Location
+import org.drinkless.tdlib.TdApi.MessageSender
+import org.drinkless.tdlib.TdApi.MessageTopic
+import org.drinkless.tdlib.TdApi.ReplyMarkup
 
 /**
  * Interface for access [TdApi.BusinessConnection] extension functions. Can be used alongside with

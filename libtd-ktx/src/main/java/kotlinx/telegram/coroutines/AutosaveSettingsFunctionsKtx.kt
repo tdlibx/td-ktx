@@ -6,9 +6,9 @@ package kotlinx.telegram.coroutines
 
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.AutosaveSettings
-import org.drinkless.td.libcore.telegram.TdApi.AutosaveSettingsScope
-import org.drinkless.td.libcore.telegram.TdApi.ScopeAutosaveSettings
+import org.drinkless.tdlib.TdApi.AutosaveSettings
+import org.drinkless.tdlib.TdApi.AutosaveSettingsScope
+import org.drinkless.tdlib.TdApi.ScopeAutosaveSettings
 
 /**
  * Suspend function, which clears the list of all autosave settings exceptions. The method is

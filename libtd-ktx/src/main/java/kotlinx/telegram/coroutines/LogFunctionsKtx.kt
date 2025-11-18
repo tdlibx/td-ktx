@@ -11,15 +11,15 @@ import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.ChatEventLogFilters
-import org.drinkless.td.libcore.telegram.TdApi.ChatEvents
-import org.drinkless.td.libcore.telegram.TdApi.HttpUrl
-import org.drinkless.td.libcore.telegram.TdApi.InputFile
-import org.drinkless.td.libcore.telegram.TdApi.JsonValue
-import org.drinkless.td.libcore.telegram.TdApi.LogStream
-import org.drinkless.td.libcore.telegram.TdApi.LogTags
-import org.drinkless.td.libcore.telegram.TdApi.LogVerbosityLevel
-import org.drinkless.td.libcore.telegram.TdApi.LoginUrlInfo
+import org.drinkless.tdlib.TdApi.ChatEventLogFilters
+import org.drinkless.tdlib.TdApi.ChatEvents
+import org.drinkless.tdlib.TdApi.HttpUrl
+import org.drinkless.tdlib.TdApi.InputFile
+import org.drinkless.tdlib.TdApi.JsonValue
+import org.drinkless.tdlib.TdApi.LogStream
+import org.drinkless.tdlib.TdApi.LogTags
+import org.drinkless.tdlib.TdApi.LogVerbosityLevel
+import org.drinkless.tdlib.TdApi.LoginUrlInfo
 
 /**
  * Suspend function, which adds a message to TDLib internal log. Can be called synchronously.

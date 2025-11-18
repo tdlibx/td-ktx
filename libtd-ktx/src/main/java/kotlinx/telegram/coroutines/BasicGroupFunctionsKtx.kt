@@ -7,8 +7,8 @@ package kotlinx.telegram.coroutines
 import kotlin.Long
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.BasicGroup
-import org.drinkless.td.libcore.telegram.TdApi.BasicGroupFullInfo
+import org.drinkless.tdlib.TdApi.BasicGroup
+import org.drinkless.tdlib.TdApi.BasicGroupFullInfo
 
 /**
  * Suspend function, which returns information about a basic group by its identifier. This is an

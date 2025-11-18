@@ -8,7 +8,7 @@ import kotlin.Boolean
 import kotlin.Long
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.InputChatPhoto
+import org.drinkless.tdlib.TdApi.InputChatPhoto
 
 /**
  * Suspend function, which deletes a profile photo.

@@ -10,9 +10,9 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.BusinessMessage
-import org.drinkless.td.libcore.telegram.TdApi.MessageSenders
-import org.drinkless.td.libcore.telegram.TdApi.ReplyMarkup
+import org.drinkless.tdlib.TdApi.BusinessMessage
+import org.drinkless.tdlib.TdApi.MessageSenders
+import org.drinkless.tdlib.TdApi.ReplyMarkup
 
 /**
  * Suspend function, which returns message senders voted for the specified option in a non-anonymous

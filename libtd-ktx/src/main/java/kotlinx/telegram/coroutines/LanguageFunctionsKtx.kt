@@ -8,11 +8,11 @@ import kotlin.Array
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.LanguagePackInfo
-import org.drinkless.td.libcore.telegram.TdApi.LanguagePackString
-import org.drinkless.td.libcore.telegram.TdApi.LanguagePackStringValue
-import org.drinkless.td.libcore.telegram.TdApi.LanguagePackStrings
-import org.drinkless.td.libcore.telegram.TdApi.Text
+import org.drinkless.tdlib.TdApi.LanguagePackInfo
+import org.drinkless.tdlib.TdApi.LanguagePackString
+import org.drinkless.tdlib.TdApi.LanguagePackStringValue
+import org.drinkless.tdlib.TdApi.LanguagePackStrings
+import org.drinkless.tdlib.TdApi.Text
 
 /**
  * Suspend function, which adds a custom server language pack to the list of installed language

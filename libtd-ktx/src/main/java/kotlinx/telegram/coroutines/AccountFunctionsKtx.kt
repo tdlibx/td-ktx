@@ -9,12 +9,12 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.AccountTtl
-import org.drinkless.td.libcore.telegram.TdApi.GiftSettings
-import org.drinkless.td.libcore.telegram.TdApi.HttpUrl
-import org.drinkless.td.libcore.telegram.TdApi.InputChatPhoto
-import org.drinkless.td.libcore.telegram.TdApi.MessageSender
-import org.drinkless.td.libcore.telegram.TdApi.StarAmount
+import org.drinkless.tdlib.TdApi.AccountTtl
+import org.drinkless.tdlib.TdApi.GiftSettings
+import org.drinkless.tdlib.TdApi.HttpUrl
+import org.drinkless.tdlib.TdApi.InputChatPhoto
+import org.drinkless.tdlib.TdApi.MessageSender
+import org.drinkless.tdlib.TdApi.StarAmount
 
 /**
  * Suspend function, which deletes the account of the current user, deleting all information

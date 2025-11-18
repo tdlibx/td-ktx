@@ -11,21 +11,21 @@ import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.AnimatedEmoji
-import org.drinkless.td.libcore.telegram.TdApi.EmojiCategories
-import org.drinkless.td.libcore.telegram.TdApi.EmojiCategoryType
-import org.drinkless.td.libcore.telegram.TdApi.EmojiKeywords
-import org.drinkless.td.libcore.telegram.TdApi.EmojiReaction
-import org.drinkless.td.libcore.telegram.TdApi.EmojiStatus
-import org.drinkless.td.libcore.telegram.TdApi.EmojiStatusCustomEmojis
-import org.drinkless.td.libcore.telegram.TdApi.EmojiStatuses
-import org.drinkless.td.libcore.telegram.TdApi.Emojis
-import org.drinkless.td.libcore.telegram.TdApi.HttpUrl
-import org.drinkless.td.libcore.telegram.TdApi.InputFile
-import org.drinkless.td.libcore.telegram.TdApi.Sticker
-import org.drinkless.td.libcore.telegram.TdApi.StickerType
-import org.drinkless.td.libcore.telegram.TdApi.Stickers
-import org.drinkless.td.libcore.telegram.TdApi.Text
+import org.drinkless.tdlib.TdApi.AnimatedEmoji
+import org.drinkless.tdlib.TdApi.EmojiCategories
+import org.drinkless.tdlib.TdApi.EmojiCategoryType
+import org.drinkless.tdlib.TdApi.EmojiKeywords
+import org.drinkless.tdlib.TdApi.EmojiReaction
+import org.drinkless.tdlib.TdApi.EmojiStatus
+import org.drinkless.tdlib.TdApi.EmojiStatusCustomEmojis
+import org.drinkless.tdlib.TdApi.EmojiStatuses
+import org.drinkless.tdlib.TdApi.Emojis
+import org.drinkless.tdlib.TdApi.HttpUrl
+import org.drinkless.tdlib.TdApi.InputFile
+import org.drinkless.tdlib.TdApi.Sticker
+import org.drinkless.tdlib.TdApi.StickerType
+import org.drinkless.tdlib.TdApi.Stickers
+import org.drinkless.tdlib.TdApi.Text
 
 /**
  * Suspend function, which clears the list of recently used emoji statuses for self status.

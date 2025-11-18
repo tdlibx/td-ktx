@@ -14,11 +14,11 @@ import kotlinx.telegram.coroutines.getGiftUpgradePreview
 import kotlinx.telegram.coroutines.searchGiftsForResale
 import kotlinx.telegram.coroutines.sendGift
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.FormattedText
-import org.drinkless.td.libcore.telegram.TdApi.Gift
-import org.drinkless.td.libcore.telegram.TdApi.GiftForResaleOrder
-import org.drinkless.td.libcore.telegram.TdApi.MessageSender
-import org.drinkless.td.libcore.telegram.TdApi.UpgradedGiftAttributeId
+import org.drinkless.tdlib.TdApi.FormattedText
+import org.drinkless.tdlib.TdApi.Gift
+import org.drinkless.tdlib.TdApi.GiftForResaleOrder
+import org.drinkless.tdlib.TdApi.MessageSender
+import org.drinkless.tdlib.TdApi.UpgradedGiftAttributeId
 
 /**
  * Interface for access [TdApi.Gift] extension functions. Can be used alongside with other extension

@@ -10,10 +10,10 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.BotMediaPreview
-import org.drinkless.td.libcore.telegram.TdApi.BotMediaPreviewInfo
-import org.drinkless.td.libcore.telegram.TdApi.BotMediaPreviews
-import org.drinkless.td.libcore.telegram.TdApi.InputStoryContent
+import org.drinkless.tdlib.TdApi.BotMediaPreview
+import org.drinkless.tdlib.TdApi.BotMediaPreviewInfo
+import org.drinkless.tdlib.TdApi.BotMediaPreviews
+import org.drinkless.tdlib.TdApi.InputStoryContent
 
 /**
  * Suspend function, which adds a new media preview to the beginning of the list of media previews

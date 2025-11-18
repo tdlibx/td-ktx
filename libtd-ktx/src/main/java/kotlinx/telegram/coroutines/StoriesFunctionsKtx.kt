@@ -9,9 +9,9 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.FoundStories
-import org.drinkless.td.libcore.telegram.TdApi.LocationAddress
-import org.drinkless.td.libcore.telegram.TdApi.StoryList
+import org.drinkless.tdlib.TdApi.FoundStories
+import org.drinkless.tdlib.TdApi.LocationAddress
+import org.drinkless.tdlib.TdApi.StoryList
 
 /**
  * Suspend function, which loads more active stories from a story list. The loaded stories will be

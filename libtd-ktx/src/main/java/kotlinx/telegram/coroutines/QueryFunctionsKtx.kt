@@ -11,19 +11,19 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.CallbackQueryAnswer
-import org.drinkless.td.libcore.telegram.TdApi.CallbackQueryPayload
-import org.drinkless.td.libcore.telegram.TdApi.InlineQueryResults
-import org.drinkless.td.libcore.telegram.TdApi.InlineQueryResultsButton
-import org.drinkless.td.libcore.telegram.TdApi.InputInlineQueryResult
-import org.drinkless.td.libcore.telegram.TdApi.InputMessageReplyTo
-import org.drinkless.td.libcore.telegram.TdApi.Location
-import org.drinkless.td.libcore.telegram.TdApi.Message
-import org.drinkless.td.libcore.telegram.TdApi.MessageSendOptions
-import org.drinkless.td.libcore.telegram.TdApi.MessageTopic
-import org.drinkless.td.libcore.telegram.TdApi.QuickReplyMessage
-import org.drinkless.td.libcore.telegram.TdApi.SentWebAppMessage
-import org.drinkless.td.libcore.telegram.TdApi.ShippingOption
+import org.drinkless.tdlib.TdApi.CallbackQueryAnswer
+import org.drinkless.tdlib.TdApi.CallbackQueryPayload
+import org.drinkless.tdlib.TdApi.InlineQueryResults
+import org.drinkless.tdlib.TdApi.InlineQueryResultsButton
+import org.drinkless.tdlib.TdApi.InputInlineQueryResult
+import org.drinkless.tdlib.TdApi.InputMessageReplyTo
+import org.drinkless.tdlib.TdApi.Location
+import org.drinkless.tdlib.TdApi.Message
+import org.drinkless.tdlib.TdApi.MessageSendOptions
+import org.drinkless.tdlib.TdApi.MessageTopic
+import org.drinkless.tdlib.TdApi.QuickReplyMessage
+import org.drinkless.tdlib.TdApi.SentWebAppMessage
+import org.drinkless.tdlib.TdApi.ShippingOption
 
 /**
  * Suspend function, which adds a message to a quick reply shortcut via inline bot. If shortcut

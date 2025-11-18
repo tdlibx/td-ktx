@@ -8,16 +8,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Call
-import org.drinkless.td.libcore.telegram.TdApi.GroupCall
-import org.drinkless.td.libcore.telegram.TdApi.UpdateGroupCallNewMessage
-import org.drinkless.td.libcore.telegram.TdApi.UpdateGroupCallParticipant
-import org.drinkless.td.libcore.telegram.TdApi.UpdateGroupCallParticipants
-import org.drinkless.td.libcore.telegram.TdApi.UpdateGroupCallVerificationState
-import org.drinkless.td.libcore.telegram.TdApi.UpdateNewBusinessCallbackQuery
-import org.drinkless.td.libcore.telegram.TdApi.UpdateNewCallSignalingData
-import org.drinkless.td.libcore.telegram.TdApi.UpdateNewCallbackQuery
-import org.drinkless.td.libcore.telegram.TdApi.UpdateNewInlineCallbackQuery
+import org.drinkless.tdlib.TdApi.Call
+import org.drinkless.tdlib.TdApi.GroupCall
+import org.drinkless.tdlib.TdApi.UpdateGroupCallNewMessage
+import org.drinkless.tdlib.TdApi.UpdateGroupCallParticipant
+import org.drinkless.tdlib.TdApi.UpdateGroupCallParticipants
+import org.drinkless.tdlib.TdApi.UpdateGroupCallVerificationState
+import org.drinkless.tdlib.TdApi.UpdateNewBusinessCallbackQuery
+import org.drinkless.tdlib.TdApi.UpdateNewCallSignalingData
+import org.drinkless.tdlib.TdApi.UpdateNewCallbackQuery
+import org.drinkless.tdlib.TdApi.UpdateNewInlineCallbackQuery
 
 /**
  * emits [Call] if new call was created or information about a call was updated.

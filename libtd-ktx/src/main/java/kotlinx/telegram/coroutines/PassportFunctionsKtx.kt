@@ -10,13 +10,13 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.InputPassportElement
-import org.drinkless.td.libcore.telegram.TdApi.InputPassportElementError
-import org.drinkless.td.libcore.telegram.TdApi.PassportAuthorizationForm
-import org.drinkless.td.libcore.telegram.TdApi.PassportElement
-import org.drinkless.td.libcore.telegram.TdApi.PassportElementType
-import org.drinkless.td.libcore.telegram.TdApi.PassportElements
-import org.drinkless.td.libcore.telegram.TdApi.PassportElementsWithErrors
+import org.drinkless.tdlib.TdApi.InputPassportElement
+import org.drinkless.tdlib.TdApi.InputPassportElementError
+import org.drinkless.tdlib.TdApi.PassportAuthorizationForm
+import org.drinkless.tdlib.TdApi.PassportElement
+import org.drinkless.tdlib.TdApi.PassportElementType
+import org.drinkless.tdlib.TdApi.PassportElements
+import org.drinkless.tdlib.TdApi.PassportElementsWithErrors
 
 /**
  * Suspend function, which deletes a Telegram Passport element.

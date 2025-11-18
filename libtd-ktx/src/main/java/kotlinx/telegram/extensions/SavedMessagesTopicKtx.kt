@@ -18,9 +18,9 @@ import kotlinx.telegram.coroutines.getSavedMessagesTopicMessageByDate
 import kotlinx.telegram.coroutines.searchSavedMessages
 import kotlinx.telegram.coroutines.toggleSavedMessagesTopicIsPinned
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.ReactionType
-import org.drinkless.td.libcore.telegram.TdApi.SavedMessagesTopic
-import org.drinkless.td.libcore.telegram.TdApi.SearchMessagesFilter
+import org.drinkless.tdlib.TdApi.ReactionType
+import org.drinkless.tdlib.TdApi.SavedMessagesTopic
+import org.drinkless.tdlib.TdApi.SearchMessagesFilter
 
 /**
  * Interface for access [TdApi.SavedMessagesTopic] extension functions. Can be used alongside with

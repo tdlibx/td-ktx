@@ -7,9 +7,9 @@ package kotlinx.telegram.coroutines
 import kotlin.Boolean
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.NetworkStatistics
-import org.drinkless.td.libcore.telegram.TdApi.NetworkStatisticsEntry
-import org.drinkless.td.libcore.telegram.TdApi.NetworkType
+import org.drinkless.tdlib.TdApi.NetworkStatistics
+import org.drinkless.tdlib.TdApi.NetworkStatisticsEntry
+import org.drinkless.tdlib.TdApi.NetworkType
 
 /**
  * Suspend function, which adds the specified data to data usage statistics. Can be called before

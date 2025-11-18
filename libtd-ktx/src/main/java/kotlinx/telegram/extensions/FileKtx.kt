@@ -28,9 +28,9 @@ import kotlinx.telegram.coroutines.reportChatPhoto
 import kotlinx.telegram.coroutines.setProfileAudioPosition
 import kotlinx.telegram.coroutines.toggleDownloadIsPaused
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.File
-import org.drinkless.td.libcore.telegram.TdApi.InputStoryContent
-import org.drinkless.td.libcore.telegram.TdApi.ReportReason
+import org.drinkless.tdlib.TdApi.File
+import org.drinkless.tdlib.TdApi.InputStoryContent
+import org.drinkless.tdlib.TdApi.ReportReason
 
 /**
  * Interface for access [TdApi.File] extension functions. Can be used alongside with other extension

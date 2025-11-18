@@ -89,21 +89,21 @@ import kotlinx.telegram.coroutines.stopPoll
 import kotlinx.telegram.coroutines.translateMessageText
 import kotlinx.telegram.coroutines.unpinChatMessage
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.CallbackQueryPayload
-import org.drinkless.td.libcore.telegram.TdApi.FormattedText
-import org.drinkless.td.libcore.telegram.TdApi.InputChecklist
-import org.drinkless.td.libcore.telegram.TdApi.InputChecklistTask
-import org.drinkless.td.libcore.telegram.TdApi.InputMessageContent
-import org.drinkless.td.libcore.telegram.TdApi.Location
-import org.drinkless.td.libcore.telegram.TdApi.Message
-import org.drinkless.td.libcore.telegram.TdApi.MessageSchedulingState
-import org.drinkless.td.libcore.telegram.TdApi.MessageSendOptions
-import org.drinkless.td.libcore.telegram.TdApi.MessageSender
-import org.drinkless.td.libcore.telegram.TdApi.MessageTopic
-import org.drinkless.td.libcore.telegram.TdApi.PaidReactionType
-import org.drinkless.td.libcore.telegram.TdApi.ReactionType
-import org.drinkless.td.libcore.telegram.TdApi.ReplyMarkup
-import org.drinkless.td.libcore.telegram.TdApi.SearchMessagesFilter
+import org.drinkless.tdlib.TdApi.CallbackQueryPayload
+import org.drinkless.tdlib.TdApi.FormattedText
+import org.drinkless.tdlib.TdApi.InputChecklist
+import org.drinkless.tdlib.TdApi.InputChecklistTask
+import org.drinkless.tdlib.TdApi.InputMessageContent
+import org.drinkless.tdlib.TdApi.Location
+import org.drinkless.tdlib.TdApi.Message
+import org.drinkless.tdlib.TdApi.MessageSchedulingState
+import org.drinkless.tdlib.TdApi.MessageSendOptions
+import org.drinkless.tdlib.TdApi.MessageSender
+import org.drinkless.tdlib.TdApi.MessageTopic
+import org.drinkless.tdlib.TdApi.PaidReactionType
+import org.drinkless.tdlib.TdApi.ReactionType
+import org.drinkless.tdlib.TdApi.ReplyMarkup
+import org.drinkless.tdlib.TdApi.SearchMessagesFilter
 
 /**
  * Interface for access [TdApi.Message] extension functions. Can be used alongside with other

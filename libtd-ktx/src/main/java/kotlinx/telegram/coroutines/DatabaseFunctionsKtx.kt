@@ -7,7 +7,7 @@ package kotlinx.telegram.coroutines
 import kotlin.ByteArray
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.DatabaseStatistics
+import org.drinkless.tdlib.TdApi.DatabaseStatistics
 
 /**
  * Suspend function, which returns database statistics.

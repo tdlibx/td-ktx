@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.QuickReplyShortcut
+import org.drinkless.tdlib.TdApi.QuickReplyShortcut
 
 /**
  * emits shortcut [QuickReplyShortcut] if basic information about a quick reply shortcut has

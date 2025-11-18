@@ -12,18 +12,18 @@ import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Audios
-import org.drinkless.td.libcore.telegram.TdApi.Birthdate
-import org.drinkless.td.libcore.telegram.TdApi.CanSendMessageToUserResult
-import org.drinkless.td.libcore.telegram.TdApi.ChatPhotos
-import org.drinkless.td.libcore.telegram.TdApi.FormattedText
-import org.drinkless.td.libcore.telegram.TdApi.InputChatPhoto
-import org.drinkless.td.libcore.telegram.TdApi.User
-import org.drinkless.td.libcore.telegram.TdApi.UserFullInfo
-import org.drinkless.td.libcore.telegram.TdApi.UserLink
-import org.drinkless.td.libcore.telegram.TdApi.UserPrivacySetting
-import org.drinkless.td.libcore.telegram.TdApi.UserPrivacySettingRules
-import org.drinkless.td.libcore.telegram.TdApi.UserSupportInfo
+import org.drinkless.tdlib.TdApi.Audios
+import org.drinkless.tdlib.TdApi.Birthdate
+import org.drinkless.tdlib.TdApi.CanSendMessageToUserResult
+import org.drinkless.tdlib.TdApi.ChatPhotos
+import org.drinkless.tdlib.TdApi.FormattedText
+import org.drinkless.tdlib.TdApi.InputChatPhoto
+import org.drinkless.tdlib.TdApi.User
+import org.drinkless.tdlib.TdApi.UserFullInfo
+import org.drinkless.tdlib.TdApi.UserLink
+import org.drinkless.tdlib.TdApi.UserPrivacySetting
+import org.drinkless.tdlib.TdApi.UserPrivacySettingRules
+import org.drinkless.tdlib.TdApi.UserSupportInfo
 
 /**
  * Suspend function, which allows the specified user to send unpaid private messages to the current

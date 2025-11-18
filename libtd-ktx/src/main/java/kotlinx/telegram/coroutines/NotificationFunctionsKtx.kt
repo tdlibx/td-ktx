@@ -9,12 +9,12 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.InputFile
-import org.drinkless.td.libcore.telegram.TdApi.NotificationSettingsScope
-import org.drinkless.td.libcore.telegram.TdApi.NotificationSound
-import org.drinkless.td.libcore.telegram.TdApi.NotificationSounds
-import org.drinkless.td.libcore.telegram.TdApi.ReactionNotificationSettings
-import org.drinkless.td.libcore.telegram.TdApi.ScopeNotificationSettings
+import org.drinkless.tdlib.TdApi.InputFile
+import org.drinkless.tdlib.TdApi.NotificationSettingsScope
+import org.drinkless.tdlib.TdApi.NotificationSound
+import org.drinkless.tdlib.TdApi.NotificationSounds
+import org.drinkless.tdlib.TdApi.ReactionNotificationSettings
+import org.drinkless.tdlib.TdApi.ScopeNotificationSettings
 
 /**
  * Suspend function, which adds a new notification sound to the list of saved notification sounds.

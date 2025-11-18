@@ -12,9 +12,9 @@ import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.ImportedContact
-import org.drinkless.td.libcore.telegram.TdApi.ImportedContacts
-import org.drinkless.td.libcore.telegram.TdApi.Users
+import org.drinkless.tdlib.TdApi.ImportedContact
+import org.drinkless.tdlib.TdApi.ImportedContacts
+import org.drinkless.tdlib.TdApi.Users
 
 /**
  * Suspend function, which adds a user to the contact list or edits an existing contact by their

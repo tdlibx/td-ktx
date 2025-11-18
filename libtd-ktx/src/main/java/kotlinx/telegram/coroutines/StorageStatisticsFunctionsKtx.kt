@@ -7,8 +7,8 @@ package kotlinx.telegram.coroutines
 import kotlin.Int
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.StorageStatistics
-import org.drinkless.td.libcore.telegram.TdApi.StorageStatisticsFast
+import org.drinkless.tdlib.TdApi.StorageStatistics
+import org.drinkless.tdlib.TdApi.StorageStatisticsFast
 
 /**
  * Suspend function, which returns storage usage statistics. Can be called before authorization.

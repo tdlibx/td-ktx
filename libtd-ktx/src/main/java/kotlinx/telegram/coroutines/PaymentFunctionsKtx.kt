@@ -8,16 +8,16 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.InputCredentials
-import org.drinkless.td.libcore.telegram.TdApi.InputInvoice
-import org.drinkless.td.libcore.telegram.TdApi.PaymentForm
-import org.drinkless.td.libcore.telegram.TdApi.PaymentReceipt
-import org.drinkless.td.libcore.telegram.TdApi.PaymentResult
-import org.drinkless.td.libcore.telegram.TdApi.PremiumGiftPaymentOptions
-import org.drinkless.td.libcore.telegram.TdApi.PremiumGiveawayPaymentOptions
-import org.drinkless.td.libcore.telegram.TdApi.StarGiveawayPaymentOptions
-import org.drinkless.td.libcore.telegram.TdApi.StarPaymentOptions
-import org.drinkless.td.libcore.telegram.TdApi.ThemeParameters
+import org.drinkless.tdlib.TdApi.InputCredentials
+import org.drinkless.tdlib.TdApi.InputInvoice
+import org.drinkless.tdlib.TdApi.PaymentForm
+import org.drinkless.tdlib.TdApi.PaymentReceipt
+import org.drinkless.tdlib.TdApi.PaymentResult
+import org.drinkless.tdlib.TdApi.PremiumGiftPaymentOptions
+import org.drinkless.tdlib.TdApi.PremiumGiveawayPaymentOptions
+import org.drinkless.tdlib.TdApi.StarGiveawayPaymentOptions
+import org.drinkless.tdlib.TdApi.StarPaymentOptions
+import org.drinkless.tdlib.TdApi.ThemeParameters
 
 /**
  * Suspend function, which returns an invoice payment form. This method must be called when the user

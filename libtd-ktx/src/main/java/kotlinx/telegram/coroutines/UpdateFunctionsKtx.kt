@@ -8,7 +8,7 @@ import kotlin.Int
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Update
+import org.drinkless.tdlib.TdApi.Update
 
 /**
  * Suspend function, which informs the server about the number of pending bot updates if they

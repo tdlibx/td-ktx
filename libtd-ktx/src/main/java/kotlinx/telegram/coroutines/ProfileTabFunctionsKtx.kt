@@ -7,7 +7,7 @@ package kotlinx.telegram.coroutines
 import kotlin.Long
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.ProfileTab
+import org.drinkless.tdlib.TdApi.ProfileTab
 
 /**
  * Suspend function, which changes the main profile tab of the current user.

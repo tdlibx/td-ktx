@@ -11,14 +11,14 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.ChatNotificationSettings
-import org.drinkless.td.libcore.telegram.TdApi.ForumTopic
-import org.drinkless.td.libcore.telegram.TdApi.ForumTopicIcon
-import org.drinkless.td.libcore.telegram.TdApi.ForumTopicInfo
-import org.drinkless.td.libcore.telegram.TdApi.ForumTopics
-import org.drinkless.td.libcore.telegram.TdApi.MessageLink
-import org.drinkless.td.libcore.telegram.TdApi.Messages
-import org.drinkless.td.libcore.telegram.TdApi.Stickers
+import org.drinkless.tdlib.TdApi.ChatNotificationSettings
+import org.drinkless.tdlib.TdApi.ForumTopic
+import org.drinkless.tdlib.TdApi.ForumTopicIcon
+import org.drinkless.tdlib.TdApi.ForumTopicInfo
+import org.drinkless.tdlib.TdApi.ForumTopics
+import org.drinkless.tdlib.TdApi.MessageLink
+import org.drinkless.tdlib.TdApi.Messages
+import org.drinkless.tdlib.TdApi.Stickers
 
 /**
  * Suspend function, which creates a topic in a forum supergroup chat or a chat with a bot with

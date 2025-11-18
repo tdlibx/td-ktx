@@ -43,12 +43,12 @@ import kotlinx.telegram.coroutines.toggleGroupCallScreenSharingIsPaused
 import kotlinx.telegram.coroutines.toggleVideoChatEnabledStartNotification
 import kotlinx.telegram.coroutines.toggleVideoChatMuteNewParticipants
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.FormattedText
-import org.drinkless.td.libcore.telegram.TdApi.GroupCall
-import org.drinkless.td.libcore.telegram.TdApi.GroupCallDataChannel
-import org.drinkless.td.libcore.telegram.TdApi.GroupCallJoinParameters
-import org.drinkless.td.libcore.telegram.TdApi.GroupCallVideoQuality
-import org.drinkless.td.libcore.telegram.TdApi.MessageSender
+import org.drinkless.tdlib.TdApi.FormattedText
+import org.drinkless.tdlib.TdApi.GroupCall
+import org.drinkless.tdlib.TdApi.GroupCallDataChannel
+import org.drinkless.tdlib.TdApi.GroupCallJoinParameters
+import org.drinkless.tdlib.TdApi.GroupCallVideoQuality
+import org.drinkless.tdlib.TdApi.MessageSender
 
 /**
  * Interface for access [TdApi.GroupCall] extension functions. Can be used alongside with other

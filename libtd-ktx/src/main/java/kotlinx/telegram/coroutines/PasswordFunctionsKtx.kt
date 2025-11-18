@@ -9,10 +9,10 @@ import kotlin.Int
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.EmailAddressAuthenticationCodeInfo
-import org.drinkless.td.libcore.telegram.TdApi.PasswordState
-import org.drinkless.td.libcore.telegram.TdApi.ResetPasswordResult
-import org.drinkless.td.libcore.telegram.TdApi.TemporaryPasswordState
+import org.drinkless.tdlib.TdApi.EmailAddressAuthenticationCodeInfo
+import org.drinkless.tdlib.TdApi.PasswordState
+import org.drinkless.tdlib.TdApi.ResetPasswordResult
+import org.drinkless.tdlib.TdApi.TemporaryPasswordState
 
 /**
  * Suspend function, which cancels reset of 2-step verification password. The method can be called

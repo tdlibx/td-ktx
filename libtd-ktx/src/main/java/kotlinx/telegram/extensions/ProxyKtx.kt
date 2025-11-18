@@ -14,8 +14,8 @@ import kotlinx.telegram.coroutines.getProxyLink
 import kotlinx.telegram.coroutines.pingProxy
 import kotlinx.telegram.coroutines.removeProxy
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Proxy
-import org.drinkless.td.libcore.telegram.TdApi.ProxyType
+import org.drinkless.tdlib.TdApi.Proxy
+import org.drinkless.tdlib.TdApi.ProxyType
 
 /**
  * Interface for access [TdApi.Proxy] extension functions. Can be used alongside with other

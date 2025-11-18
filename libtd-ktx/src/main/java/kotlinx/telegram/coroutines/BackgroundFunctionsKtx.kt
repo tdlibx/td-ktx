@@ -9,11 +9,11 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Background
-import org.drinkless.td.libcore.telegram.TdApi.BackgroundType
-import org.drinkless.td.libcore.telegram.TdApi.Backgrounds
-import org.drinkless.td.libcore.telegram.TdApi.HttpUrl
-import org.drinkless.td.libcore.telegram.TdApi.InputBackground
+import org.drinkless.tdlib.TdApi.Background
+import org.drinkless.tdlib.TdApi.BackgroundType
+import org.drinkless.tdlib.TdApi.Backgrounds
+import org.drinkless.tdlib.TdApi.HttpUrl
+import org.drinkless.tdlib.TdApi.InputBackground
 
 /**
  * Suspend function, which deletes default background for chats.

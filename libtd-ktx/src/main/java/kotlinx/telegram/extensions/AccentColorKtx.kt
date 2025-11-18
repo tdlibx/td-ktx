@@ -9,7 +9,7 @@ import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.setAccentColor
 import kotlinx.telegram.coroutines.setChatAccentColor
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.AccentColor
+import org.drinkless.tdlib.TdApi.AccentColor
 
 /**
  * Interface for access [TdApi.AccentColor] extension functions. Can be used alongside with other

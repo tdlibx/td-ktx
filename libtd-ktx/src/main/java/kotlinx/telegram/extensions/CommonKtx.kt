@@ -17,18 +17,18 @@ import kotlinx.telegram.coroutines.sendPaymentForm
 import kotlinx.telegram.coroutines.setSupergroupStickerSet
 import kotlinx.telegram.coroutines.setUpgradedGiftColors
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Background
-import org.drinkless.td.libcore.telegram.TdApi.FileType
-import org.drinkless.td.libcore.telegram.TdApi.InputCredentials
-import org.drinkless.td.libcore.telegram.TdApi.InputInvoice
-import org.drinkless.td.libcore.telegram.TdApi.Notification
-import org.drinkless.td.libcore.telegram.TdApi.PaymentForm
-import org.drinkless.td.libcore.telegram.TdApi.ProfilePhoto
-import org.drinkless.td.libcore.telegram.TdApi.RemoteFile
-import org.drinkless.td.libcore.telegram.TdApi.ShippingOption
-import org.drinkless.td.libcore.telegram.TdApi.StickerSet
-import org.drinkless.td.libcore.telegram.TdApi.UpgradedGiftColors
-import org.drinkless.td.libcore.telegram.TdApi.Venue
+import org.drinkless.tdlib.TdApi.Background
+import org.drinkless.tdlib.TdApi.FileType
+import org.drinkless.tdlib.TdApi.InputCredentials
+import org.drinkless.tdlib.TdApi.InputInvoice
+import org.drinkless.tdlib.TdApi.Notification
+import org.drinkless.tdlib.TdApi.PaymentForm
+import org.drinkless.tdlib.TdApi.ProfilePhoto
+import org.drinkless.tdlib.TdApi.RemoteFile
+import org.drinkless.tdlib.TdApi.ShippingOption
+import org.drinkless.tdlib.TdApi.StickerSet
+import org.drinkless.tdlib.TdApi.UpgradedGiftColors
+import org.drinkless.tdlib.TdApi.Venue
 
 /**
  * Interface for access common

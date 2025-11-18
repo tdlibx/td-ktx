@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.UpdateUserFullInfo
-import org.drinkless.td.libcore.telegram.TdApi.UpdateUserPrivacySettingRules
-import org.drinkless.td.libcore.telegram.TdApi.UpdateUserStatus
-import org.drinkless.td.libcore.telegram.TdApi.User
+import org.drinkless.tdlib.TdApi.UpdateUserFullInfo
+import org.drinkless.tdlib.TdApi.UpdateUserPrivacySettingRules
+import org.drinkless.tdlib.TdApi.UpdateUserStatus
+import org.drinkless.tdlib.TdApi.User
 
 /**
  * emits [UpdateUserStatus] if the user went online or offline.

@@ -16,7 +16,7 @@ import kotlinx.telegram.coroutines.removeStoryAlbumStories
 import kotlinx.telegram.coroutines.reorderStoryAlbumStories
 import kotlinx.telegram.coroutines.setStoryAlbumName
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.StoryAlbum
+import org.drinkless.tdlib.TdApi.StoryAlbum
 
 /**
  * Interface for access [TdApi.StoryAlbum] extension functions. Can be used alongside with other

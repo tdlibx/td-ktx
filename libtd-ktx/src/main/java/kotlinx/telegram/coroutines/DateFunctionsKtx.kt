@@ -8,9 +8,9 @@ import kotlin.Int
 import kotlin.Long
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Message
-import org.drinkless.td.libcore.telegram.TdApi.MessageReadDate
-import org.drinkless.td.libcore.telegram.TdApi.ReadDatePrivacySettings
+import org.drinkless.tdlib.TdApi.Message
+import org.drinkless.tdlib.TdApi.MessageReadDate
+import org.drinkless.tdlib.TdApi.ReadDatePrivacySettings
 
 /**
  * Suspend function, which deletes all messages between the specified dates in a Saved Messages

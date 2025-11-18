@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.StarAmount
-import org.drinkless.td.libcore.telegram.TdApi.UpdateTopicMessageCount
-import org.drinkless.td.libcore.telegram.TdApi.UpdateUnreadMessageCount
+import org.drinkless.tdlib.TdApi.StarAmount
+import org.drinkless.tdlib.TdApi.UpdateTopicMessageCount
+import org.drinkless.tdlib.TdApi.UpdateUnreadMessageCount
 
 /**
  * emits topicCount [Int] if number of Saved Messages topics has changed.

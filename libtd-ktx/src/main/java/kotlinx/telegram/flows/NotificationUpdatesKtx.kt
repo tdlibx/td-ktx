@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.NotificationGroup
-import org.drinkless.td.libcore.telegram.TdApi.ReactionNotificationSettings
-import org.drinkless.td.libcore.telegram.TdApi.UpdateHavePendingNotifications
-import org.drinkless.td.libcore.telegram.TdApi.UpdateNotification
-import org.drinkless.td.libcore.telegram.TdApi.UpdateNotificationGroup
-import org.drinkless.td.libcore.telegram.TdApi.UpdateScopeNotificationSettings
-import org.drinkless.td.libcore.telegram.TdApi.UpdateServiceNotification
+import org.drinkless.tdlib.TdApi.NotificationGroup
+import org.drinkless.tdlib.TdApi.ReactionNotificationSettings
+import org.drinkless.tdlib.TdApi.UpdateHavePendingNotifications
+import org.drinkless.tdlib.TdApi.UpdateNotification
+import org.drinkless.tdlib.TdApi.UpdateNotificationGroup
+import org.drinkless.tdlib.TdApi.UpdateScopeNotificationSettings
+import org.drinkless.tdlib.TdApi.UpdateServiceNotification
 
 /**
  * emits [UpdateScopeNotificationSettings] if notification settings for some type of chats were

@@ -10,16 +10,16 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.CustomRequestResult
-import org.drinkless.td.libcore.telegram.TdApi.FoundUsers
-import org.drinkless.td.libcore.telegram.TdApi.FoundWebApp
-import org.drinkless.td.libcore.telegram.TdApi.HttpUrl
-import org.drinkless.td.libcore.telegram.TdApi.InputMessageReplyTo
-import org.drinkless.td.libcore.telegram.TdApi.MainWebApp
-import org.drinkless.td.libcore.telegram.TdApi.MessageTopic
-import org.drinkless.td.libcore.telegram.TdApi.Outline
-import org.drinkless.td.libcore.telegram.TdApi.WebAppInfo
-import org.drinkless.td.libcore.telegram.TdApi.WebAppOpenParameters
+import org.drinkless.tdlib.TdApi.CustomRequestResult
+import org.drinkless.tdlib.TdApi.FoundUsers
+import org.drinkless.tdlib.TdApi.FoundWebApp
+import org.drinkless.tdlib.TdApi.HttpUrl
+import org.drinkless.tdlib.TdApi.InputMessageReplyTo
+import org.drinkless.tdlib.TdApi.MainWebApp
+import org.drinkless.tdlib.TdApi.MessageTopic
+import org.drinkless.tdlib.TdApi.Outline
+import org.drinkless.tdlib.TdApi.WebAppInfo
+import org.drinkless.tdlib.TdApi.WebAppOpenParameters
 
 /**
  * Suspend function, which informs TDLib that a previously opened Web App was closed.

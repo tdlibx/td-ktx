@@ -12,26 +12,26 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.AvailableGifts
-import org.drinkless.td.libcore.telegram.TdApi.CanSendGiftResult
-import org.drinkless.td.libcore.telegram.TdApi.FormattedText
-import org.drinkless.td.libcore.telegram.TdApi.GiftCollection
-import org.drinkless.td.libcore.telegram.TdApi.GiftCollections
-import org.drinkless.td.libcore.telegram.TdApi.GiftForResaleOrder
-import org.drinkless.td.libcore.telegram.TdApi.GiftResalePrice
-import org.drinkless.td.libcore.telegram.TdApi.GiftResaleResult
-import org.drinkless.td.libcore.telegram.TdApi.GiftSettings
-import org.drinkless.td.libcore.telegram.TdApi.GiftUpgradePreview
-import org.drinkless.td.libcore.telegram.TdApi.GiftsForResale
-import org.drinkless.td.libcore.telegram.TdApi.HttpUrl
-import org.drinkless.td.libcore.telegram.TdApi.MessageSender
-import org.drinkless.td.libcore.telegram.TdApi.PremiumGiftCodeInfo
-import org.drinkless.td.libcore.telegram.TdApi.ReceivedGift
-import org.drinkless.td.libcore.telegram.TdApi.ReceivedGifts
-import org.drinkless.td.libcore.telegram.TdApi.UpgradeGiftResult
-import org.drinkless.td.libcore.telegram.TdApi.UpgradedGift
-import org.drinkless.td.libcore.telegram.TdApi.UpgradedGiftAttributeId
-import org.drinkless.td.libcore.telegram.TdApi.UpgradedGiftValueInfo
+import org.drinkless.tdlib.TdApi.AvailableGifts
+import org.drinkless.tdlib.TdApi.CanSendGiftResult
+import org.drinkless.tdlib.TdApi.FormattedText
+import org.drinkless.tdlib.TdApi.GiftCollection
+import org.drinkless.tdlib.TdApi.GiftCollections
+import org.drinkless.tdlib.TdApi.GiftForResaleOrder
+import org.drinkless.tdlib.TdApi.GiftResalePrice
+import org.drinkless.tdlib.TdApi.GiftResaleResult
+import org.drinkless.tdlib.TdApi.GiftSettings
+import org.drinkless.tdlib.TdApi.GiftUpgradePreview
+import org.drinkless.tdlib.TdApi.GiftsForResale
+import org.drinkless.tdlib.TdApi.HttpUrl
+import org.drinkless.tdlib.TdApi.MessageSender
+import org.drinkless.tdlib.TdApi.PremiumGiftCodeInfo
+import org.drinkless.tdlib.TdApi.ReceivedGift
+import org.drinkless.tdlib.TdApi.ReceivedGifts
+import org.drinkless.tdlib.TdApi.UpgradeGiftResult
+import org.drinkless.tdlib.TdApi.UpgradedGift
+import org.drinkless.tdlib.TdApi.UpgradedGiftAttributeId
+import org.drinkless.tdlib.TdApi.UpgradedGiftValueInfo
 
 /**
  * Suspend function, which adds gifts to the beginning of a previously created collection. If the

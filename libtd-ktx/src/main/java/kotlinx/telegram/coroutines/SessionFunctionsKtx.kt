@@ -8,7 +8,7 @@ import kotlin.Int
 import kotlin.Long
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Sessions
+import org.drinkless.tdlib.TdApi.Sessions
 
 /**
  * Suspend function, which confirms an unconfirmed session of the current user from another device.

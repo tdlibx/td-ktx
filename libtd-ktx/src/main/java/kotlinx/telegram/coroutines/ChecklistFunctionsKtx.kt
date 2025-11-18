@@ -9,7 +9,7 @@ import kotlin.IntArray
 import kotlin.Long
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.InputChecklistTask
+import org.drinkless.tdlib.TdApi.InputChecklistTask
 
 /**
  * Suspend function, which adds tasks to a checklist in a message.

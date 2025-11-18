@@ -10,10 +10,10 @@ import kotlin.Long
 import kotlin.LongArray
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.ChatMembers
-import org.drinkless.td.libcore.telegram.TdApi.Supergroup
-import org.drinkless.td.libcore.telegram.TdApi.SupergroupFullInfo
-import org.drinkless.td.libcore.telegram.TdApi.SupergroupMembersFilter
+import org.drinkless.tdlib.TdApi.ChatMembers
+import org.drinkless.tdlib.TdApi.Supergroup
+import org.drinkless.tdlib.TdApi.SupergroupFullInfo
+import org.drinkless.tdlib.TdApi.SupergroupMembersFilter
 
 /**
  * Suspend function, which returns information about a supergroup or a channel by its identifier.

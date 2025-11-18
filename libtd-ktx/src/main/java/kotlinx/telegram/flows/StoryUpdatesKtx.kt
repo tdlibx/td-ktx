@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Story
-import org.drinkless.td.libcore.telegram.TdApi.UpdateStoryDeleted
-import org.drinkless.td.libcore.telegram.TdApi.UpdateStoryPostFailed
-import org.drinkless.td.libcore.telegram.TdApi.UpdateStoryPostSucceeded
-import org.drinkless.td.libcore.telegram.TdApi.UpdateStoryStealthMode
+import org.drinkless.tdlib.TdApi.Story
+import org.drinkless.tdlib.TdApi.UpdateStoryDeleted
+import org.drinkless.tdlib.TdApi.UpdateStoryPostFailed
+import org.drinkless.tdlib.TdApi.UpdateStoryPostSucceeded
+import org.drinkless.tdlib.TdApi.UpdateStoryStealthMode
 
 /**
  * emits [Story] if a story was changed.

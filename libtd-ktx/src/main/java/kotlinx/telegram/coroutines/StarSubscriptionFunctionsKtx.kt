@@ -8,7 +8,7 @@ import kotlin.Boolean
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.StarSubscriptions
+import org.drinkless.tdlib.TdApi.StarSubscriptions
 
 /**
  * Suspend function, which cancels or re-enables Telegram Star subscription.

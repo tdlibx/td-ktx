@@ -9,7 +9,7 @@ import kotlinx.telegram.coroutines.closeSecretChat
 import kotlinx.telegram.coroutines.createSecretChat
 import kotlinx.telegram.coroutines.getSecretChat
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.SecretChat
+import org.drinkless.tdlib.TdApi.SecretChat
 
 /**
  * Interface for access [TdApi.SecretChat] extension functions. Can be used alongside with other

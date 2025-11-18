@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.File
-import org.drinkless.td.libcore.telegram.TdApi.UpdateFileAddedToDownloads
-import org.drinkless.td.libcore.telegram.TdApi.UpdateFileDownload
-import org.drinkless.td.libcore.telegram.TdApi.UpdateFileDownloads
-import org.drinkless.td.libcore.telegram.TdApi.UpdateFileGenerationStart
-import org.drinkless.td.libcore.telegram.TdApi.UpdateFileRemovedFromDownloads
+import org.drinkless.tdlib.TdApi.File
+import org.drinkless.tdlib.TdApi.UpdateFileAddedToDownloads
+import org.drinkless.tdlib.TdApi.UpdateFileDownload
+import org.drinkless.tdlib.TdApi.UpdateFileDownloads
+import org.drinkless.tdlib.TdApi.UpdateFileGenerationStart
+import org.drinkless.tdlib.TdApi.UpdateFileRemovedFromDownloads
 
 /**
  * emits [File] if information about a file was updated.

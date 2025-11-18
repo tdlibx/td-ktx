@@ -8,8 +8,8 @@ import kotlin.ByteArray
 import kotlin.Long
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.ReportSponsoredResult
-import org.drinkless.td.libcore.telegram.TdApi.VideoMessageAdvertisements
+import org.drinkless.tdlib.TdApi.ReportSponsoredResult
+import org.drinkless.tdlib.TdApi.VideoMessageAdvertisements
 
 /**
  * Suspend function, which informs TDLib that the user clicked a video message advertisement.

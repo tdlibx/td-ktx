@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.PaidReactionType
-import org.drinkless.td.libcore.telegram.TdApi.ReactionType
+import org.drinkless.tdlib.TdApi.PaidReactionType
+import org.drinkless.tdlib.TdApi.ReactionType
 
 /**
  * emits [ReactionType] if the type of default reaction has changed.

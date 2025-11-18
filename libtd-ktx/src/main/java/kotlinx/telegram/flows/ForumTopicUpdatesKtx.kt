@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.ForumTopicInfo
-import org.drinkless.td.libcore.telegram.TdApi.UpdateForumTopic
+import org.drinkless.tdlib.TdApi.ForumTopicInfo
+import org.drinkless.tdlib.TdApi.UpdateForumTopic
 
 /**
  * emits info [ForumTopicInfo] if basic information about a topic in a forum chat was changed.

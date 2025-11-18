@@ -6,8 +6,8 @@ package kotlinx.telegram.coroutines
 
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Animations
-import org.drinkless.td.libcore.telegram.TdApi.InputFile
+import org.drinkless.tdlib.TdApi.Animations
+import org.drinkless.tdlib.TdApi.InputFile
 
 /**
  * Suspend function, which manually adds a new animation to the list of saved animations. The new

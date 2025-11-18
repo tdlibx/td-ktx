@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.StickerSet
-import org.drinkless.td.libcore.telegram.TdApi.UpdateInstalledStickerSets
-import org.drinkless.td.libcore.telegram.TdApi.UpdateRecentStickers
-import org.drinkless.td.libcore.telegram.TdApi.UpdateTrendingStickerSets
+import org.drinkless.tdlib.TdApi.StickerSet
+import org.drinkless.tdlib.TdApi.UpdateInstalledStickerSets
+import org.drinkless.tdlib.TdApi.UpdateRecentStickers
+import org.drinkless.tdlib.TdApi.UpdateTrendingStickerSets
 
 /**
  * emits [StickerSet] if a sticker set has changed.

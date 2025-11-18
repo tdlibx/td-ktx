@@ -9,12 +9,12 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.AuthenticationCodeInfo
-import org.drinkless.td.libcore.telegram.TdApi.PhoneNumberAuthenticationSettings
-import org.drinkless.td.libcore.telegram.TdApi.PhoneNumberCodeType
-import org.drinkless.td.libcore.telegram.TdApi.PhoneNumberInfo
-import org.drinkless.td.libcore.telegram.TdApi.ResendCodeReason
-import org.drinkless.td.libcore.telegram.TdApi.User
+import org.drinkless.tdlib.TdApi.AuthenticationCodeInfo
+import org.drinkless.tdlib.TdApi.PhoneNumberAuthenticationSettings
+import org.drinkless.tdlib.TdApi.PhoneNumberCodeType
+import org.drinkless.tdlib.TdApi.PhoneNumberInfo
+import org.drinkless.tdlib.TdApi.ResendCodeReason
+import org.drinkless.tdlib.TdApi.User
 
 /**
  * Suspend function, which check the authentication code and completes the request for which the

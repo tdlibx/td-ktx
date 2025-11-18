@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Poll
-import org.drinkless.td.libcore.telegram.TdApi.UpdatePollAnswer
+import org.drinkless.tdlib.TdApi.Poll
+import org.drinkless.tdlib.TdApi.UpdatePollAnswer
 
 /**
  * emits [Poll] if a poll was updated; for bots only.

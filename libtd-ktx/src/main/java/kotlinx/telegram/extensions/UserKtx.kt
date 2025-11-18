@@ -53,21 +53,21 @@ import kotlinx.telegram.coroutines.suggestUserProfilePhoto
 import kotlinx.telegram.coroutines.transferChatOwnership
 import kotlinx.telegram.coroutines.uploadStickerFile
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Birthdate
-import org.drinkless.td.libcore.telegram.TdApi.BotMenuButton
-import org.drinkless.td.libcore.telegram.TdApi.CallProtocol
-import org.drinkless.td.libcore.telegram.TdApi.EmojiStatus
-import org.drinkless.td.libcore.telegram.TdApi.FormattedText
-import org.drinkless.td.libcore.telegram.TdApi.ImportedContact
-import org.drinkless.td.libcore.telegram.TdApi.InputChatPhoto
-import org.drinkless.td.libcore.telegram.TdApi.InputFile
-import org.drinkless.td.libcore.telegram.TdApi.InputInlineQueryResult
-import org.drinkless.td.libcore.telegram.TdApi.InputPassportElementError
-import org.drinkless.td.libcore.telegram.TdApi.InputSticker
-import org.drinkless.td.libcore.telegram.TdApi.StickerFormat
-import org.drinkless.td.libcore.telegram.TdApi.StickerType
-import org.drinkless.td.libcore.telegram.TdApi.TargetChatTypes
-import org.drinkless.td.libcore.telegram.TdApi.User
+import org.drinkless.tdlib.TdApi.Birthdate
+import org.drinkless.tdlib.TdApi.BotMenuButton
+import org.drinkless.tdlib.TdApi.CallProtocol
+import org.drinkless.tdlib.TdApi.EmojiStatus
+import org.drinkless.tdlib.TdApi.FormattedText
+import org.drinkless.tdlib.TdApi.ImportedContact
+import org.drinkless.tdlib.TdApi.InputChatPhoto
+import org.drinkless.tdlib.TdApi.InputFile
+import org.drinkless.tdlib.TdApi.InputInlineQueryResult
+import org.drinkless.tdlib.TdApi.InputPassportElementError
+import org.drinkless.tdlib.TdApi.InputSticker
+import org.drinkless.tdlib.TdApi.StickerFormat
+import org.drinkless.tdlib.TdApi.StickerType
+import org.drinkless.tdlib.TdApi.TargetChatTypes
+import org.drinkless.tdlib.TdApi.User
 
 /**
  * Interface for access [TdApi.User] extension functions. Can be used alongside with other extension

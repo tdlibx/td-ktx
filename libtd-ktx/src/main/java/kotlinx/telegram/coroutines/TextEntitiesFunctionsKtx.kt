@@ -7,9 +7,9 @@ package kotlinx.telegram.coroutines
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.FormattedText
-import org.drinkless.td.libcore.telegram.TdApi.TextEntities
-import org.drinkless.td.libcore.telegram.TdApi.TextParseMode
+import org.drinkless.tdlib.TdApi.FormattedText
+import org.drinkless.tdlib.TdApi.TextEntities
+import org.drinkless.tdlib.TdApi.TextParseMode
 
 /**
  * Suspend function, which returns all entities (mentions, hashtags, cashtags, bot commands, bank

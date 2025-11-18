@@ -7,10 +7,10 @@ package kotlinx.telegram.coroutines
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.EmailAddressAuthentication
-import org.drinkless.td.libcore.telegram.TdApi.EmailAddressAuthenticationCodeInfo
-import org.drinkless.td.libcore.telegram.TdApi.PasswordState
-import org.drinkless.td.libcore.telegram.TdApi.RecoveryEmailAddress
+import org.drinkless.tdlib.TdApi.EmailAddressAuthentication
+import org.drinkless.tdlib.TdApi.EmailAddressAuthenticationCodeInfo
+import org.drinkless.tdlib.TdApi.PasswordState
+import org.drinkless.tdlib.TdApi.RecoveryEmailAddress
 
 /**
  * Suspend function, which cancels verification of the 2-step verification recovery email address.

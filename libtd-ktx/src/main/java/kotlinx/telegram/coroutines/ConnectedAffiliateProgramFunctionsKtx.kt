@@ -9,9 +9,9 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.AffiliateType
-import org.drinkless.td.libcore.telegram.TdApi.ConnectedAffiliateProgram
-import org.drinkless.td.libcore.telegram.TdApi.ConnectedAffiliatePrograms
+import org.drinkless.tdlib.TdApi.AffiliateType
+import org.drinkless.tdlib.TdApi.ConnectedAffiliateProgram
+import org.drinkless.tdlib.TdApi.ConnectedAffiliatePrograms
 
 /**
  * Suspend function, which returns an affiliate program that were connected to the given affiliate

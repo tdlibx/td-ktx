@@ -12,19 +12,19 @@ import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.CheckStickerSetNameResult
-import org.drinkless.td.libcore.telegram.TdApi.InputFile
-import org.drinkless.td.libcore.telegram.TdApi.InputSticker
-import org.drinkless.td.libcore.telegram.TdApi.MaskPosition
-import org.drinkless.td.libcore.telegram.TdApi.Outline
-import org.drinkless.td.libcore.telegram.TdApi.Sticker
-import org.drinkless.td.libcore.telegram.TdApi.StickerFormat
-import org.drinkless.td.libcore.telegram.TdApi.StickerSet
-import org.drinkless.td.libcore.telegram.TdApi.StickerSets
-import org.drinkless.td.libcore.telegram.TdApi.StickerType
-import org.drinkless.td.libcore.telegram.TdApi.Stickers
-import org.drinkless.td.libcore.telegram.TdApi.Text
-import org.drinkless.td.libcore.telegram.TdApi.TrendingStickerSets
+import org.drinkless.tdlib.TdApi.CheckStickerSetNameResult
+import org.drinkless.tdlib.TdApi.InputFile
+import org.drinkless.tdlib.TdApi.InputSticker
+import org.drinkless.tdlib.TdApi.MaskPosition
+import org.drinkless.tdlib.TdApi.Outline
+import org.drinkless.tdlib.TdApi.Sticker
+import org.drinkless.tdlib.TdApi.StickerFormat
+import org.drinkless.tdlib.TdApi.StickerSet
+import org.drinkless.tdlib.TdApi.StickerSets
+import org.drinkless.tdlib.TdApi.StickerType
+import org.drinkless.tdlib.TdApi.Stickers
+import org.drinkless.tdlib.TdApi.Text
+import org.drinkless.tdlib.TdApi.TrendingStickerSets
 
 /**
  * Suspend function, which adds a new sticker to the list of favorite stickers. The new sticker is

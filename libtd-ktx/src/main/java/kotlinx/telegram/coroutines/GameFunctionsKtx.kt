@@ -10,8 +10,8 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.GameHighScores
-import org.drinkless.td.libcore.telegram.TdApi.Message
+import org.drinkless.tdlib.TdApi.GameHighScores
+import org.drinkless.tdlib.TdApi.Message
 
 /**
  * Suspend function, which returns the high scores for a game and some part of the high score table

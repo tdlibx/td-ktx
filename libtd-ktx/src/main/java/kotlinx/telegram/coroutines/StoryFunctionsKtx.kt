@@ -13,22 +13,22 @@ import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.AvailableReactions
-import org.drinkless.td.libcore.telegram.TdApi.CanPostStoryResult
-import org.drinkless.td.libcore.telegram.TdApi.Chats
-import org.drinkless.td.libcore.telegram.TdApi.FormattedText
-import org.drinkless.td.libcore.telegram.TdApi.InputStoryAreas
-import org.drinkless.td.libcore.telegram.TdApi.InputStoryContent
-import org.drinkless.td.libcore.telegram.TdApi.PublicForwards
-import org.drinkless.td.libcore.telegram.TdApi.ReactionType
-import org.drinkless.td.libcore.telegram.TdApi.ReportStoryResult
-import org.drinkless.td.libcore.telegram.TdApi.Stories
-import org.drinkless.td.libcore.telegram.TdApi.Story
-import org.drinkless.td.libcore.telegram.TdApi.StoryAlbum
-import org.drinkless.td.libcore.telegram.TdApi.StoryFullId
-import org.drinkless.td.libcore.telegram.TdApi.StoryInteractions
-import org.drinkless.td.libcore.telegram.TdApi.StoryPrivacySettings
-import org.drinkless.td.libcore.telegram.TdApi.StoryStatistics
+import org.drinkless.tdlib.TdApi.AvailableReactions
+import org.drinkless.tdlib.TdApi.CanPostStoryResult
+import org.drinkless.tdlib.TdApi.Chats
+import org.drinkless.tdlib.TdApi.FormattedText
+import org.drinkless.tdlib.TdApi.InputStoryAreas
+import org.drinkless.tdlib.TdApi.InputStoryContent
+import org.drinkless.tdlib.TdApi.PublicForwards
+import org.drinkless.tdlib.TdApi.ReactionType
+import org.drinkless.tdlib.TdApi.ReportStoryResult
+import org.drinkless.tdlib.TdApi.Stories
+import org.drinkless.tdlib.TdApi.Story
+import org.drinkless.tdlib.TdApi.StoryAlbum
+import org.drinkless.tdlib.TdApi.StoryFullId
+import org.drinkless.tdlib.TdApi.StoryInteractions
+import org.drinkless.tdlib.TdApi.StoryPrivacySettings
+import org.drinkless.tdlib.TdApi.StoryStatistics
 
 /**
  * Suspend function, which activates stealth mode for stories, which hides all views of stories from

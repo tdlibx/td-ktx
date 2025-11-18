@@ -11,7 +11,7 @@ import kotlinx.telegram.coroutines.terminateSession
 import kotlinx.telegram.coroutines.toggleSessionCanAcceptCalls
 import kotlinx.telegram.coroutines.toggleSessionCanAcceptSecretChats
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Session
+import org.drinkless.tdlib.TdApi.Session
 
 /**
  * Interface for access [TdApi.Session] extension functions. Can be used alongside with other
