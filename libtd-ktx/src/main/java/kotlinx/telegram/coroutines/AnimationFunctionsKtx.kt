@@ -15,7 +15,7 @@ import org.drinkless.td.libcore.telegram.TdApi.InputFile
  * removed first. Only non-secret video animations with MIME type &quot;video/mp4&quot; can be added to
  * the list.
  *
- * @param animation The animation file to be added. Only animations known to the server (i.e.
+ * @param animation The animation file to be added. Only animations known to the server (i.e.,
  * successfully sent via a message) can be added to the list.
  */
 suspend fun TelegramFlow.addSavedAnimation(animation: InputFile?) =

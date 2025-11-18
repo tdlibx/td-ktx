@@ -26,7 +26,7 @@ import org.drinkless.td.libcore.telegram.TdApi.Message
 suspend fun TelegramFlow.getGameHighScores(
   chatId: Long,
   messageId: Long,
-  userId: Int
+  userId: Long
 ): GameHighScores = this.sendFunctionAsync(TdApi.GetGameHighScores(chatId, messageId, userId))
 
 /**
@@ -38,7 +38,7 @@ suspend fun TelegramFlow.getGameHighScores(
  *
  * @return [GameHighScores] Contains a list of game high scores.
  */
-suspend fun TelegramFlow.getInlineGameHighScores(inlineMessageId: String?, userId: Int):
+suspend fun TelegramFlow.getInlineGameHighScores(inlineMessageId: String?, userId: Long):
     GameHighScores = this.sendFunctionAsync(TdApi.GetInlineGameHighScores(inlineMessageId, userId))
 
 /**
@@ -46,7 +46,7 @@ suspend fun TelegramFlow.getInlineGameHighScores(inlineMessageId: String?, userI
  *
  * @param chatId The chat to which the message with the game belongs.  
  * @param messageId Identifier of the message.  
- * @param editMessage True, if the message should be edited.  
+ * @param editMessage Pass true to edit the game message to include the current scoreboard.  
  * @param userId User identifier.  
  * @param score The new score.  
  * @param force Pass true to update the score even if it decreases. If the score is 0, the user will
@@ -58,7 +58,7 @@ suspend fun TelegramFlow.setGameScore(
   chatId: Long,
   messageId: Long,
   editMessage: Boolean,
-  userId: Int,
+  userId: Long,
   score: Int,
   force: Boolean
 ): Message = this.sendFunctionAsync(TdApi.SetGameScore(chatId, messageId, editMessage, userId,
@@ -68,7 +68,7 @@ suspend fun TelegramFlow.setGameScore(
  * Suspend function, which updates the game score of the specified user in a game; for bots only.
  *
  * @param inlineMessageId Inline message identifier.  
- * @param editMessage True, if the message should be edited.  
+ * @param editMessage Pass true to edit the game message to include the current scoreboard.  
  * @param userId User identifier.  
  * @param score The new score.  
  * @param force Pass true to update the score even if it decreases. If the score is 0, the user will
@@ -77,7 +77,7 @@ suspend fun TelegramFlow.setGameScore(
 suspend fun TelegramFlow.setInlineGameScore(
   inlineMessageId: String?,
   editMessage: Boolean,
-  userId: Int,
+  userId: Long,
   score: Int,
   force: Boolean
 ) = this.sendFunctionLaunch(TdApi.SetInlineGameScore(inlineMessageId, editMessage, userId, score,

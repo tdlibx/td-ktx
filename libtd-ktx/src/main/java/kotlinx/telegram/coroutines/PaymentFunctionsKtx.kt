@@ -9,26 +9,33 @@ import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.InputCredentials
+import org.drinkless.td.libcore.telegram.TdApi.InputInvoice
 import org.drinkless.td.libcore.telegram.TdApi.PaymentForm
 import org.drinkless.td.libcore.telegram.TdApi.PaymentReceipt
 import org.drinkless.td.libcore.telegram.TdApi.PaymentResult
+import org.drinkless.td.libcore.telegram.TdApi.PremiumGiftPaymentOptions
+import org.drinkless.td.libcore.telegram.TdApi.PremiumGiveawayPaymentOptions
+import org.drinkless.td.libcore.telegram.TdApi.StarGiveawayPaymentOptions
+import org.drinkless.td.libcore.telegram.TdApi.StarPaymentOptions
+import org.drinkless.td.libcore.telegram.TdApi.ThemeParameters
 
 /**
- * Suspend function, which returns an invoice payment form. This method should be called when the
- * user presses inlineKeyboardButtonBuy.
+ * Suspend function, which returns an invoice payment form. This method must be called when the user
+ * presses inline button of the type inlineKeyboardButtonTypeBuy, or wants to buy access to media in a
+ * messagePaidMedia message.
  *
- * @param chatId Chat identifier of the Invoice message.  
- * @param messageId Message identifier.
+ * @param inputInvoice The invoice.  
+ * @param theme Preferred payment form theme; pass null to use the default theme.
  *
  * @return [PaymentForm] Contains information about an invoice payment form.
  */
-suspend fun TelegramFlow.getPaymentForm(chatId: Long, messageId: Long): PaymentForm =
-    this.sendFunctionAsync(TdApi.GetPaymentForm(chatId, messageId))
+suspend fun TelegramFlow.getPaymentForm(inputInvoice: InputInvoice?, theme: ThemeParameters?):
+    PaymentForm = this.sendFunctionAsync(TdApi.GetPaymentForm(inputInvoice, theme))
 
 /**
  * Suspend function, which returns information about a successful payment.
  *
- * @param chatId Chat identifier of the PaymentSuccessful message.  
+ * @param chatId Chat identifier of the messagePaymentSuccessful message.  
  * @param messageId Message identifier.
  *
  * @return [PaymentReceipt] Contains information about a successful payment.
@@ -37,21 +44,84 @@ suspend fun TelegramFlow.getPaymentReceipt(chatId: Long, messageId: Long): Payme
     this.sendFunctionAsync(TdApi.GetPaymentReceipt(chatId, messageId))
 
 /**
+ * Suspend function, which returns available options for gifting Telegram Premium to a user.
+ *
+ * @return [PremiumGiftPaymentOptions] Contains a list of options for gifting Telegram Premium to a
+ * user.
+ */
+suspend fun TelegramFlow.getPremiumGiftPaymentOptions(): PremiumGiftPaymentOptions =
+    this.sendFunctionAsync(TdApi.GetPremiumGiftPaymentOptions())
+
+/**
+ * Suspend function, which returns available options for creating of Telegram Premium giveaway or
+ * manual distribution of Telegram Premium among chat members.
+ *
+ * @param boostedChatId Identifier of the supergroup or channel chat, which will be automatically
+ * boosted by receivers of the gift codes and which is administered by the user.
+ *
+ * @return [PremiumGiveawayPaymentOptions] Contains a list of options for creating of Telegram
+ * Premium giveaway or manual distribution of Telegram Premium among chat members.
+ */
+suspend fun TelegramFlow.getPremiumGiveawayPaymentOptions(boostedChatId: Long):
+    PremiumGiveawayPaymentOptions =
+    this.sendFunctionAsync(TdApi.GetPremiumGiveawayPaymentOptions(boostedChatId))
+
+/**
+ * Suspend function, which returns available options for Telegram Stars gifting.
+ *
+ * @param userId Identifier of the user that will receive Telegram Stars; pass 0 to get options for
+ * an unspecified user.
+ *
+ * @return [StarPaymentOptions] Contains a list of options for buying Telegram Stars.
+ */
+suspend fun TelegramFlow.getStarGiftPaymentOptions(userId: Long): StarPaymentOptions =
+    this.sendFunctionAsync(TdApi.GetStarGiftPaymentOptions(userId))
+
+/**
+ * Suspend function, which returns available options for Telegram Star giveaway creation.
+ *
+ * @return [StarGiveawayPaymentOptions] Contains a list of options for creating of Telegram Star
+ * giveaway.
+ */
+suspend fun TelegramFlow.getStarGiveawayPaymentOptions(): StarGiveawayPaymentOptions =
+    this.sendFunctionAsync(TdApi.GetStarGiveawayPaymentOptions())
+
+/**
+ * Suspend function, which returns available options for Telegram Stars purchase.
+ *
+ * @return [StarPaymentOptions] Contains a list of options for buying Telegram Stars.
+ */
+suspend fun TelegramFlow.getStarPaymentOptions(): StarPaymentOptions =
+    this.sendFunctionAsync(TdApi.GetStarPaymentOptions())
+
+/**
+ * Suspend function, which refunds a previously done payment in Telegram Stars; for bots only.
+ *
+ * @param userId Identifier of the user that did the payment.  
+ * @param telegramPaymentChargeId Telegram payment identifier.
+ */
+suspend fun TelegramFlow.refundStarPayment(userId: Long, telegramPaymentChargeId: String?) =
+    this.sendFunctionLaunch(TdApi.RefundStarPayment(userId, telegramPaymentChargeId))
+
+/**
  * Suspend function, which sends a filled-out payment form to the bot for final verification.
  *
- * @param chatId Chat identifier of the Invoice message.  
- * @param messageId Message identifier.  
- * @param orderInfoId Identifier returned by ValidateOrderInfo, or an empty string.  
+ * @param inputInvoice The invoice.  
+ * @param paymentFormId Payment form identifier returned by getPaymentForm.  
+ * @param orderInfoId Identifier returned by validateOrderInfo, or an empty string.  
  * @param shippingOptionId Identifier of a chosen shipping option, if applicable.  
- * @param credentials The credentials chosen by user for payment.
+ * @param credentials The credentials chosen by user for payment; pass null for a payment in
+ * Telegram Stars.  
+ * @param tipAmount Chosen by the user amount of tip in the smallest units of the currency.
  *
  * @return [PaymentResult] Contains the result of a payment request.
  */
 suspend fun TelegramFlow.sendPaymentForm(
-  chatId: Long,
-  messageId: Long,
+  inputInvoice: InputInvoice?,
+  paymentFormId: Long,
   orderInfoId: String?,
   shippingOptionId: String?,
-  credentials: InputCredentials?
-): PaymentResult = this.sendFunctionAsync(TdApi.SendPaymentForm(chatId, messageId, orderInfoId,
-    shippingOptionId, credentials))
+  credentials: InputCredentials?,
+  tipAmount: Long
+): PaymentResult = this.sendFunctionAsync(TdApi.SendPaymentForm(inputInvoice, paymentFormId,
+    orderInfoId, shippingOptionId, credentials, tipAmount))

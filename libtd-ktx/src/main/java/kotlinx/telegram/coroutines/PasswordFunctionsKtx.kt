@@ -11,22 +11,49 @@ import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.EmailAddressAuthenticationCodeInfo
 import org.drinkless.td.libcore.telegram.TdApi.PasswordState
+import org.drinkless.td.libcore.telegram.TdApi.ResetPasswordResult
 import org.drinkless.td.libcore.telegram.TdApi.TemporaryPasswordState
 
 /**
- * Suspend function, which checks the authentication password for correctness. Works only when the
- * current authorization state is authorizationStateWaitPassword.
+ * Suspend function, which cancels reset of 2-step verification password. The method can be called
+ * if passwordState.pendingResetDate &gt; 0.
+ */
+suspend fun TelegramFlow.cancelPasswordReset() =
+    this.sendFunctionLaunch(TdApi.CancelPasswordReset())
+
+/**
+ * Suspend function, which checks the 2-step verification password for correctness. Works only when
+ * the current authorization state is authorizationStateWaitPassword.
  *
- * @param password The password to check.
+ * @param password The 2-step verification password to check.
  */
 suspend fun TelegramFlow.checkAuthenticationPassword(password: String?) =
     this.sendFunctionLaunch(TdApi.CheckAuthenticationPassword(password))
 
 /**
+ * Suspend function, which checks whether a 2-step verification password recovery code sent to an
+ * email address is valid. Works only when the current authorization state is
+ * authorizationStateWaitPassword.
+ *
+ * @param recoveryCode Recovery code to check.
+ */
+suspend fun TelegramFlow.checkAuthenticationPasswordRecoveryCode(recoveryCode: String?) =
+    this.sendFunctionLaunch(TdApi.CheckAuthenticationPasswordRecoveryCode(recoveryCode))
+
+/**
+ * Suspend function, which checks whether a 2-step verification password recovery code sent to an
+ * email address is valid.
+ *
+ * @param recoveryCode Recovery code to check.
+ */
+suspend fun TelegramFlow.checkPasswordRecoveryCode(recoveryCode: String?) =
+    this.sendFunctionLaunch(TdApi.CheckPasswordRecoveryCode(recoveryCode))
+
+/**
  * Suspend function, which creates a new temporary password for processing payments.
  *
- * @param password Persistent user password.  
- * @param validFor Time during which the temporary password will be valid, in seconds; should be
+ * @param password The 2-step verification password of the current user.  
+ * @param validFor Time during which the temporary password will be valid, in seconds; must be
  * between 60 and 86400.
  *
  * @return [TemporaryPasswordState] Returns information about the availability of a temporary
@@ -54,37 +81,49 @@ suspend fun TelegramFlow.getTemporaryPasswordState(): TemporaryPasswordState =
     this.sendFunctionAsync(TdApi.GetTemporaryPasswordState())
 
 /**
- * Suspend function, which recovers the password with a password recovery code sent to an email
- * address that was previously set up. Works only when the current authorization state is
- * authorizationStateWaitPassword.
+ * Suspend function, which recovers the 2-step verification password with a password recovery code
+ * sent to an email address that was previously set up. Works only when the current authorization state
+ * is authorizationStateWaitPassword.
  *
- * @param recoveryCode Recovery code to check.
+ * @param recoveryCode Recovery code to check.  
+ * @param newPassword New 2-step verification password of the user; may be empty to remove the
+ * password.  
+ * @param newHint New password hint; may be empty.
  */
-suspend fun TelegramFlow.recoverAuthenticationPassword(recoveryCode: String?) =
-    this.sendFunctionLaunch(TdApi.RecoverAuthenticationPassword(recoveryCode))
+suspend fun TelegramFlow.recoverAuthenticationPassword(
+  recoveryCode: String?,
+  newPassword: String?,
+  newHint: String?
+) = this.sendFunctionLaunch(TdApi.RecoverAuthenticationPassword(recoveryCode, newPassword, newHint))
 
 /**
- * Suspend function, which recovers the password using a recovery code sent to an email address that
- * was previously set up.
+ * Suspend function, which recovers the 2-step verification password using a recovery code sent to
+ * an email address that was previously set up.
  *
- * @param recoveryCode Recovery code to check.
+ * @param recoveryCode Recovery code to check.  
+ * @param newPassword New 2-step verification password of the user; may be empty to remove the
+ * password.  
+ * @param newHint New password hint; may be empty.
  *
  * @return [PasswordState] Represents the current state of 2-step verification.
  */
-suspend fun TelegramFlow.recoverPassword(recoveryCode: String?): PasswordState =
-    this.sendFunctionAsync(TdApi.RecoverPassword(recoveryCode))
+suspend fun TelegramFlow.recoverPassword(
+  recoveryCode: String?,
+  newPassword: String?,
+  newHint: String?
+): PasswordState = this.sendFunctionAsync(TdApi.RecoverPassword(recoveryCode, newPassword, newHint))
 
 /**
- * Suspend function, which requests to send a password recovery code to an email address that was
- * previously set up. Works only when the current authorization state is
+ * Suspend function, which requests to send a 2-step verification password recovery code to an email
+ * address that was previously set up. Works only when the current authorization state is
  * authorizationStateWaitPassword.
  */
 suspend fun TelegramFlow.requestAuthenticationPasswordRecovery() =
     this.sendFunctionLaunch(TdApi.RequestAuthenticationPasswordRecovery())
 
 /**
- * Suspend function, which requests to send a password recovery code to an email address that was
- * previously set up.
+ * Suspend function, which requests to send a 2-step verification password recovery code to an email
+ * address that was previously set up.
  *
  * @return [EmailAddressAuthenticationCodeInfo] Information about the email address authentication
  * code that was sent.
@@ -93,13 +132,25 @@ suspend fun TelegramFlow.requestPasswordRecovery(): EmailAddressAuthenticationCo
     this.sendFunctionAsync(TdApi.RequestPasswordRecovery())
 
 /**
- * Suspend function, which changes the password for the user. If a new recovery email address is
- * specified, then the change will not be applied until the new recovery email address is confirmed.
+ * Suspend function, which removes 2-step verification password without previous password and access
+ * to recovery email address. The password can't be reset immediately and the request needs to be
+ * repeated after the specified time.
  *
- * @param oldPassword Previous password of the user.  
- * @param newPassword New password of the user; may be empty to remove the password.  
+ * @return [ResetPasswordResult] This class is an abstract base class.
+ */
+suspend fun TelegramFlow.resetPassword(): ResetPasswordResult =
+    this.sendFunctionAsync(TdApi.ResetPassword())
+
+/**
+ * Suspend function, which changes the 2-step verification password for the current user. If a new
+ * recovery email address is specified, then the change will not be applied until the new recovery
+ * email address is confirmed.
+ *
+ * @param oldPassword Previous 2-step verification password of the user.  
+ * @param newPassword New 2-step verification password of the user; may be empty to remove the
+ * password.  
  * @param newHint New password hint; may be empty.  
- * @param setRecoveryEmailAddress Pass true if the recovery email address should be changed.  
+ * @param setRecoveryEmailAddress Pass true to change also the recovery email address.  
  * @param newRecoveryEmailAddress New recovery email address; may be empty.
  *
  * @return [PasswordState] Represents the current state of 2-step verification.

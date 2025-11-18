@@ -4,6 +4,7 @@
 //
 package kotlinx.telegram.extensions
 
+import kotlin.Array
 import kotlin.Boolean
 import kotlin.Int
 import kotlin.Long
@@ -11,16 +12,31 @@ import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.createSupergroupChat
-import kotlinx.telegram.coroutines.deleteSupergroup
+import kotlinx.telegram.coroutines.disableAllSupergroupUsernames
 import kotlinx.telegram.coroutines.getSupergroup
 import kotlinx.telegram.coroutines.getSupergroupFullInfo
 import kotlinx.telegram.coroutines.getSupergroupMembers
+import kotlinx.telegram.coroutines.reorderSupergroupActiveUsernames
+import kotlinx.telegram.coroutines.reportSupergroupAntiSpamFalsePositive
 import kotlinx.telegram.coroutines.reportSupergroupSpam
+import kotlinx.telegram.coroutines.setSupergroupCustomEmojiStickerSet
+import kotlinx.telegram.coroutines.setSupergroupMainProfileTab
 import kotlinx.telegram.coroutines.setSupergroupStickerSet
+import kotlinx.telegram.coroutines.setSupergroupUnrestrictBoostCount
 import kotlinx.telegram.coroutines.setSupergroupUsername
+import kotlinx.telegram.coroutines.toggleSupergroupCanHaveSponsoredMessages
+import kotlinx.telegram.coroutines.toggleSupergroupHasAggressiveAntiSpamEnabled
+import kotlinx.telegram.coroutines.toggleSupergroupHasAutomaticTranslation
+import kotlinx.telegram.coroutines.toggleSupergroupHasHiddenMembers
 import kotlinx.telegram.coroutines.toggleSupergroupIsAllHistoryAvailable
+import kotlinx.telegram.coroutines.toggleSupergroupIsBroadcastGroup
+import kotlinx.telegram.coroutines.toggleSupergroupIsForum
+import kotlinx.telegram.coroutines.toggleSupergroupJoinByRequest
+import kotlinx.telegram.coroutines.toggleSupergroupJoinToSendMessages
 import kotlinx.telegram.coroutines.toggleSupergroupSignMessages
+import kotlinx.telegram.coroutines.toggleSupergroupUsernameIsActive
 import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.td.libcore.telegram.TdApi.ProfileTab
 import org.drinkless.td.libcore.telegram.TdApi.Supergroup
 import org.drinkless.td.libcore.telegram.TdApi.SupergroupMembersFilter
 
@@ -39,7 +55,7 @@ interface SupergroupKtx : BaseKtx {
    * Suspend function, which returns an existing chat corresponding to a known supergroup or
    * channel.
    *
-   * @param force If true, the chat will be created without network request. In this case all
+   * @param force Pass true to create the chat without a network request. In this case all
    * information about the chat except its type, title and photo can be incorrect.
    *
    * @return [TdApi.Chat] A chat. (Can be a private chat, basic group, supergroup, or secret chat.)
@@ -47,16 +63,14 @@ interface SupergroupKtx : BaseKtx {
   suspend fun Supergroup.createChat(force: Boolean) = api.createSupergroupChat(this.id, force)
 
   /**
-   * Suspend function, which deletes a supergroup or channel along with all messages in the
-   * corresponding chat. This will release the supergroup or channel username and remove all members;
-   * requires owner privileges in the supergroup or channel. Chats with more than 1000 members can't be
-   * deleted using this method.
+   * Suspend function, which disables all active non-editable usernames of a supergroup or channel,
+   * requires owner privileges in the supergroup or channel.
    */
-  suspend fun Supergroup.delete() = api.deleteSupergroup(this.id)
+  suspend fun Supergroup.disableAllUsernames() = api.disableAllSupergroupUsernames(this.id)
 
   /**
    * Suspend function, which returns information about a supergroup or a channel by its identifier.
-   * This is an offline request if the current user is not a bot.
+   * This is an offline method if the current user is not a bot.
    *
    *
    * @return [TdApi.Supergroup] Represents a supergroup or channel with zero or more members
@@ -78,12 +92,12 @@ interface SupergroupKtx : BaseKtx {
 
   /**
    * Suspend function, which returns information about members or banned users in a supergroup or
-   * channel. Can be used only if SupergroupFullInfo.canGetMembers == true; additionally, administrator
+   * channel. Can be used only if supergroupFullInfo.canGetMembers == true; additionally, administrator
    * privileges may be required for some filters.
    *
-   * @param filter The type of users to return. By default, supergroupMembersRecent.  
+   * @param filter The type of users to return; pass null to use supergroupMembersFilterRecent.  
    * @param offset Number of users to skip.  
-   * @param limit The maximum number of users be returned; up to 200.
+   * @param limit The maximum number of users to be returned; up to 200.
    *
    * @return [TdApi.ChatMembers] Contains a list of chat members.
    */
@@ -94,18 +108,58 @@ interface SupergroupKtx : BaseKtx {
   ) = api.getSupergroupMembers(this.id, filter, offset, limit)
 
   /**
-   * Suspend function, which reports some messages from a user in a supergroup as spam; requires
-   * administrator rights in the supergroup.
+   * Suspend function, which changes order of active usernames of a supergroup or channel, requires
+   * owner privileges in the supergroup or channel.
    *
-   * @param userId User identifier.  
-   * @param messageIds Identifiers of messages sent in the supergroup by the user. This list must be
-   * non-empty.
+   * @param usernames The new order of active usernames. All currently active usernames must be
+   * specified.
    */
-  suspend fun Supergroup.reportSpam(userId: Int, messageIds: LongArray?) =
-      api.reportSupergroupSpam(this.id, userId, messageIds)
+  suspend fun Supergroup.reorderActiveUsernames(usernames: Array<String>?) =
+      api.reorderSupergroupActiveUsernames(this.id, usernames)
 
   /**
-   * Suspend function, which changes the sticker set of a supergroup; requires canChangeInfo rights.
+   * Suspend function, which reports a false deletion of a message by aggressive anti-spam checks;
+   * requires administrator rights in the supergroup. Can be called only for messages from
+   * chatEventMessageDeleted with canReportAntiSpamFalsePositive == true.
+   *
+   * @param messageId Identifier of the erroneously deleted message from chatEventMessageDeleted.
+   */
+  suspend fun Supergroup.reportAntiSpamFalsePositive(messageId: Long) =
+      api.reportSupergroupAntiSpamFalsePositive(this.id, messageId)
+
+  /**
+   * Suspend function, which reports messages in a supergroup as spam; requires administrator rights
+   * in the supergroup.
+   *
+   * @param messageIds Identifiers of messages to report. Use
+   * messageProperties.canReportSupergroupSpam to check whether the message can be reported.
+   */
+  suspend fun Supergroup.reportSpam(messageIds: LongArray?) = api.reportSupergroupSpam(this.id,
+      messageIds)
+
+  /**
+   * Suspend function, which changes the custom emoji sticker set of a supergroup; requires
+   * canChangeInfo administrator right. The chat must have at least
+   * chatBoostFeatures.minCustomEmojiStickerSetBoostLevel boost level to pass the corresponding color.
+   *
+   * @param customEmojiStickerSetId New value of the custom emoji sticker set identifier for the
+   * supergroup. Use 0 to remove the custom emoji sticker set in the supergroup.
+   */
+  suspend fun Supergroup.setCustomEmojiStickerSet(customEmojiStickerSetId: Long) =
+      api.setSupergroupCustomEmojiStickerSet(this.id, customEmojiStickerSetId)
+
+  /**
+   * Suspend function, which changes the main profile tab of the channel; requires canChangeInfo
+   * administrator right.
+   *
+   * @param mainProfileTab The new value of the main profile tab.
+   */
+  suspend fun Supergroup.setMainProfileTab(mainProfileTab: ProfileTab?) =
+      api.setSupergroupMainProfileTab(this.id, mainProfileTab)
+
+  /**
+   * Suspend function, which changes the sticker set of a supergroup; requires canChangeInfo
+   * administrator right.
    *
    * @param stickerSetId New value of the supergroup sticker set identifier. Use 0 to remove the
    * supergroup sticker set.
@@ -114,17 +168,68 @@ interface SupergroupKtx : BaseKtx {
       stickerSetId)
 
   /**
-   * Suspend function, which changes the username of a supergroup or channel, requires owner
-   * privileges in the supergroup or channel.
+   * Suspend function, which changes the number of times the supergroup must be boosted by a user to
+   * ignore slow mode and chat permission restrictions; requires canRestrictMembers administrator
+   * right.
    *
-   * @param username New value of the username. Use an empty string to remove the username.
+   * @param unrestrictBoostCount New value of the unrestrictBoostCount supergroup setting; 0-8. Use
+   * 0 to remove the setting.
+   */
+  suspend fun Supergroup.setUnrestrictBoostCount(unrestrictBoostCount: Int) =
+      api.setSupergroupUnrestrictBoostCount(this.id, unrestrictBoostCount)
+
+  /**
+   * Suspend function, which changes the editable username of a supergroup or channel, requires
+   * owner privileges in the supergroup or channel.
+   *
+   * @param username New value of the username. Use an empty string to remove the username. The
+   * username can't be completely removed if there is another active or disabled username.
    */
   suspend fun Supergroup.setUsername(username: String?) = api.setSupergroupUsername(this.id,
       username)
 
   /**
+   * Suspend function, which toggles whether sponsored messages are shown in the channel chat;
+   * requires owner privileges in the channel. The chat must have at least
+   * chatBoostFeatures.minSponsoredMessageDisableBoostLevel boost level to disable sponsored messages.
+   *
+   * @param canHaveSponsoredMessages The new value of canHaveSponsoredMessages.
+   */
+  suspend fun Supergroup.toggleCanHaveSponsoredMessages(canHaveSponsoredMessages: Boolean) =
+      api.toggleSupergroupCanHaveSponsoredMessages(this.id, canHaveSponsoredMessages)
+
+  /**
+   * Suspend function, which toggles whether aggressive anti-spam checks are enabled in the
+   * supergroup. Can be called only if supergroupFullInfo.canToggleAggressiveAntiSpam == true.
+   *
+   * @param hasAggressiveAntiSpamEnabled The new value of hasAggressiveAntiSpamEnabled.
+   */
+  suspend fun Supergroup.toggleHasAggressiveAntiSpamEnabled(hasAggressiveAntiSpamEnabled: Boolean) =
+      api.toggleSupergroupHasAggressiveAntiSpamEnabled(this.id, hasAggressiveAntiSpamEnabled)
+
+  /**
+   * Suspend function, which toggles whether messages are automatically translated in the channel
+   * chat; requires canChangeInfo administrator right in the channel. The chat must have at least
+   * chatBoostFeatures.minAutomaticTranslationBoostLevel boost level to enable automatic translation.
+   *
+   * @param hasAutomaticTranslation The new value of hasAutomaticTranslation.
+   */
+  suspend fun Supergroup.toggleHasAutomaticTranslation(hasAutomaticTranslation: Boolean) =
+      api.toggleSupergroupHasAutomaticTranslation(this.id, hasAutomaticTranslation)
+
+  /**
+   * Suspend function, which toggles whether non-administrators can receive only administrators and
+   * bots using getSupergroupMembers or searchChatMembers. Can be called only if
+   * supergroupFullInfo.canHideMembers == true.
+   *
+   * @param hasHiddenMembers New value of hasHiddenMembers.
+   */
+  suspend fun Supergroup.toggleHasHiddenMembers(hasHiddenMembers: Boolean) =
+      api.toggleSupergroupHasHiddenMembers(this.id, hasHiddenMembers)
+
+  /**
    * Suspend function, which toggles whether the message history of a supergroup is available to new
-   * members; requires canChangeInfo rights.
+   * members; requires canChangeInfo member right.
    *
    * @param isAllHistoryAvailable The new value of isAllHistoryAvailable.
    */
@@ -132,11 +237,58 @@ interface SupergroupKtx : BaseKtx {
       api.toggleSupergroupIsAllHistoryAvailable(this.id, isAllHistoryAvailable)
 
   /**
-   * Suspend function, which toggles sender signatures messages sent in a channel; requires
-   * canChangeInfo rights.
-   *
-   * @param signMessages New value of signMessages.
+   * Suspend function, which upgrades supergroup to a broadcast group; requires owner privileges in
+   * the supergroup.
    */
-  suspend fun Supergroup.toggleSignMessages(signMessages: Boolean) =
-      api.toggleSupergroupSignMessages(this.id, signMessages)
+  suspend fun Supergroup.toggleIsBroadcastGroup() = api.toggleSupergroupIsBroadcastGroup(this.id)
+
+  /**
+   * Suspend function, which toggles whether the supergroup is a forum; requires owner privileges in
+   * the supergroup. Discussion supergroups can't be converted to forums.
+   *
+   * @param isForum New value of isForum.  
+   * @param hasForumTabs New value of hasForumTabs; ignored if isForum is false.
+   */
+  suspend fun Supergroup.toggleIsForum(isForum: Boolean, hasForumTabs: Boolean) =
+      api.toggleSupergroupIsForum(this.id, isForum, hasForumTabs)
+
+  /**
+   * Suspend function, which toggles whether all users directly joining the supergroup need to be
+   * approved by supergroup administrators; requires canRestrictMembers administrator right.
+   *
+   * @param joinByRequest New value of joinByRequest.
+   */
+  suspend fun Supergroup.toggleJoinByRequest(joinByRequest: Boolean) =
+      api.toggleSupergroupJoinByRequest(this.id, joinByRequest)
+
+  /**
+   * Suspend function, which toggles whether joining is mandatory to send messages to a discussion
+   * supergroup; requires canRestrictMembers administrator right.
+   *
+   * @param joinToSendMessages New value of joinToSendMessages.
+   */
+  suspend fun Supergroup.toggleJoinToSendMessages(joinToSendMessages: Boolean) =
+      api.toggleSupergroupJoinToSendMessages(this.id, joinToSendMessages)
+
+  /**
+   * Suspend function, which toggles whether sender signature or link to the account is added to
+   * sent messages in a channel; requires canChangeInfo member right.
+   *
+   * @param signMessages New value of signMessages.  
+   * @param showMessageSender New value of showMessageSender.
+   */
+  suspend fun Supergroup.toggleSignMessages(signMessages: Boolean, showMessageSender: Boolean) =
+      api.toggleSupergroupSignMessages(this.id, signMessages, showMessageSender)
+
+  /**
+   * Suspend function, which changes active state for a username of a supergroup or channel,
+   * requires owner privileges in the supergroup or channel. The editable username can't be disabled.
+   * May return an error with a message &quot;USERNAMES_ACTIVE_TOO_MUCH&quot; if the maximum number of
+   * active usernames has been reached.
+   *
+   * @param username The username to change.  
+   * @param isActive Pass true to activate the username; pass false to disable it.
+   */
+  suspend fun Supergroup.toggleUsernameIsActive(username: String?, isActive: Boolean) =
+      api.toggleSupergroupUsernameIsActive(this.id, username, isActive)
 }

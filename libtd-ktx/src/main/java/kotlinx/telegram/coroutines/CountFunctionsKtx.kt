@@ -4,14 +4,38 @@
 //
 package kotlinx.telegram.coroutines
 
+import kotlin.Boolean
+import kotlin.Int
+import kotlin.Long
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.Count
+import org.drinkless.td.libcore.telegram.TdApi.Countries
 import org.drinkless.td.libcore.telegram.TdApi.Text
 
 /**
- * Suspend function, which uses current user IP to found their country. Returns two-letter ISO
- * 3166-1 alpha-2 country code. Can be called before authorization.
+ * Suspend function, which returns approximate number of bots similar to the given bot.
+ *
+ * @param botUserId User identifier of the target bot.  
+ * @param returnLocal Pass true to get the number of bots without sending network requests, or -1 if
+ * the number of bots is unknown locally.
+ *
+ * @return [Count] Contains a counter.
+ */
+suspend fun TelegramFlow.getBotSimilarBotCount(botUserId: Long, returnLocal: Boolean): Count =
+    this.sendFunctionAsync(TdApi.GetBotSimilarBotCount(botUserId, returnLocal))
+
+/**
+ * Suspend function, which returns information about existing countries. Can be called before
+ * authorization.
+ *
+ * @return [Countries] Contains information about countries.
+ */
+suspend fun TelegramFlow.getCountries(): Countries = this.sendFunctionAsync(TdApi.GetCountries())
+
+/**
+ * Suspend function, which uses the current IP address to find the current country. Returns
+ * two-letter ISO 3166-1 alpha-2 country code. Can be called before authorization.
  *
  * @return [Text] Contains some text.
  */
@@ -24,3 +48,16 @@ suspend fun TelegramFlow.getCountryCode(): Text = this.sendFunctionAsync(TdApi.G
  */
 suspend fun TelegramFlow.getImportedContactCount(): Count =
     this.sendFunctionAsync(TdApi.GetImportedContactCount())
+
+/**
+ * Suspend function, which changes the number of times the supergroup must be boosted by a user to
+ * ignore slow mode and chat permission restrictions; requires canRestrictMembers administrator right.
+ *
+ * @param supergroupId Identifier of the supergroup.  
+ * @param unrestrictBoostCount New value of the unrestrictBoostCount supergroup setting; 0-8. Use 0
+ * to remove the setting.
+ */
+suspend fun TelegramFlow.setSupergroupUnrestrictBoostCount(supergroupId: Long,
+    unrestrictBoostCount: Int) =
+    this.sendFunctionLaunch(TdApi.SetSupergroupUnrestrictBoostCount(supergroupId,
+    unrestrictBoostCount))

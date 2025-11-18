@@ -14,18 +14,52 @@ import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.CallbackQueryAnswer
 import org.drinkless.td.libcore.telegram.TdApi.CallbackQueryPayload
 import org.drinkless.td.libcore.telegram.TdApi.InlineQueryResults
+import org.drinkless.td.libcore.telegram.TdApi.InlineQueryResultsButton
 import org.drinkless.td.libcore.telegram.TdApi.InputInlineQueryResult
+import org.drinkless.td.libcore.telegram.TdApi.InputMessageReplyTo
 import org.drinkless.td.libcore.telegram.TdApi.Location
 import org.drinkless.td.libcore.telegram.TdApi.Message
-import org.drinkless.td.libcore.telegram.TdApi.SendMessageOptions
+import org.drinkless.td.libcore.telegram.TdApi.MessageSendOptions
+import org.drinkless.td.libcore.telegram.TdApi.MessageTopic
+import org.drinkless.td.libcore.telegram.TdApi.QuickReplyMessage
+import org.drinkless.td.libcore.telegram.TdApi.SentWebAppMessage
 import org.drinkless.td.libcore.telegram.TdApi.ShippingOption
+
+/**
+ * Suspend function, which adds a message to a quick reply shortcut via inline bot. If shortcut
+ * doesn't exist and there are less than getOption(&quot;quick_reply_shortcut_count_max&quot;)
+ * shortcuts, then a new shortcut is created. The shortcut must not contain more than
+ * getOption(&quot;quick_reply_shortcut_message_count_max&quot;) messages after adding the new message.
+ * Returns the added message.
+ *
+ * @param shortcutName Name of the target shortcut.  
+ * @param replyToMessageId Identifier of a quick reply message in the same shortcut to be replied;
+ * pass 0 if none.  
+ * @param queryId Identifier of the inline query.  
+ * @param resultId Identifier of the inline query result.  
+ * @param hideViaBot Pass true to hide the bot, via which the message is sent. Can be used only for
+ * bots getOption(&quot;animation_search_bot_username&quot;),
+ * getOption(&quot;photo_search_bot_username&quot;), and
+ * getOption(&quot;venue_search_bot_username&quot;).
+ *
+ * @return [QuickReplyMessage] Describes a message that can be used for quick reply.
+ */
+suspend fun TelegramFlow.addQuickReplyShortcutInlineQueryResultMessage(
+  shortcutName: String?,
+  replyToMessageId: Long,
+  queryId: Long,
+  resultId: String?,
+  hideViaBot: Boolean
+): QuickReplyMessage =
+    this.sendFunctionAsync(TdApi.AddQuickReplyShortcutInlineQueryResultMessage(shortcutName,
+    replyToMessageId, queryId, resultId, hideViaBot))
 
 /**
  * Suspend function, which sets the result of a callback query; for bots only.
  *
  * @param callbackQueryId Identifier of the callback query.  
  * @param text Text of the answer.  
- * @param showAlert If true, an alert should be shown to the user instead of a toast notification.  
+ * @param showAlert Pass true to show an alert to the user instead of a toast notification.  
  * @param url URL to be opened.  
  * @param cacheTime Time during which the result of the query can be cached, in seconds.
  */
@@ -51,25 +85,23 @@ suspend fun TelegramFlow.answerCustomQuery(customQueryId: Long, data: String?) =
  * Suspend function, which sets the result of an inline query; for bots only.
  *
  * @param inlineQueryId Identifier of the inline query.  
- * @param isPersonal True, if the result of the query can be cached for the specified user.  
+ * @param isPersonal Pass true if results may be cached and returned only for the user that sent the
+ * query. By default, results may be returned to any user who sends the same query.  
+ * @param button Button to be shown above inline query results; pass null if none.  
  * @param results The results of the query.  
  * @param cacheTime Allowed time to cache the results of the query, in seconds.  
  * @param nextOffset Offset for the next inline query; pass an empty string if there are no more
- * results.  
- * @param switchPmText If non-empty, this text should be shown on the button that opens a private
- * chat with the bot and sends a start message to the bot with the parameter switchPmParameter.  
- * @param switchPmParameter The parameter for the bot start message.
+ * results.
  */
 suspend fun TelegramFlow.answerInlineQuery(
   inlineQueryId: Long,
   isPersonal: Boolean,
+  button: InlineQueryResultsButton?,
   results: Array<InputInlineQueryResult>?,
   cacheTime: Int,
-  nextOffset: String?,
-  switchPmText: String?,
-  switchPmParameter: String?
-) = this.sendFunctionLaunch(TdApi.AnswerInlineQuery(inlineQueryId, isPersonal, results, cacheTime,
-    nextOffset, switchPmText, switchPmParameter))
+  nextOffset: String?
+) = this.sendFunctionLaunch(TdApi.AnswerInlineQuery(inlineQueryId, isPersonal, button, results,
+    cacheTime, nextOffset))
 
 /**
  * Suspend function, which sets the result of a pre-checkout query; for bots only.
@@ -95,11 +127,24 @@ suspend fun TelegramFlow.answerShippingQuery(
     errorMessage))
 
 /**
+ * Suspend function, which sets the result of interaction with a Web App and sends corresponding
+ * message on behalf of the user to the chat from which the query originated; for bots only.
+ *
+ * @param webAppQueryId Identifier of the Web App query.  
+ * @param result The result of the query.
+ *
+ * @return [SentWebAppMessage] Information about the message sent by answerWebAppQuery.
+ */
+suspend fun TelegramFlow.answerWebAppQuery(webAppQueryId: String?, result: InputInlineQueryResult?):
+    SentWebAppMessage = this.sendFunctionAsync(TdApi.AnswerWebAppQuery(webAppQueryId, result))
+
+/**
  * Suspend function, which sends a callback query to a bot and returns an answer. Returns an error
  * with code 502 if the bot fails to answer the query before the query timeout expires.
  *
  * @param chatId Identifier of the chat with the message.  
- * @param messageId Identifier of the message from which the query originated.  
+ * @param messageId Identifier of the message from which the query originated. The message must not
+ * be scheduled.  
  * @param payload Query payload.
  *
  * @return [CallbackQueryAnswer] Contains a bot's answer to a callback query.
@@ -112,20 +157,39 @@ suspend fun TelegramFlow.getCallbackQueryAnswer(
     payload))
 
 /**
+ * Suspend function, which returns information about a message with the callback button that
+ * originated a callback query; for bots only.
+ *
+ * @param chatId Identifier of the chat the message belongs to.  
+ * @param messageId Message identifier.  
+ * @param callbackQueryId Identifier of the callback query.
+ *
+ * @return [Message] Describes a message.
+ */
+suspend fun TelegramFlow.getCallbackQueryMessage(
+  chatId: Long,
+  messageId: Long,
+  callbackQueryId: Long
+): Message = this.sendFunctionAsync(TdApi.GetCallbackQueryMessage(chatId, messageId,
+    callbackQueryId))
+
+/**
  * Suspend function, which sends an inline query to a bot and returns its results. Returns an error
  * with code 502 if the bot fails to answer the query before the query timeout expires.
  *
- * @param botUserId The identifier of the target bot.  
+ * @param botUserId Identifier of the target bot.  
  * @param chatId Identifier of the chat where the query was sent.  
- * @param userLocation Location of the user, only if needed.  
+ * @param userLocation Location of the user; pass null if unknown or the bot doesn't need user's
+ * location.  
  * @param query Text of the query.  
- * @param offset Offset of the first entry to return.
+ * @param offset Offset of the first entry to return; use empty string to get the first chunk of
+ * results.
  *
  * @return [InlineQueryResults] Represents the results of the inline query. Use
  * sendInlineQueryResultMessage to send the result of the query.
  */
 suspend fun TelegramFlow.getInlineQueryResults(
-  botUserId: Int,
+  botUserId: Long,
   chatId: Long,
   userLocation: Location?,
   query: String?,
@@ -138,23 +202,25 @@ suspend fun TelegramFlow.getInlineQueryResults(
  * message. Always clears a chat draft message.
  *
  * @param chatId Target chat.  
- * @param replyToMessageId Identifier of a message to reply to or 0.  
- * @param options Options to be used to send the message.  
+ * @param topicId Topic in which the message will be sent; pass null if none.  
+ * @param replyTo Information about the message or story to be replied; pass null if none.  
+ * @param options Options to be used to send the message; pass null to use default options.  
  * @param queryId Identifier of the inline query.  
- * @param resultId Identifier of the inline result.  
- * @param hideViaBot If true, there will be no mention of a bot, via which the message is sent. Can
- * be used only for bots GetOption(&quot;animation_search_bot_username&quot;),
- * GetOption(&quot;photo_search_bot_username&quot;) and
- * GetOption(&quot;venue_search_bot_username&quot;).
+ * @param resultId Identifier of the inline query result.  
+ * @param hideViaBot Pass true to hide the bot, via which the message is sent. Can be used only for
+ * bots getOption(&quot;animation_search_bot_username&quot;),
+ * getOption(&quot;photo_search_bot_username&quot;), and
+ * getOption(&quot;venue_search_bot_username&quot;).
  *
  * @return [Message] Describes a message.
  */
 suspend fun TelegramFlow.sendInlineQueryResultMessage(
   chatId: Long,
-  replyToMessageId: Long,
-  options: SendMessageOptions?,
+  topicId: MessageTopic?,
+  replyTo: InputMessageReplyTo?,
+  options: MessageSendOptions?,
   queryId: Long,
   resultId: String?,
   hideViaBot: Boolean
-): Message = this.sendFunctionAsync(TdApi.SendInlineQueryResultMessage(chatId, replyToMessageId,
+): Message = this.sendFunctionAsync(TdApi.SendInlineQueryResultMessage(chatId, topicId, replyTo,
     options, queryId, resultId, hideViaBot))

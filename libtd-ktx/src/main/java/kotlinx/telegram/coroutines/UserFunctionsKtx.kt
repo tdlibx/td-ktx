@@ -4,34 +4,75 @@
 //
 package kotlinx.telegram.coroutines
 
+import kotlin.Array
+import kotlin.Boolean
 import kotlin.Int
+import kotlin.Long
+import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.td.libcore.telegram.TdApi.Audios
+import org.drinkless.td.libcore.telegram.TdApi.Birthdate
+import org.drinkless.td.libcore.telegram.TdApi.CanSendMessageToUserResult
+import org.drinkless.td.libcore.telegram.TdApi.ChatPhotos
+import org.drinkless.td.libcore.telegram.TdApi.FormattedText
+import org.drinkless.td.libcore.telegram.TdApi.InputChatPhoto
 import org.drinkless.td.libcore.telegram.TdApi.User
 import org.drinkless.td.libcore.telegram.TdApi.UserFullInfo
+import org.drinkless.td.libcore.telegram.TdApi.UserLink
 import org.drinkless.td.libcore.telegram.TdApi.UserPrivacySetting
 import org.drinkless.td.libcore.telegram.TdApi.UserPrivacySettingRules
-import org.drinkless.td.libcore.telegram.TdApi.UserProfilePhotos
-import org.drinkless.td.libcore.telegram.TdApi.Users
+import org.drinkless.td.libcore.telegram.TdApi.UserSupportInfo
 
 /**
- * Suspend function, which adds a user to the blacklist.
+ * Suspend function, which allows the specified user to send unpaid private messages to the current
+ * user by adding a rule to userPrivacySettingAllowUnpaidMessages.
  *
- * @param userId User identifier.
+ * @param userId Identifier of the user.  
+ * @param refundPayments Pass true to refund the user previously paid messages.
  */
-suspend fun TelegramFlow.blockUser(userId: Int) = this.sendFunctionLaunch(TdApi.BlockUser(userId))
+suspend fun TelegramFlow.allowUnpaidMessagesFromUser(userId: Long, refundPayments: Boolean) =
+    this.sendFunctionLaunch(TdApi.AllowUnpaidMessagesFromUser(userId, refundPayments))
 
 /**
- * Suspend function, which returns users that were blocked by the current user.
+ * Suspend function, which check whether the current user can message another user or try to create
+ * a chat with them.
  *
- * @param offset Number of users to skip in the result; must be non-negative.  
- * @param limit The maximum number of users to return; up to 100.
+ * @param userId Identifier of the other user.  
+ * @param onlyLocal Pass true to get only locally available information without sending network
+ * requests.
  *
- * @return [Users] Represents a list of users.
+ * @return [CanSendMessageToUserResult] This class is an abstract base class.
  */
-suspend fun TelegramFlow.getBlockedUsers(offset: Int, limit: Int): Users =
-    this.sendFunctionAsync(TdApi.GetBlockedUsers(offset, limit))
+suspend fun TelegramFlow.canSendMessageToUser(userId: Long, onlyLocal: Boolean):
+    CanSendMessageToUserResult = this.sendFunctionAsync(TdApi.CanSendMessageToUser(userId,
+    onlyLocal))
+
+/**
+ * Suspend function, which disables all active non-editable usernames of a supergroup or channel,
+ * requires owner privileges in the supergroup or channel.
+ *
+ * @param supergroupId Identifier of the supergroup or channel.
+ */
+suspend fun TelegramFlow.disableAllSupergroupUsernames(supergroupId: Long) =
+    this.sendFunctionLaunch(TdApi.DisableAllSupergroupUsernames(supergroupId))
+
+/**
+ * Suspend function, which cancels or re-enables Telegram Star subscription for a user; for bots
+ * only.
+ *
+ * @param userId User identifier.  
+ * @param telegramPaymentChargeId Telegram payment identifier of the subscription.  
+ * @param isCanceled Pass true to cancel the subscription; pass false to allow the user to enable
+ * it.
+ */
+suspend fun TelegramFlow.editUserStarSubscription(
+  userId: Long,
+  telegramPaymentChargeId: String?,
+  isCanceled: Boolean
+) = this.sendFunctionLaunch(TdApi.EditUserStarSubscription(userId, telegramPaymentChargeId,
+    isCanceled))
 
 /**
  * Suspend function, which returns a user that can be contacted to get support.
@@ -42,24 +83,31 @@ suspend fun TelegramFlow.getSupportUser(): User = this.sendFunctionAsync(TdApi.G
 
 /**
  * Suspend function, which returns information about a user by their identifier. This is an offline
- * request if the current user is not a bot.
+ * method if the current user is not a bot.
  *
  * @param userId User identifier.
  *
  * @return [User] Represents a user.
  */
-suspend fun TelegramFlow.getUser(userId: Int): User = this.sendFunctionAsync(TdApi.GetUser(userId))
+suspend fun TelegramFlow.getUser(userId: Long): User = this.sendFunctionAsync(TdApi.GetUser(userId))
 
 /**
  * Suspend function, which returns full information about a user by their identifier.
  *
  * @param userId User identifier.
  *
- * @return [UserFullInfo] Contains full information about a user (except the full list of profile
- * photos).
+ * @return [UserFullInfo] Contains full information about a user.
  */
-suspend fun TelegramFlow.getUserFullInfo(userId: Int): UserFullInfo =
+suspend fun TelegramFlow.getUserFullInfo(userId: Long): UserFullInfo =
     this.sendFunctionAsync(TdApi.GetUserFullInfo(userId))
+
+/**
+ * Suspend function, which returns an HTTPS link, which can be used to get information about the
+ * current user.
+ *
+ * @return [UserLink] Contains an HTTPS URL, which can be used to get information about a user.
+ */
+suspend fun TelegramFlow.getUserLink(): UserLink = this.sendFunctionAsync(TdApi.GetUserLink())
 
 /**
  * Suspend function, which returns the current privacy settings.
@@ -74,40 +122,135 @@ suspend fun TelegramFlow.getUserPrivacySettingRules(setting: UserPrivacySetting?
     UserPrivacySettingRules = this.sendFunctionAsync(TdApi.GetUserPrivacySettingRules(setting))
 
 /**
- * Suspend function, which returns the profile photos of a user. The result of this query may be
- * outdated: some photos might have been deleted already.
+ * Suspend function, which returns the list of profile audio files of a user.
+ *
+ * @param userId User identifier.  
+ * @param offset The number of audio files to skip; must be non-negative.  
+ * @param limit The maximum number of audio files to be returned; up to 100.
+ *
+ * @return [Audios] Contains a list of audio files.
+ */
+suspend fun TelegramFlow.getUserProfileAudios(
+  userId: Long,
+  offset: Int,
+  limit: Int
+): Audios = this.sendFunctionAsync(TdApi.GetUserProfileAudios(userId, offset, limit))
+
+/**
+ * Suspend function, which returns the profile photos of a user. Personal and public photo aren't
+ * returned.
  *
  * @param userId User identifier.  
  * @param offset The number of photos to skip; must be non-negative.  
  * @param limit The maximum number of photos to be returned; up to 100.
  *
- * @return [UserProfilePhotos] Contains part of the list of user photos.
+ * @return [ChatPhotos] Contains a list of chat or user profile photos.
  */
 suspend fun TelegramFlow.getUserProfilePhotos(
-  userId: Int,
+  userId: Long,
   offset: Int,
   limit: Int
-): UserProfilePhotos = this.sendFunctionAsync(TdApi.GetUserProfilePhotos(userId, offset, limit))
+): ChatPhotos = this.sendFunctionAsync(TdApi.GetUserProfilePhotos(userId, offset, limit))
+
+/**
+ * Suspend function, which returns support information for the given user; for Telegram support
+ * only.
+ *
+ * @param userId User identifier.
+ *
+ * @return [UserSupportInfo] Contains custom information about the user.
+ */
+suspend fun TelegramFlow.getUserSupportInfo(userId: Long): UserSupportInfo =
+    this.sendFunctionAsync(TdApi.GetUserSupportInfo(userId))
 
 /**
  * Suspend function, which finishes user registration. Works only when the current authorization
  * state is authorizationStateWaitRegistration.
  *
  * @param firstName The first name of the user; 1-64 characters.  
- * @param lastName The last name of the user; 0-64 characters.
+ * @param lastName The last name of the user; 0-64 characters.  
+ * @param disableNotification Pass true to disable notification about the current user joining
+ * Telegram for other users that added them to contact list.
  */
-suspend fun TelegramFlow.registerUser(firstName: String?, lastName: String?) =
-    this.sendFunctionLaunch(TdApi.RegisterUser(firstName, lastName))
+suspend fun TelegramFlow.registerUser(
+  firstName: String?,
+  lastName: String?,
+  disableNotification: Boolean
+) = this.sendFunctionLaunch(TdApi.RegisterUser(firstName, lastName, disableNotification))
 
 /**
- * Suspend function, which changes the username of a supergroup or channel, requires owner
+ * Suspend function, which changes order of active usernames of the current user.
+ *
+ * @param usernames The new order of active usernames. All currently active usernames must be
+ * specified.
+ */
+suspend fun TelegramFlow.reorderActiveUsernames(usernames: Array<String>?) =
+    this.sendFunctionLaunch(TdApi.ReorderActiveUsernames(usernames))
+
+/**
+ * Suspend function, which changes order of active usernames of a bot. Can be called only if
+ * userTypeBot.canBeEdited == true.
+ *
+ * @param botUserId Identifier of the target bot.  
+ * @param usernames The new order of active usernames. All currently active usernames must be
+ * specified.
+ */
+suspend fun TelegramFlow.reorderBotActiveUsernames(botUserId: Long, usernames: Array<String>?) =
+    this.sendFunctionLaunch(TdApi.ReorderBotActiveUsernames(botUserId, usernames))
+
+/**
+ * Suspend function, which changes order of active usernames of a supergroup or channel, requires
+ * owner privileges in the supergroup or channel.
+ *
+ * @param supergroupId Identifier of the supergroup or channel.  
+ * @param usernames The new order of active usernames. All currently active usernames must be
+ * specified.
+ */
+suspend fun TelegramFlow.reorderSupergroupActiveUsernames(supergroupId: Long,
+    usernames: Array<String>?) =
+    this.sendFunctionLaunch(TdApi.ReorderSupergroupActiveUsernames(supergroupId, usernames))
+
+/**
+ * Suspend function, which searches a user by a token from the user's link.
+ *
+ * @param token Token to search for.
+ *
+ * @return [User] Represents a user.
+ */
+suspend fun TelegramFlow.searchUserByToken(token: String?): User =
+    this.sendFunctionAsync(TdApi.SearchUserByToken(token))
+
+/**
+ * Suspend function, which changes the editable username of a supergroup or channel, requires owner
  * privileges in the supergroup or channel.
  *
  * @param supergroupId Identifier of the supergroup or channel.  
- * @param username New value of the username. Use an empty string to remove the username.
+ * @param username New value of the username. Use an empty string to remove the username. The
+ * username can't be completely removed if there is another active or disabled username.
  */
-suspend fun TelegramFlow.setSupergroupUsername(supergroupId: Int, username: String?) =
+suspend fun TelegramFlow.setSupergroupUsername(supergroupId: Long, username: String?) =
     this.sendFunctionLaunch(TdApi.SetSupergroupUsername(supergroupId, username))
+
+/**
+ * Suspend function, which changes a note of a contact user.
+ *
+ * @param userId User identifier.  
+ * @param note Note to set for the user; 0-getOption(&quot;user_note_text_length_max&quot;)
+ * characters. Only Bold, Italic, Underline, Strikethrough, Spoiler, and CustomEmoji entities are
+ * allowed.
+ */
+suspend fun TelegramFlow.setUserNote(userId: Long, note: FormattedText?) =
+    this.sendFunctionLaunch(TdApi.SetUserNote(userId, note))
+
+/**
+ * Suspend function, which changes a personal profile photo of a contact user.
+ *
+ * @param userId User identifier.  
+ * @param photo Profile photo to set; pass null to delete the photo; inputChatPhotoPrevious isn't
+ * supported in this function.
+ */
+suspend fun TelegramFlow.setUserPersonalProfilePhoto(userId: Long, photo: InputChatPhoto?) =
+    this.sendFunctionLaunch(TdApi.SetUserPersonalProfilePhoto(userId, photo))
 
 /**
  * Suspend function, which changes user privacy settings.
@@ -120,18 +263,105 @@ suspend fun TelegramFlow.setUserPrivacySettingRules(setting: UserPrivacySetting?
     this.sendFunctionLaunch(TdApi.SetUserPrivacySettingRules(setting, rules))
 
 /**
- * Suspend function, which changes the username of the current user. If something changes,
- * updateUser will be sent.
+ * Suspend function, which sets support information for the given user; for Telegram support only.
  *
- * @param username The new value of the username. Use an empty string to remove the username.
+ * @param userId User identifier.  
+ * @param message New information message.
+ *
+ * @return [UserSupportInfo] Contains custom information about the user.
+ */
+suspend fun TelegramFlow.setUserSupportInfo(userId: Long, message: FormattedText?): UserSupportInfo
+    = this.sendFunctionAsync(TdApi.SetUserSupportInfo(userId, message))
+
+/**
+ * Suspend function, which changes the editable username of the current user.
+ *
+ * @param username The new value of the username. Use an empty string to remove the username. The
+ * username can't be completely removed if there is another active or disabled username.
  */
 suspend fun TelegramFlow.setUsername(username: String?) =
     this.sendFunctionLaunch(TdApi.SetUsername(username))
 
 /**
- * Suspend function, which removes a user from the blacklist.
+ * Suspend function, which shares users after pressing a keyboardButtonTypeRequestUsers button with
+ * the bot.
  *
- * @param userId User identifier.
+ * @param chatId Identifier of the chat with the bot.  
+ * @param messageId Identifier of the message with the button.  
+ * @param buttonId Identifier of the button.  
+ * @param sharedUserIds Identifiers of the shared users.  
+ * @param onlyCheck Pass true to check that the users can be shared by the button instead of
+ * actually sharing them.
  */
-suspend fun TelegramFlow.unblockUser(userId: Int) =
-    this.sendFunctionLaunch(TdApi.UnblockUser(userId))
+suspend fun TelegramFlow.shareUsersWithBot(
+  chatId: Long,
+  messageId: Long,
+  buttonId: Int,
+  sharedUserIds: LongArray?,
+  onlyCheck: Boolean
+) = this.sendFunctionLaunch(TdApi.ShareUsersWithBot(chatId, messageId, buttonId, sharedUserIds,
+    onlyCheck))
+
+/**
+ * Suspend function, which suggests a birthdate to another regular user with common messages and
+ * allowing non-paid messages.
+ *
+ * @param userId User identifier.  
+ * @param birthdate Birthdate to suggest.
+ */
+suspend fun TelegramFlow.suggestUserBirthdate(userId: Long, birthdate: Birthdate?) =
+    this.sendFunctionLaunch(TdApi.SuggestUserBirthdate(userId, birthdate))
+
+/**
+ * Suspend function, which suggests a profile photo to another regular user with common messages and
+ * allowing non-paid messages.
+ *
+ * @param userId User identifier.  
+ * @param photo Profile photo to suggest; inputChatPhotoPrevious isn't supported in this function.
+ */
+suspend fun TelegramFlow.suggestUserProfilePhoto(userId: Long, photo: InputChatPhoto?) =
+    this.sendFunctionLaunch(TdApi.SuggestUserProfilePhoto(userId, photo))
+
+/**
+ * Suspend function, which changes active state for a username of a bot. The editable username can
+ * be disabled only if there are other active usernames. May return an error with a message
+ * &quot;USERNAMES_ACTIVE_TOO_MUCH&quot; if the maximum number of active usernames has been reached.
+ * Can be called only if userTypeBot.canBeEdited == true.
+ *
+ * @param botUserId Identifier of the target bot.  
+ * @param username The username to change.  
+ * @param isActive Pass true to activate the username; pass false to disable it.
+ */
+suspend fun TelegramFlow.toggleBotUsernameIsActive(
+  botUserId: Long,
+  username: String?,
+  isActive: Boolean
+) = this.sendFunctionLaunch(TdApi.ToggleBotUsernameIsActive(botUserId, username, isActive))
+
+/**
+ * Suspend function, which changes active state for a username of a supergroup or channel, requires
+ * owner privileges in the supergroup or channel. The editable username can't be disabled. May return
+ * an error with a message &quot;USERNAMES_ACTIVE_TOO_MUCH&quot; if the maximum number of active
+ * usernames has been reached.
+ *
+ * @param supergroupId Identifier of the supergroup or channel.  
+ * @param username The username to change.  
+ * @param isActive Pass true to activate the username; pass false to disable it.
+ */
+suspend fun TelegramFlow.toggleSupergroupUsernameIsActive(
+  supergroupId: Long,
+  username: String?,
+  isActive: Boolean
+) = this.sendFunctionLaunch(TdApi.ToggleSupergroupUsernameIsActive(supergroupId, username,
+    isActive))
+
+/**
+ * Suspend function, which changes active state for a username of the current user. The editable
+ * username can't be disabled. May return an error with a message &quot;USERNAMES_ACTIVE_TOO_MUCH&quot;
+ * if the maximum number of active usernames has been reached.
+ *
+ * @param username The username to change.  
+ * @param isActive Pass true to activate the username; pass false to disable it.
+ */
+suspend fun TelegramFlow.toggleUsernameIsActive(username: String?, isActive: Boolean) =
+    this.sendFunctionLaunch(TdApi.ToggleUsernameIsActive(username, isActive))

@@ -24,7 +24,7 @@ suspend fun TelegramFlow.addNetworkStatistics(entry: NetworkStatisticsEntry?) =
  * Suspend function, which returns network data usage statistics. Can be called before
  * authorization.
  *
- * @param onlyCurrent If true, returns only data for the current library launch.
+ * @param onlyCurrent Pass true to get statistics only for the current library launch.
  *
  * @return [NetworkStatistics] A full list of available network statistic entries.
  */
@@ -41,11 +41,11 @@ suspend fun TelegramFlow.resetNetworkStatistics() =
 /**
  * Suspend function, which sets the current network type. Can be called before authorization.
  * Calling this method forces all network connections to reopen, mitigating the delay in switching
- * between different networks, so it should be called whenever the network is changed, even if the
+ * between different networks, so it must be called whenever the network is changed, even if the
  * network type remains the same. Network type is used to check whether the library can use the network
  * at all and also for collecting detailed network data usage statistics.
  *
- * @param type The new network type. By default, networkTypeOther.
+ * @param type The new network type; pass null to set network type to networkTypeOther.
  */
 suspend fun TelegramFlow.setNetworkType(type: NetworkType?) =
     this.sendFunctionLaunch(TdApi.SetNetworkType(type))

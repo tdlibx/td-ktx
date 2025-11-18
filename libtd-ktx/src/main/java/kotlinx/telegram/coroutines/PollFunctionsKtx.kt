@@ -7,24 +7,26 @@ package kotlinx.telegram.coroutines
 import kotlin.Int
 import kotlin.IntArray
 import kotlin.Long
+import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.td.libcore.telegram.TdApi.BusinessMessage
+import org.drinkless.td.libcore.telegram.TdApi.MessageSenders
 import org.drinkless.td.libcore.telegram.TdApi.ReplyMarkup
-import org.drinkless.td.libcore.telegram.TdApi.Users
 
 /**
- * Suspend function, which returns users voted for the specified option in a non-anonymous polls.
- * For the optimal performance the number of returned users is chosen by the library.
+ * Suspend function, which returns message senders voted for the specified option in a non-anonymous
+ * polls. For optimal performance, the number of returned users is chosen by TDLib.
  *
  * @param chatId Identifier of the chat to which the poll belongs.  
  * @param messageId Identifier of the message containing the poll.  
  * @param optionId 0-based identifier of the answer option.  
- * @param offset Number of users to skip in the result; must be non-negative.  
- * @param limit The maximum number of users to be returned; must be positive and can't be greater
- * than 50. Fewer users may be returned than specified by the limit, even if the end of the voter list
- * has not been reached.
+ * @param offset Number of voters to skip in the result; must be non-negative.  
+ * @param limit The maximum number of voters to be returned; must be positive and can't be greater
+ * than 50. For optimal performance, the number of returned voters is chosen by TDLib and can be
+ * smaller than the specified limit, even if the end of the voter list has not been reached.
  *
- * @return [Users] Represents a list of users.
+ * @return [MessageSenders] Represents a list of message senders.
  */
 suspend fun TelegramFlow.getPollVoters(
   chatId: Long,
@@ -32,7 +34,8 @@ suspend fun TelegramFlow.getPollVoters(
   optionId: Int,
   offset: Int,
   limit: Int
-): Users = this.sendFunctionAsync(TdApi.GetPollVoters(chatId, messageId, optionId, offset, limit))
+): MessageSenders = this.sendFunctionAsync(TdApi.GetPollVoters(chatId, messageId, optionId, offset,
+    limit))
 
 /**
  * Suspend function, which changes the user answer to a poll. A poll in quiz mode can be answered
@@ -50,12 +53,31 @@ suspend fun TelegramFlow.setPollAnswer(
 ) = this.sendFunctionLaunch(TdApi.SetPollAnswer(chatId, messageId, optionIds))
 
 /**
- * Suspend function, which stops a poll. A poll in a message can be stopped when the message has
- * canBeEdited flag set.
+ * Suspend function, which stops a poll sent on behalf of a business account; for bots only.
+ *
+ * @param businessConnectionId Unique identifier of business connection on behalf of which the
+ * message with the poll was sent.  
+ * @param chatId The chat the message belongs to.  
+ * @param messageId Identifier of the message containing the poll.  
+ * @param replyMarkup The new message reply markup; pass null if none.
+ *
+ * @return [BusinessMessage] Describes a message from a business account as received by a bot.
+ */
+suspend fun TelegramFlow.stopBusinessPoll(
+  businessConnectionId: String?,
+  chatId: Long,
+  messageId: Long,
+  replyMarkup: ReplyMarkup?
+): BusinessMessage = this.sendFunctionAsync(TdApi.StopBusinessPoll(businessConnectionId, chatId,
+    messageId, replyMarkup))
+
+/**
+ * Suspend function, which stops a poll.
  *
  * @param chatId Identifier of the chat to which the poll belongs.  
- * @param messageId Identifier of the message containing the poll.  
- * @param replyMarkup The new message reply markup; for bots only.
+ * @param messageId Identifier of the message containing the poll. Use messageProperties.canBeEdited
+ * to check whether the poll can be stopped.  
+ * @param replyMarkup The new message reply markup; pass null if none; for bots only.
  */
 suspend fun TelegramFlow.stopPoll(
   chatId: Long,

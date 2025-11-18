@@ -4,48 +4,106 @@
 //
 package kotlinx.telegram.extensions
 
+import kotlin.Array
 import kotlin.Boolean
+import kotlin.ByteArray
 import kotlin.Int
 import kotlin.IntArray
 import kotlin.Long
+import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
+import kotlinx.telegram.coroutines.addChecklistTasks
+import kotlinx.telegram.coroutines.addFileToDownloads
+import kotlinx.telegram.coroutines.addMessageReaction
+import kotlinx.telegram.coroutines.addOffer
+import kotlinx.telegram.coroutines.addPendingPaidMessageReaction
+import kotlinx.telegram.coroutines.approveSuggestedPost
+import kotlinx.telegram.coroutines.blockMessageSenderFromReplies
+import kotlinx.telegram.coroutines.clickAnimatedEmojiMessage
+import kotlinx.telegram.coroutines.clickChatSponsoredMessage
+import kotlinx.telegram.coroutines.commitPendingPaidMessageReactions
+import kotlinx.telegram.coroutines.declineGroupCallInvitation
+import kotlinx.telegram.coroutines.declineSuggestedPost
 import kotlinx.telegram.coroutines.deleteChatReplyMarkup
+import kotlinx.telegram.coroutines.editBusinessMessageCaption
+import kotlinx.telegram.coroutines.editBusinessMessageChecklist
+import kotlinx.telegram.coroutines.editBusinessMessageLiveLocation
+import kotlinx.telegram.coroutines.editBusinessMessageMedia
+import kotlinx.telegram.coroutines.editBusinessMessageReplyMarkup
+import kotlinx.telegram.coroutines.editBusinessMessageText
 import kotlinx.telegram.coroutines.editMessageCaption
+import kotlinx.telegram.coroutines.editMessageChecklist
 import kotlinx.telegram.coroutines.editMessageLiveLocation
 import kotlinx.telegram.coroutines.editMessageMedia
 import kotlinx.telegram.coroutines.editMessageReplyMarkup
 import kotlinx.telegram.coroutines.editMessageSchedulingState
 import kotlinx.telegram.coroutines.editMessageText
+import kotlinx.telegram.coroutines.editQuickReplyMessage
 import kotlinx.telegram.coroutines.getCallbackQueryAnswer
+import kotlinx.telegram.coroutines.getCallbackQueryMessage
+import kotlinx.telegram.coroutines.getChatMessagePosition
 import kotlinx.telegram.coroutines.getGameHighScores
+import kotlinx.telegram.coroutines.getGiveawayInfo
 import kotlinx.telegram.coroutines.getLoginUrl
 import kotlinx.telegram.coroutines.getLoginUrlInfo
 import kotlinx.telegram.coroutines.getMessage
+import kotlinx.telegram.coroutines.getMessageAddedReactions
+import kotlinx.telegram.coroutines.getMessageAuthor
+import kotlinx.telegram.coroutines.getMessageAvailableReactions
+import kotlinx.telegram.coroutines.getMessageEmbeddingCode
 import kotlinx.telegram.coroutines.getMessageLink
 import kotlinx.telegram.coroutines.getMessageLocally
-import kotlinx.telegram.coroutines.getPaymentForm
+import kotlinx.telegram.coroutines.getMessageProperties
+import kotlinx.telegram.coroutines.getMessagePublicForwards
+import kotlinx.telegram.coroutines.getMessageReadDate
+import kotlinx.telegram.coroutines.getMessageStatistics
+import kotlinx.telegram.coroutines.getMessageThread
+import kotlinx.telegram.coroutines.getMessageThreadHistory
+import kotlinx.telegram.coroutines.getMessageViewers
 import kotlinx.telegram.coroutines.getPaymentReceipt
 import kotlinx.telegram.coroutines.getPollVoters
-import kotlinx.telegram.coroutines.getPublicMessageLink
 import kotlinx.telegram.coroutines.getRepliedMessage
+import kotlinx.telegram.coroutines.getVideoMessageAdvertisements
+import kotlinx.telegram.coroutines.markChecklistTasksAsDone
 import kotlinx.telegram.coroutines.openMessageContent
 import kotlinx.telegram.coroutines.pinChatMessage
-import kotlinx.telegram.coroutines.sendPaymentForm
+import kotlinx.telegram.coroutines.rateSpeechRecognition
+import kotlinx.telegram.coroutines.readBusinessMessage
+import kotlinx.telegram.coroutines.recognizeSpeech
+import kotlinx.telegram.coroutines.removeMessageReaction
+import kotlinx.telegram.coroutines.removePendingPaidMessageReactions
+import kotlinx.telegram.coroutines.reportChatSponsoredMessage
+import kotlinx.telegram.coroutines.reportMessageReactions
+import kotlinx.telegram.coroutines.reportSupergroupAntiSpamFalsePositive
+import kotlinx.telegram.coroutines.setBusinessMessageIsPinned
 import kotlinx.telegram.coroutines.setGameScore
+import kotlinx.telegram.coroutines.setMessageFactCheck
+import kotlinx.telegram.coroutines.setMessageReactions
+import kotlinx.telegram.coroutines.setPaidMessageReactionType
 import kotlinx.telegram.coroutines.setPollAnswer
+import kotlinx.telegram.coroutines.shareChatWithBot
+import kotlinx.telegram.coroutines.shareUsersWithBot
+import kotlinx.telegram.coroutines.stopBusinessPoll
 import kotlinx.telegram.coroutines.stopPoll
-import kotlinx.telegram.coroutines.validateOrderInfo
+import kotlinx.telegram.coroutines.translateMessageText
+import kotlinx.telegram.coroutines.unpinChatMessage
 import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.CallbackQueryPayload
 import org.drinkless.td.libcore.telegram.TdApi.FormattedText
-import org.drinkless.td.libcore.telegram.TdApi.InputCredentials
+import org.drinkless.td.libcore.telegram.TdApi.InputChecklist
+import org.drinkless.td.libcore.telegram.TdApi.InputChecklistTask
 import org.drinkless.td.libcore.telegram.TdApi.InputMessageContent
 import org.drinkless.td.libcore.telegram.TdApi.Location
 import org.drinkless.td.libcore.telegram.TdApi.Message
 import org.drinkless.td.libcore.telegram.TdApi.MessageSchedulingState
-import org.drinkless.td.libcore.telegram.TdApi.OrderInfo
+import org.drinkless.td.libcore.telegram.TdApi.MessageSendOptions
+import org.drinkless.td.libcore.telegram.TdApi.MessageSender
+import org.drinkless.td.libcore.telegram.TdApi.MessageTopic
+import org.drinkless.td.libcore.telegram.TdApi.PaidReactionType
+import org.drinkless.td.libcore.telegram.TdApi.ReactionType
 import org.drinkless.td.libcore.telegram.TdApi.ReplyMarkup
+import org.drinkless.td.libcore.telegram.TdApi.SearchMessagesFilter
 
 /**
  * Interface for access [TdApi.Message] extension functions. Can be used alongside with other
@@ -59,9 +117,164 @@ interface MessageKtx : BaseKtx {
   override val api: TelegramFlow
 
   /**
+   * Suspend function, which adds tasks to a checklist in a message.
+   *
+   * @param chatId Identifier of the chat with the message.  
+   * @param tasks List of added tasks.
+   */
+  suspend fun Message.addChecklistTasks(chatId: Long, tasks: Array<InputChecklistTask>?) =
+      api.addChecklistTasks(chatId, this.id, tasks)
+
+  /**
+   * Suspend function, which adds a file from a message to the list of file downloads. Download
+   * progress and completion of the download will be notified through updateFile updates. If message
+   * database is used, the list of file downloads is persistent across application restarts. The
+   * downloading is independent of download using downloadFile, i.e. it continues if downloadFile is
+   * canceled or is used to download a part of the file.
+   *
+   * @param fileId Identifier of the file to download.  
+   * @param chatId Chat identifier of the message with the file.  
+   * @param priority Priority of the download (1-32). The higher the priority, the earlier the file
+   * will be downloaded. If the priorities of two files are equal, then the last one for which
+   * downloadFile/addFileToDownloads was called will be downloaded first.
+   *
+   * @return [TdApi.File] Represents a file.
+   */
+  suspend fun Message.addFileToDownloads(
+    fileId: Int,
+    chatId: Long,
+    priority: Int
+  ) = api.addFileToDownloads(fileId, chatId, this.id, priority)
+
+  /**
+   * Suspend function, which adds a reaction or a tag to a message. Use getMessageAvailableReactions
+   * to receive the list of available reactions for the message.
+   *
+   * @param chatId Identifier of the chat to which the message belongs.  
+   * @param reactionType Type of the reaction to add. Use addPendingPaidMessageReaction instead to
+   * add the paid reaction.  
+   * @param isBig Pass true if the reaction is added with a big animation.  
+   * @param updateRecentReactions Pass true if the reaction needs to be added to recent reactions;
+   * tags are never added to the list of recent reactions.
+   */
+  suspend fun Message.addReaction(
+    chatId: Long,
+    reactionType: ReactionType?,
+    isBig: Boolean,
+    updateRecentReactions: Boolean
+  ) = api.addMessageReaction(chatId, this.id, reactionType, isBig, updateRecentReactions)
+
+  /**
+   * Suspend function, which sent a suggested post based on a previously sent message in a channel
+   * direct messages chat. Can be also used to suggest price or time change for an existing suggested
+   * post. Returns the sent message.
+   *
+   * @param chatId Identifier of the channel direct messages chat.  
+   * @param options Options to be used to send the message. New information about the suggested post
+   * must always be specified.
+   *
+   * @return [TdApi.Message] Describes a message.
+   */
+  suspend fun Message.addOffer(chatId: Long, options: MessageSendOptions?) = api.addOffer(chatId,
+      this.id, options)
+
+  /**
+   * Suspend function, which adds the paid message reaction to a message. Use
+   * getMessageAvailableReactions to check whether the reaction is available for the message.
+   *
+   * @param chatId Identifier of the chat to which the message belongs.  
+   * @param starCount Number of Telegram Stars to be used for the reaction. The total number of
+   * pending paid reactions must not exceed getOption(&quot;paid_reaction_star_count_max&quot;).  
+   * @param type Type of the paid reaction; pass null if the user didn't choose reaction type
+   * explicitly, for example, the reaction is set from the message bubble.
+   */
+  suspend fun Message.addPendingPaidReaction(
+    chatId: Long,
+    starCount: Long,
+    type: PaidReactionType?
+  ) = api.addPendingPaidMessageReaction(chatId, this.id, starCount, type)
+
+  /**
+   * Suspend function, which approves a suggested post in a channel direct messages chat.
+   *
+   * @param chatId Chat identifier of the channel direct messages chat.  
+   * @param sendDate Point in time (Unix timestamp) when the post is expected to be published; pass
+   * 0 if the date has already been chosen. If specified, then the date must be in the future, but at
+   * most getOption(&quot;suggested_post_send_delay_max&quot;) seconds in the future.
+   */
+  suspend fun Message.approveSuggestedPost(chatId: Long, sendDate: Int) =
+      api.approveSuggestedPost(chatId, this.id, sendDate)
+
+  /**
+   * Suspend function, which blocks an original sender of a message in the Replies chat.
+   *
+   * @param deleteMessage Pass true to delete the message.  
+   * @param deleteAllMessages Pass true to delete all messages from the same sender.  
+   * @param reportSpam Pass true to report the sender to the Telegram moderators.
+   */
+  suspend fun Message.blockSenderFromReplies(
+    deleteMessage: Boolean,
+    deleteAllMessages: Boolean,
+    reportSpam: Boolean
+  ) = api.blockMessageSenderFromReplies(this.id, deleteMessage, deleteAllMessages, reportSpam)
+
+  /**
+   * Suspend function, which informs TDLib that a message with an animated emoji was clicked by the
+   * user. Returns a big animated sticker to be played or a 404 error if usual animation needs to be
+   * played.
+   *
+   * @param chatId Chat identifier of the message.  
+   *
+   * @return [TdApi.Sticker] Describes a sticker.
+   */
+  suspend fun Message.clickAnimatedEmoji(chatId: Long) = api.clickAnimatedEmojiMessage(chatId,
+      this.id)
+
+  /**
+   * Suspend function, which informs TDLib that the user opened the sponsored chat via the button,
+   * the name, the chat photo, a mention in the sponsored message text, or the media in the sponsored
+   * message.
+   *
+   * @param chatId Chat identifier of the sponsored message.  
+   * @param isMediaClick Pass true if the media was clicked in the sponsored message.  
+   * @param fromFullscreen Pass true if the user expanded the video from the sponsored message
+   * fullscreen before the click.
+   */
+  suspend fun Message.clickChatSponsored(
+    chatId: Long,
+    isMediaClick: Boolean,
+    fromFullscreen: Boolean
+  ) = api.clickChatSponsoredMessage(chatId, this.id, isMediaClick, fromFullscreen)
+
+  /**
+   * Suspend function, which applies all pending paid reactions on a message.
+   *
+   * @param chatId Identifier of the chat to which the message belongs.  
+   */
+  suspend fun Message.commitPendingPaidReactions(chatId: Long) =
+      api.commitPendingPaidMessageReactions(chatId, this.id)
+
+  /**
+   * Suspend function, which declines an invitation to an active group call via messageGroupCall.
+   * Can be called both by the sender and the receiver of the invitation.
+   *
+   * @param chatId Identifier of the chat with the message.  
+   */
+  suspend fun Message.declineGroupCallInvitation(chatId: Long) =
+      api.declineGroupCallInvitation(chatId, this.id)
+
+  /**
+   * Suspend function, which declines a suggested post in a channel direct messages chat.
+   *
+   * @param chatId Chat identifier of the channel direct messages chat.  
+   * @param comment Comment for the creator of the suggested post; 0-128 characters.
+   */
+  suspend fun Message.declineSuggestedPost(chatId: Long, comment: String?) =
+      api.declineSuggestedPost(chatId, this.id, comment)
+
+  /**
    * Suspend function, which deletes the default reply markup from a chat. Must be called after a
-   * one-time keyboard or a ForceReply reply markup has been used. UpdateChatReplyMarkup will be sent
-   * if the reply markup will be changed.
+   * one-time keyboard or a replyMarkupForceReply reply markup has been used or dismissed.
    *
    * @param chatId Chat identifier.  
    */
@@ -69,21 +282,184 @@ interface MessageKtx : BaseKtx {
       this.id)
 
   /**
+   * Suspend function, which edits the caption of a message sent on behalf of a business account;
+   * for bots only.
+   *
+   * @param businessConnectionId Unique identifier of business connection on behalf of which the
+   * message was sent.  
+   * @param chatId The chat the message belongs to.  
+   * @param replyMarkup The new message reply markup; pass null if none.  
+   * @param caption New message content caption; pass null to remove caption;
+   * 0-getOption(&quot;message_caption_length_max&quot;) characters.  
+   * @param showCaptionAboveMedia Pass true to show the caption above the media; otherwise, the
+   * caption will be shown below the media. May be true only for animation, photo, and video messages.
+   *
+   * @return [TdApi.BusinessMessage] Describes a message from a business account as received by a
+   * bot.
+   */
+  suspend fun Message.editBusinessCaption(
+    businessConnectionId: String?,
+    chatId: Long,
+    replyMarkup: ReplyMarkup?,
+    caption: FormattedText?,
+    showCaptionAboveMedia: Boolean
+  ) = api.editBusinessMessageCaption(businessConnectionId, chatId, this.id, replyMarkup, caption,
+      showCaptionAboveMedia)
+
+  /**
+   * Suspend function, which edits the content of a checklist in a message sent on behalf of a
+   * business account; for bots only.
+   *
+   * @param businessConnectionId Unique identifier of business connection on behalf of which the
+   * message was sent.  
+   * @param chatId The chat the message belongs to.  
+   * @param replyMarkup The new message reply markup; pass null if none.  
+   * @param checklist The new checklist. If some tasks were completed, this information will be
+   * kept.
+   *
+   * @return [TdApi.BusinessMessage] Describes a message from a business account as received by a
+   * bot.
+   */
+  suspend fun Message.editBusinessChecklist(
+    businessConnectionId: String?,
+    chatId: Long,
+    replyMarkup: ReplyMarkup?,
+    checklist: InputChecklist?
+  ) = api.editBusinessMessageChecklist(businessConnectionId, chatId, this.id, replyMarkup,
+      checklist)
+
+  /**
+   * Suspend function, which edits the content of a live location in a message sent on behalf of a
+   * business account; for bots only.
+   *
+   * @param businessConnectionId Unique identifier of business connection on behalf of which the
+   * message was sent.  
+   * @param chatId The chat the message belongs to.  
+   * @param replyMarkup The new message reply markup; pass null if none.  
+   * @param location New location content of the message; pass null to stop sharing the live
+   * location.  
+   * @param livePeriod New time relative to the message send date, for which the location can be
+   * updated, in seconds. If 0x7FFFFFFF specified, then the location can be updated forever. Otherwise,
+   * must not exceed the current livePeriod by more than a day, and the live location expiration date
+   * must remain in the next 90 days. Pass 0 to keep the current livePeriod.  
+   * @param heading The new direction in which the location moves, in degrees; 1-360. Pass 0 if
+   * unknown.  
+   * @param proximityAlertRadius The new maximum distance for proximity alerts, in meters
+   * (0-100000). Pass 0 if the notification is disabled.
+   *
+   * @return [TdApi.BusinessMessage] Describes a message from a business account as received by a
+   * bot.
+   */
+  suspend fun Message.editBusinessLiveLocation(
+    businessConnectionId: String?,
+    chatId: Long,
+    replyMarkup: ReplyMarkup?,
+    location: Location?,
+    livePeriod: Int,
+    heading: Int,
+    proximityAlertRadius: Int
+  ) = api.editBusinessMessageLiveLocation(businessConnectionId, chatId, this.id, replyMarkup,
+      location, livePeriod, heading, proximityAlertRadius)
+
+  /**
+   * Suspend function, which edits the media content of a message with a text, an animation, an
+   * audio, a document, a photo or a video in a message sent on behalf of a business account; for bots
+   * only.
+   *
+   * @param businessConnectionId Unique identifier of business connection on behalf of which the
+   * message was sent.  
+   * @param chatId The chat the message belongs to.  
+   * @param replyMarkup The new message reply markup; pass null if none; for bots only.  
+   * @param inputMessageContent New content of the message. Must be one of the following types:
+   * inputMessageAnimation, inputMessageAudio, inputMessageDocument, inputMessagePhoto or
+   * inputMessageVideo.
+   *
+   * @return [TdApi.BusinessMessage] Describes a message from a business account as received by a
+   * bot.
+   */
+  suspend fun Message.editBusinessMedia(
+    businessConnectionId: String?,
+    chatId: Long,
+    replyMarkup: ReplyMarkup?,
+    inputMessageContent: InputMessageContent?
+  ) = api.editBusinessMessageMedia(businessConnectionId, chatId, this.id, replyMarkup,
+      inputMessageContent)
+
+  /**
+   * Suspend function, which edits the reply markup of a message sent on behalf of a business
+   * account; for bots only.
+   *
+   * @param businessConnectionId Unique identifier of business connection on behalf of which the
+   * message was sent.  
+   * @param chatId The chat the message belongs to.  
+   * @param replyMarkup The new message reply markup; pass null if none.
+   *
+   * @return [TdApi.BusinessMessage] Describes a message from a business account as received by a
+   * bot.
+   */
+  suspend fun Message.editBusinessReplyMarkup(
+    businessConnectionId: String?,
+    chatId: Long,
+    replyMarkup: ReplyMarkup?
+  ) = api.editBusinessMessageReplyMarkup(businessConnectionId, chatId, this.id, replyMarkup)
+
+  /**
+   * Suspend function, which edits the text of a text or game message sent on behalf of a business
+   * account; for bots only.
+   *
+   * @param businessConnectionId Unique identifier of business connection on behalf of which the
+   * message was sent.  
+   * @param chatId The chat the message belongs to.  
+   * @param replyMarkup The new message reply markup; pass null if none.  
+   * @param inputMessageContent New text content of the message. Must be of type inputMessageText.
+   *
+   * @return [TdApi.BusinessMessage] Describes a message from a business account as received by a
+   * bot.
+   */
+  suspend fun Message.editBusinessText(
+    businessConnectionId: String?,
+    chatId: Long,
+    replyMarkup: ReplyMarkup?,
+    inputMessageContent: InputMessageContent?
+  ) = api.editBusinessMessageText(businessConnectionId, chatId, this.id, replyMarkup,
+      inputMessageContent)
+
+  /**
    * Suspend function, which edits the message content caption. Returns the edited message after the
    * edit is completed on the server side.
    *
    * @param chatId The chat the message belongs to.  
-   * @param replyMarkup The new message reply markup; for bots only.  
-   * @param caption New message content caption; 0-GetOption(&quot;message_caption_length_max&quot;)
-   * characters.
+   * @param replyMarkup The new message reply markup; pass null if none; for bots only.  
+   * @param caption New message content caption; 0-getOption(&quot;message_caption_length_max&quot;)
+   * characters; pass null to remove caption.  
+   * @param showCaptionAboveMedia Pass true to show the caption above the media; otherwise, the
+   * caption will be shown below the media. May be true only for animation, photo, and video messages.
    *
    * @return [TdApi.Message] Describes a message.
    */
   suspend fun Message.editCaption(
     chatId: Long,
     replyMarkup: ReplyMarkup?,
-    caption: FormattedText?
-  ) = api.editMessageCaption(chatId, this.id, replyMarkup, caption)
+    caption: FormattedText?,
+    showCaptionAboveMedia: Boolean
+  ) = api.editMessageCaption(chatId, this.id, replyMarkup, caption, showCaptionAboveMedia)
+
+  /**
+   * Suspend function, which edits the message content of a checklist. Returns the edited message
+   * after the edit is completed on the server side.
+   *
+   * @param chatId The chat the message belongs to.  
+   * @param replyMarkup The new message reply markup; pass null if none; for bots only.  
+   * @param checklist The new checklist. If some tasks were completed, this information will be
+   * kept.
+   *
+   * @return [TdApi.Message] Describes a message.
+   */
+  suspend fun Message.editChecklist(
+    chatId: Long,
+    replyMarkup: ReplyMarkup?,
+    checklist: InputChecklist?
+  ) = api.editMessageChecklist(chatId, this.id, replyMarkup, checklist)
 
   /**
    * Suspend function, which edits the message content of a live location. Messages can be edited
@@ -91,30 +467,41 @@ interface MessageKtx : BaseKtx {
    * edit is completed on the server side.
    *
    * @param chatId The chat the message belongs to.  
-   * @param replyMarkup The new message reply markup; for bots only.  
-   * @param location New location content of the message; may be null. Pass null to stop sharing the
-   * live location.
+   * @param replyMarkup The new message reply markup; pass null if none; for bots only.  
+   * @param location New location content of the message; pass null to stop sharing the live
+   * location.  
+   * @param livePeriod New time relative to the message send date, for which the location can be
+   * updated, in seconds. If 0x7FFFFFFF specified, then the location can be updated forever. Otherwise,
+   * must not exceed the current livePeriod by more than a day, and the live location expiration date
+   * must remain in the next 90 days. Pass 0 to keep the current livePeriod.  
+   * @param heading The new direction in which the location moves, in degrees; 1-360. Pass 0 if
+   * unknown.  
+   * @param proximityAlertRadius The new maximum distance for proximity alerts, in meters
+   * (0-100000). Pass 0 if the notification is disabled.
    *
    * @return [TdApi.Message] Describes a message.
    */
   suspend fun Message.editLiveLocation(
     chatId: Long,
     replyMarkup: ReplyMarkup?,
-    location: Location? = null
-  ) = api.editMessageLiveLocation(chatId, this.id, replyMarkup, location)
+    location: Location?,
+    livePeriod: Int,
+    heading: Int,
+    proximityAlertRadius: Int
+  ) = api.editMessageLiveLocation(chatId, this.id, replyMarkup, location, livePeriod, heading,
+      proximityAlertRadius)
 
   /**
-   * Suspend function, which edits the content of a message with an animation, an audio, a document,
-   * a photo or a video. The media in the message can't be replaced if the message was set to
-   * self-destruct. Media can't be replaced by self-destructing media. Media in an album can be edited
-   * only to contain a photo or a video. Returns the edited message after the edit is completed on the
-   * server side.
+   * Suspend function, which edits the media content of a message, including message caption. If
+   * only the caption needs to be edited, use editMessageCaption instead. The type of message content
+   * in an album can't be changed with exception of replacing a photo with a video or vice versa.
+   * Returns the edited message after the edit is completed on the server side.
    *
    * @param chatId The chat the message belongs to.  
-   * @param replyMarkup The new message reply markup; for bots only.  
+   * @param replyMarkup The new message reply markup; pass null if none; for bots only.  
    * @param inputMessageContent New content of the message. Must be one of the following types:
-   * InputMessageAnimation, InputMessageAudio, InputMessageDocument, InputMessagePhoto or
-   * InputMessageVideo.
+   * inputMessageAnimation, inputMessageAudio, inputMessageDocument, inputMessagePhoto or
+   * inputMessageVideo.
    *
    * @return [TdApi.Message] Describes a message.
    */
@@ -129,7 +516,7 @@ interface MessageKtx : BaseKtx {
    * message after the edit is completed on the server side.
    *
    * @param chatId The chat the message belongs to.  
-   * @param replyMarkup The new message reply markup.
+   * @param replyMarkup The new message reply markup; pass null if none.
    *
    * @return [TdApi.Message] Describes a message.
    */
@@ -141,8 +528,8 @@ interface MessageKtx : BaseKtx {
    * of all messages in the same album or forwarded together with the message will be also changed.
    *
    * @param chatId The chat the message belongs to.  
-   * @param schedulingState The new message scheduling state. Pass null to send the message
-   * immediately.
+   * @param schedulingState The new message scheduling state; pass null to send the message
+   * immediately. Must be null for messages in the state messageSchedulingStateSendWhenVideoProcessed.
    */
   suspend fun Message.editSchedulingState(chatId: Long, schedulingState: MessageSchedulingState?) =
       api.editMessageSchedulingState(chatId, this.id, schedulingState)
@@ -152,8 +539,8 @@ interface MessageKtx : BaseKtx {
    * edited message after the edit is completed on the server side.
    *
    * @param chatId The chat the message belongs to.  
-   * @param replyMarkup The new message reply markup; for bots only.  
-   * @param inputMessageContent New text content of the message. Should be of type InputMessageText.
+   * @param replyMarkup The new message reply markup; pass null if none; for bots only.  
+   * @param inputMessageContent New text content of the message. Must be of type inputMessageText.
    *
    * @return [TdApi.Message] Describes a message.
    */
@@ -162,6 +549,21 @@ interface MessageKtx : BaseKtx {
     replyMarkup: ReplyMarkup?,
     inputMessageContent: InputMessageContent?
   ) = api.editMessageText(chatId, this.id, replyMarkup, inputMessageContent)
+
+  /**
+   * Suspend function, which asynchronously edits the text, media or caption of a quick reply
+   * message. Use quickReplyMessage.canBeEdited to check whether a message can be edited. Media message
+   * can be edited only to a media message. Checklist messages can be edited only to a checklist
+   * message. The type of message content in an album can't be changed with exception of replacing a
+   * photo with a video or vice versa.
+   *
+   * @param shortcutId Unique identifier of the quick reply shortcut with the message.  
+   * @param inputMessageContent New content of the message. Must be one of the following types:
+   * inputMessageAnimation, inputMessageAudio, inputMessageChecklist, inputMessageDocument,
+   * inputMessagePhoto, inputMessageText, or inputMessageVideo.
+   */
+  suspend fun Message.editQuickReply(shortcutId: Int, inputMessageContent: InputMessageContent?) =
+      api.editQuickReplyMessage(shortcutId, this.id, inputMessageContent)
 
   /**
    * Suspend function, which sends a callback query to a bot and returns an answer. Returns an error
@@ -176,6 +578,37 @@ interface MessageKtx : BaseKtx {
       api.getCallbackQueryAnswer(chatId, this.id, payload)
 
   /**
+   * Suspend function, which returns information about a message with the callback button that
+   * originated a callback query; for bots only.
+   *
+   * @param chatId Identifier of the chat the message belongs to.  
+   * @param callbackQueryId Identifier of the callback query.
+   *
+   * @return [TdApi.Message] Describes a message.
+   */
+  suspend fun Message.getCallbackQuery(chatId: Long, callbackQueryId: Long) =
+      api.getCallbackQueryMessage(chatId, this.id, callbackQueryId)
+
+  /**
+   * Suspend function, which returns approximate 1-based position of a message among messages, which
+   * can be found by the specified filter in the chat and topic. Cannot be used in secret chats.
+   *
+   * @param chatId Identifier of the chat in which to find message position.  
+   * @param topicId Pass topic identifier to get position among messages only in specific topic;
+   * pass null to get position among all chat messages; message threads aren't supported.  
+   * @param filter Filter for message content; searchMessagesFilterEmpty,
+   * searchMessagesFilterUnreadMention, searchMessagesFilterUnreadReaction, and
+   * searchMessagesFilterFailedToSend are unsupported in this function.  
+   *
+   * @return [TdApi.Count] Contains a counter.
+   */
+  suspend fun Message.getChatPosition(
+    chatId: Long,
+    topicId: MessageTopic?,
+    filter: SearchMessagesFilter?
+  ) = api.getChatMessagePosition(chatId, topicId, filter, this.id)
+
+  /**
    * Suspend function, which returns the high scores for a game and some part of the high score
    * table in the range of the specified user; for bots only.
    *
@@ -184,8 +617,17 @@ interface MessageKtx : BaseKtx {
    *
    * @return [TdApi.GameHighScores] Contains a list of game high scores.
    */
-  suspend fun Message.getGameHighScores(chatId: Long, userId: Int) = api.getGameHighScores(chatId,
+  suspend fun Message.getGameHighScores(chatId: Long, userId: Long) = api.getGameHighScores(chatId,
       this.id, userId)
+
+  /**
+   * Suspend function, which returns information about a giveaway.
+   *
+   * @param chatId Identifier of the channel chat which started the giveaway.  
+   *
+   * @return [TdApi.GiveawayInfo] This class is an abstract base class.
+   */
+  suspend fun Message.getGiveawayInfo(chatId: Long) = api.getGiveawayInfo(chatId, this.id)
 
   /**
    * Suspend function, which returns an HTTP URL which can be used to automatically authorize the
@@ -195,13 +637,13 @@ interface MessageKtx : BaseKtx {
    *
    * @param chatId Chat identifier of the message with the button.  
    * @param buttonId Button identifier.  
-   * @param allowWriteAccess True, if the user allowed the bot to send them messages.
+   * @param allowWriteAccess Pass true to allow the bot to send messages to the current user.
    *
    * @return [TdApi.HttpUrl] Contains an HTTP URL.
    */
   suspend fun Message.getLoginUrl(
     chatId: Long,
-    buttonId: Int,
+    buttonId: Long,
     allowWriteAccess: Boolean
   ) = api.getLoginUrl(chatId, this.id, buttonId, allowWriteAccess)
 
@@ -214,11 +656,12 @@ interface MessageKtx : BaseKtx {
    *
    * @return [TdApi.LoginUrlInfo] This class is an abstract base class.
    */
-  suspend fun Message.getLoginUrlInfo(chatId: Long, buttonId: Int) = api.getLoginUrlInfo(chatId,
+  suspend fun Message.getLoginUrlInfo(chatId: Long, buttonId: Long) = api.getLoginUrlInfo(chatId,
       this.id, buttonId)
 
   /**
-   * Suspend function, which returns information about a message.
+   * Suspend function, which returns information about a message. Returns a 404 error if the message
+   * doesn't exist.
    *
    * @param chatId Identifier of the chat the message belongs to.  
    *
@@ -227,19 +670,88 @@ interface MessageKtx : BaseKtx {
   suspend fun Message.get(chatId: Long) = api.getMessage(chatId, this.id)
 
   /**
-   * Suspend function, which returns a private HTTPS link to a message in a chat. Available only for
-   * already sent messages in supergroups and channels. The link will work only for members of the
-   * chat.
+   * Suspend function, which returns reactions added for a message, along with their sender.
    *
    * @param chatId Identifier of the chat to which the message belongs.  
+   * @param reactionType Type of the reactions to return; pass null to return all added reactions;
+   * reactionTypePaid isn't supported.  
+   * @param offset Offset of the first entry to return as received from the previous request; use
+   * empty string to get the first chunk of results.  
+   * @param limit The maximum number of reactions to be returned; must be positive and can't be
+   * greater than 100.
    *
-   * @return [TdApi.HttpUrl] Contains an HTTP URL.
+   * @return [TdApi.AddedReactions] Represents a list of reactions added to a message.
    */
-  suspend fun Message.getLink(chatId: Long) = api.getMessageLink(chatId, this.id)
+  suspend fun Message.getAddedReactions(
+    chatId: Long,
+    reactionType: ReactionType?,
+    offset: String?,
+    limit: Int
+  ) = api.getMessageAddedReactions(chatId, this.id, reactionType, offset, limit)
 
   /**
-   * Suspend function, which returns information about a message, if it is available locally without
-   * sending network request. This is an offline request.
+   * Suspend function, which returns information about actual author of a message sent on behalf of
+   * a channel. The method can be called if messageProperties.canGetAuthor == true.
+   *
+   * @param chatId Chat identifier.  
+   *
+   * @return [TdApi.User] Represents a user.
+   */
+  suspend fun Message.getAuthor(chatId: Long) = api.getMessageAuthor(chatId, this.id)
+
+  /**
+   * Suspend function, which returns reactions, which can be added to a message. The list can change
+   * after updateActiveEmojiReactions, updateChatAvailableReactions for the chat, or
+   * updateMessageInteractionInfo for the message.
+   *
+   * @param chatId Identifier of the chat to which the message belongs.  
+   * @param rowSize Number of reaction per row, 5-25.
+   *
+   * @return [TdApi.AvailableReactions] Represents a list of reactions that can be added to a
+   * message.
+   */
+  suspend fun Message.getAvailableReactions(chatId: Long, rowSize: Int) =
+      api.getMessageAvailableReactions(chatId, this.id, rowSize)
+
+  /**
+   * Suspend function, which returns an HTML code for embedding the message. Available only if
+   * messageProperties.canGetEmbeddingCode.
+   *
+   * @param chatId Identifier of the chat to which the message belongs.  
+   * @param forAlbum Pass true to return an HTML code for embedding of the whole media album.
+   *
+   * @return [TdApi.Text] Contains some text.
+   */
+  suspend fun Message.getEmbeddingCode(chatId: Long, forAlbum: Boolean) =
+      api.getMessageEmbeddingCode(chatId, this.id, forAlbum)
+
+  /**
+   * Suspend function, which returns an HTTPS link to a message in a chat. Available only if
+   * messageProperties.canGetLink, or if messageProperties.canGetMediaTimestampLinks and a media
+   * timestamp link is generated. This is an offline method.
+   *
+   * @param chatId Identifier of the chat to which the message belongs.  
+   * @param mediaTimestamp If not 0, timestamp from which the video/audio/video note/voice
+   * note/story playing must start, in seconds. The media can be in the message content or in its link
+   * preview.  
+   * @param forAlbum Pass true to create a link for the whole media album.  
+   * @param inMessageThread Pass true to create a link to the message as a channel post comment, in
+   * a message thread, or a forum topic.
+   *
+   * @return [TdApi.MessageLink] Contains an HTTPS link to a message in a supergroup or channel, or
+   * a forum topic.
+   */
+  suspend fun Message.getLink(
+    chatId: Long,
+    mediaTimestamp: Int,
+    forAlbum: Boolean,
+    inMessageThread: Boolean
+  ) = api.getMessageLink(chatId, this.id, mediaTimestamp, forAlbum, inMessageThread)
+
+  /**
+   * Suspend function, which returns information about a message, if it is available without sending
+   * network request. Returns a 404 error if message isn't available locally. This is an offline
+   * method.
    *
    * @param chatId Identifier of the chat the message belongs to.  
    *
@@ -248,36 +760,126 @@ interface MessageKtx : BaseKtx {
   suspend fun Message.getLocally(chatId: Long) = api.getMessageLocally(chatId, this.id)
 
   /**
-   * Suspend function, which returns an invoice payment form. This method should be called when the
-   * user presses inlineKeyboardButtonBuy.
+   * Suspend function, which returns properties of a message. This is an offline method.
    *
-   * @param chatId Chat identifier of the Invoice message.  
+   * @param chatId Chat identifier.  
    *
-   * @return [TdApi.PaymentForm] Contains information about an invoice payment form.
+   * @return [TdApi.MessageProperties] Contains properties of a message and describes actions that
+   * can be done with the message right now.
    */
-  suspend fun Message.getPaymentForm(chatId: Long) = api.getPaymentForm(chatId, this.id)
+  suspend fun Message.getProperties(chatId: Long) = api.getMessageProperties(chatId, this.id)
+
+  /**
+   * Suspend function, which returns forwarded copies of a channel message to different public
+   * channels and public reposts as a story. Can be used only if messageProperties.canGetStatistics ==
+   * true. For optimal performance, the number of returned messages and stories is chosen by TDLib.
+   *
+   * @param chatId Chat identifier of the message.  
+   * @param offset Offset of the first entry to return as received from the previous request; use
+   * empty string to get the first chunk of results.  
+   * @param limit The maximum number of messages and stories to be returned; must be positive and
+   * can't be greater than 100. For optimal performance, the number of returned objects is chosen by
+   * TDLib and can be smaller than the specified limit.
+   *
+   * @return [TdApi.PublicForwards] Represents a list of public forwards and reposts as a story of a
+   * message or a story.
+   */
+  suspend fun Message.getPublicForwards(
+    chatId: Long,
+    offset: String?,
+    limit: Int
+  ) = api.getMessagePublicForwards(chatId, this.id, offset, limit)
+
+  /**
+   * Suspend function, which returns read date of a recent outgoing message in a private chat. The
+   * method can be called if messageProperties.canGetReadDate == true.
+   *
+   * @param chatId Chat identifier.  
+   *
+   * @return [TdApi.MessageReadDate] This class is an abstract base class.
+   */
+  suspend fun Message.getReadDate(chatId: Long) = api.getMessageReadDate(chatId, this.id)
+
+  /**
+   * Suspend function, which returns detailed statistics about a message. Can be used only if
+   * messageProperties.canGetStatistics == true.
+   *
+   * @param chatId Chat identifier.  
+   * @param isDark Pass true if a dark theme is used by the application.
+   *
+   * @return [TdApi.MessageStatistics] A detailed statistics about a message.
+   */
+  suspend fun Message.getStatistics(chatId: Long, isDark: Boolean) =
+      api.getMessageStatistics(chatId, this.id, isDark)
+
+  /**
+   * Suspend function, which returns information about a message thread. Can be used only if
+   * messageProperties.canGetMessageThread == true.
+   *
+   * @param chatId Chat identifier.  
+   *
+   * @return [TdApi.MessageThreadInfo] Contains information about a message thread.
+   */
+  suspend fun Message.getThread(chatId: Long) = api.getMessageThread(chatId, this.id)
+
+  /**
+   * Suspend function, which returns messages in a message thread of a message. Can be used only if
+   * messageProperties.canGetMessageThread == true. Message thread of a channel message is in the
+   * channel's linked supergroup. The messages are returned in reverse chronological order (i.e., in
+   * order of decreasing messageId). For optimal performance, the number of returned messages is chosen
+   * by TDLib.
+   *
+   * @param chatId Chat identifier.  
+   * @param fromMessageId Identifier of the message starting from which history must be fetched; use
+   * 0 to get results from the last message.  
+   * @param offset Specify 0 to get results from exactly the message fromMessageId or a negative
+   * number from -99 to -1 to get additionally -offset newer messages.  
+   * @param limit The maximum number of messages to be returned; must be positive and can't be
+   * greater than 100. If the offset is negative, then the limit must be greater than or equal
+   * to -offset. For optimal performance, the number of returned messages is chosen by TDLib and can be
+   * smaller than the specified limit.
+   *
+   * @return [TdApi.Messages] Contains a list of messages.
+   */
+  suspend fun Message.getThreadHistory(
+    chatId: Long,
+    fromMessageId: Long,
+    offset: Int,
+    limit: Int
+  ) = api.getMessageThreadHistory(chatId, this.id, fromMessageId, offset, limit)
+
+  /**
+   * Suspend function, which returns viewers of a recent outgoing message in a basic group or a
+   * supergroup chat. For video notes and voice notes only users, opened content of the message, are
+   * returned. The method can be called if messageProperties.canGetViewers == true.
+   *
+   * @param chatId Chat identifier.  
+   *
+   * @return [TdApi.MessageViewers] Represents a list of message viewers.
+   */
+  suspend fun Message.getViewers(chatId: Long) = api.getMessageViewers(chatId, this.id)
 
   /**
    * Suspend function, which returns information about a successful payment.
    *
-   * @param chatId Chat identifier of the PaymentSuccessful message.  
+   * @param chatId Chat identifier of the messagePaymentSuccessful message.  
    *
    * @return [TdApi.PaymentReceipt] Contains information about a successful payment.
    */
   suspend fun Message.getPaymentReceipt(chatId: Long) = api.getPaymentReceipt(chatId, this.id)
 
   /**
-   * Suspend function, which returns users voted for the specified option in a non-anonymous polls.
-   * For the optimal performance the number of returned users is chosen by the library.
+   * Suspend function, which returns message senders voted for the specified option in a
+   * non-anonymous polls. For optimal performance, the number of returned users is chosen by TDLib.
    *
    * @param chatId Identifier of the chat to which the poll belongs.  
    * @param optionId 0-based identifier of the answer option.  
-   * @param offset Number of users to skip in the result; must be non-negative.  
-   * @param limit The maximum number of users to be returned; must be positive and can't be greater
-   * than 50. Fewer users may be returned than specified by the limit, even if the end of the voter
-   * list has not been reached.
+   * @param offset Number of voters to skip in the result; must be non-negative.  
+   * @param limit The maximum number of voters to be returned; must be positive and can't be greater
+   * than 50. For optimal performance, the number of returned voters is chosen by TDLib and can be
+   * smaller than the specified limit, even if the end of the voter list has not been reached.
    *
-   * @return [TdApi.Users] Represents a list of users.
+   * @return [TdApi.MessageSenders] Represents a list of message senders.
    */
   suspend fun Message.getPollVoters(
     chatId: Long,
@@ -287,26 +889,48 @@ interface MessageKtx : BaseKtx {
   ) = api.getPollVoters(chatId, this.id, optionId, offset, limit)
 
   /**
-   * Suspend function, which returns a public HTTPS link to a message. Available only for messages
-   * in supergroups and channels with a username.
-   *
-   * @param chatId Identifier of the chat to which the message belongs.  
-   * @param forAlbum Pass true if a link for a whole media album should be returned.
-   *
-   * @return [TdApi.PublicMessageLink] Contains a public HTTPS link to a message in a supergroup or
-   * channel with a username.
-   */
-  suspend fun Message.getPublicLink(chatId: Long, forAlbum: Boolean) =
-      api.getPublicMessageLink(chatId, this.id, forAlbum)
-
-  /**
-   * Suspend function, which returns information about a message that is replied by given message.
+   * Suspend function, which returns information about a non-bundled message that is replied by a
+   * given message. Also, returns the pinned message for messagePinMessage, the game message for
+   * messageGameScore, the invoice message for messagePaymentSuccessful, the message with a previously
+   * set same background for messageChatSetBackground, the giveaway message for
+   * messageGiveawayCompleted, the checklist message for messageChecklistTasksDone,
+   * messageChecklistTasksAdded, the message with suggested post information for
+   * messageSuggestedPostApprovalFailed, messageSuggestedPostApproved, messageSuggestedPostDeclined,
+   * messageSuggestedPostPaid, messageSuggestedPostRefunded, the message with the regular gift that was
+   * upgraded for messageUpgradedGift with origin of the type upgradedGiftOriginUpgrade, and the topic
+   * creation message for topic messages without non-bundled replied message. Returns a 404 error if
+   * the message doesn't exist.
    *
    * @param chatId Identifier of the chat the message belongs to.  
    *
    * @return [TdApi.Message] Describes a message.
    */
   suspend fun Message.getReplied(chatId: Long) = api.getRepliedMessage(chatId, this.id)
+
+  /**
+   * Suspend function, which returns advertisements to be shown while a video from a message is
+   * watched. Available only if messageProperties.canGetVideoAdvertisements.
+   *
+   * @param chatId Identifier of the chat with the message.  
+   *
+   * @return [TdApi.VideoMessageAdvertisements] Contains a list of advertisements to be shown while
+   * a video from a message is watched.
+   */
+  suspend fun Message.getVideoAdvertisements(chatId: Long) =
+      api.getVideoMessageAdvertisements(chatId, this.id)
+
+  /**
+   * Suspend function, which adds tasks of a checklist in a message as done or not done.
+   *
+   * @param chatId Identifier of the chat with the message.  
+   * @param markedAsDoneTaskIds Identifiers of tasks that were marked as done.  
+   * @param markedAsNotDoneTaskIds Identifiers of tasks that were marked as not done.
+   */
+  suspend fun Message.markChecklistTasksAsDone(
+    chatId: Long,
+    markedAsDoneTaskIds: IntArray?,
+    markedAsNotDoneTaskIds: IntArray?
+  ) = api.markChecklistTasksAsDone(chatId, this.id, markedAsDoneTaskIds, markedAsNotDoneTaskIds)
 
   /**
    * Suspend function, which informs TDLib that the message content has been opened (e.g., the user
@@ -318,37 +942,116 @@ interface MessageKtx : BaseKtx {
   suspend fun Message.openContent(chatId: Long) = api.openMessageContent(chatId, this.id)
 
   /**
-   * Suspend function, which pins a message in a chat; requires canPinMessages rights.
+   * Suspend function, which pins a message in a chat. A message can be pinned only if
+   * messageProperties.canBePinned.
    *
    * @param chatId Identifier of the chat.  
-   * @param disableNotification True, if there should be no notification about the pinned message.
+   * @param disableNotification Pass true to disable notification about the pinned message.
+   * Notifications are always disabled in channels and private chats.  
+   * @param onlyForSelf Pass true to pin the message only for self; private chats only.
    */
-  suspend fun Message.pinChat(chatId: Long, disableNotification: Boolean) =
-      api.pinChatMessage(chatId, this.id, disableNotification)
+  suspend fun Message.pinChat(
+    chatId: Long,
+    disableNotification: Boolean,
+    onlyForSelf: Boolean
+  ) = api.pinChatMessage(chatId, this.id, disableNotification, onlyForSelf)
 
   /**
-   * Suspend function, which sends a filled-out payment form to the bot for final verification.
+   * Suspend function, which rates recognized speech in a video note or a voice note message.
    *
-   * @param chatId Chat identifier of the Invoice message.  
-   * @param orderInfoId Identifier returned by ValidateOrderInfo, or an empty string.  
-   * @param shippingOptionId Identifier of a chosen shipping option, if applicable.  
-   * @param credentials The credentials chosen by user for payment.
-   *
-   * @return [TdApi.PaymentResult] Contains the result of a payment request.
+   * @param chatId Identifier of the chat to which the message belongs.  
+   * @param isGood Pass true if the speech recognition is good.
    */
-  suspend fun Message.sendPaymentForm(
+  suspend fun Message.rateSpeechRecognition(chatId: Long, isGood: Boolean) =
+      api.rateSpeechRecognition(chatId, this.id, isGood)
+
+  /**
+   * Suspend function, which reads a message on behalf of a business account; for bots only.
+   *
+   * @param businessConnectionId Unique identifier of business connection through which the message
+   * was received.  
+   * @param chatId The chat the message belongs to.  
+   */
+  suspend fun Message.readBusiness(businessConnectionId: String?, chatId: Long) =
+      api.readBusinessMessage(businessConnectionId, chatId, this.id)
+
+  /**
+   * Suspend function, which recognizes speech in a video note or a voice note message.
+   *
+   * @param chatId Identifier of the chat to which the message belongs.  
+   */
+  suspend fun Message.recognizeSpeech(chatId: Long) = api.recognizeSpeech(chatId, this.id)
+
+  /**
+   * Suspend function, which removes a reaction from a message. A chosen reaction can always be
+   * removed.
+   *
+   * @param chatId Identifier of the chat to which the message belongs.  
+   * @param reactionType Type of the reaction to remove. The paid reaction can't be removed.
+   */
+  suspend fun Message.removeReaction(chatId: Long, reactionType: ReactionType?) =
+      api.removeMessageReaction(chatId, this.id, reactionType)
+
+  /**
+   * Suspend function, which removes all pending paid reactions on a message.
+   *
+   * @param chatId Identifier of the chat to which the message belongs.  
+   */
+  suspend fun Message.removePendingPaidReactions(chatId: Long) =
+      api.removePendingPaidMessageReactions(chatId, this.id)
+
+  /**
+   * Suspend function, which reports a sponsored message to Telegram moderators.
+   *
+   * @param chatId Chat identifier of the sponsored message.  
+   * @param optionId Option identifier chosen by the user; leave empty for the initial request.
+   *
+   * @return [TdApi.ReportSponsoredResult] This class is an abstract base class.
+   */
+  suspend fun Message.reportChatSponsored(chatId: Long, optionId: ByteArray?) =
+      api.reportChatSponsoredMessage(chatId, this.id, optionId)
+
+  /**
+   * Suspend function, which reports reactions set on a message to the Telegram moderators.
+   * Reactions on a message can be reported only if messageProperties.canReportReactions.
+   *
+   * @param chatId Chat identifier.  
+   * @param senderId Identifier of the sender, which added the reaction.
+   */
+  suspend fun Message.reportReactions(chatId: Long, senderId: MessageSender?) =
+      api.reportMessageReactions(chatId, this.id, senderId)
+
+  /**
+   * Suspend function, which reports a false deletion of a message by aggressive anti-spam checks;
+   * requires administrator rights in the supergroup. Can be called only for messages from
+   * chatEventMessageDeleted with canReportAntiSpamFalsePositive == true.
+   *
+   * @param supergroupId Supergroup identifier.  
+   */
+  suspend fun Message.reportSupergroupAntiSpamFalsePositive(supergroupId: Long) =
+      api.reportSupergroupAntiSpamFalsePositive(supergroupId, this.id)
+
+  /**
+   * Suspend function, which pins or unpins a message sent on behalf of a business account; for bots
+   * only.
+   *
+   * @param businessConnectionId Unique identifier of business connection on behalf of which the
+   * message was sent.  
+   * @param chatId The chat the message belongs to.  
+   * @param isPinned Pass true to pin the message, pass false to unpin it.
+   */
+  suspend fun Message.setBusinessIsPinned(
+    businessConnectionId: String?,
     chatId: Long,
-    orderInfoId: String?,
-    shippingOptionId: String?,
-    credentials: InputCredentials?
-  ) = api.sendPaymentForm(chatId, this.id, orderInfoId, shippingOptionId, credentials)
+    isPinned: Boolean
+  ) = api.setBusinessMessageIsPinned(businessConnectionId, chatId, this.id, isPinned)
 
   /**
    * Suspend function, which updates the game score of the specified user in the game; for bots
    * only.
    *
    * @param chatId The chat to which the message with the game belongs.  
-   * @param editMessage True, if the message should be edited.  
+   * @param editMessage Pass true to edit the game message to include the current scoreboard.  
    * @param userId User identifier.  
    * @param score The new score.  
    * @param force Pass true to update the score even if it decreases. If the score is 0, the user
@@ -359,10 +1062,46 @@ interface MessageKtx : BaseKtx {
   suspend fun Message.setGameScore(
     chatId: Long,
     editMessage: Boolean,
-    userId: Int,
+    userId: Long,
     score: Int,
     force: Boolean
   ) = api.setGameScore(chatId, this.id, editMessage, userId, score, force)
+
+  /**
+   * Suspend function, which changes the fact-check of a message. Can be only used if
+   * messageProperties.canSetFactCheck == true.
+   *
+   * @param chatId The channel chat the message belongs to.  
+   * @param text New text of the fact-check; 0-getOption(&quot;fact_check_length_max&quot;)
+   * characters; pass null to remove it. Only Bold, Italic, and TextUrl entities with https://t.me/
+   * links are supported.
+   */
+  suspend fun Message.setFactCheck(chatId: Long, text: FormattedText?) =
+      api.setMessageFactCheck(chatId, this.id, text)
+
+  /**
+   * Suspend function, which sets reactions on a message; for bots only.
+   *
+   * @param chatId Identifier of the chat to which the message belongs.  
+   * @param reactionTypes Types of the reaction to set; pass an empty list to remove the reactions. 
+   * 
+   * @param isBig Pass true if the reactions are added with a big animation.
+   */
+  suspend fun Message.setReactions(
+    chatId: Long,
+    reactionTypes: Array<ReactionType>?,
+    isBig: Boolean
+  ) = api.setMessageReactions(chatId, this.id, reactionTypes, isBig)
+
+  /**
+   * Suspend function, which changes type of paid message reaction of the current user on a message.
+   * The message must have paid reaction added by the current user.
+   *
+   * @param chatId Identifier of the chat to which the message belongs.  
+   * @param type New type of the paid reaction.
+   */
+  suspend fun Message.setPaidReactionType(chatId: Long, type: PaidReactionType?) =
+      api.setPaidMessageReactionType(chatId, this.id, type)
 
   /**
    * Suspend function, which changes the user answer to a poll. A poll in quiz mode can be answered
@@ -376,29 +1115,108 @@ interface MessageKtx : BaseKtx {
       this.id, optionIds)
 
   /**
-   * Suspend function, which stops a poll. A poll in a message can be stopped when the message has
-   * canBeEdited flag set.
+   * Suspend function, which shares a chat after pressing a keyboardButtonTypeRequestChat button
+   * with the bot.
+   *
+   * @param chatId Identifier of the chat with the bot.  
+   * @param buttonId Identifier of the button.  
+   * @param sharedChatId Identifier of the shared chat.  
+   * @param onlyCheck Pass true to check that the chat can be shared by the button instead of
+   * actually sharing it. Doesn't check botIsMember and botAdministratorRights restrictions. If the bot
+   * must be a member, then all chats from getGroupsInCommon and all chats, where the user can add the
+   * bot, are suitable. In the latter case the bot will be automatically added to the chat. If the bot
+   * must be an administrator, then all chats, where the bot already has requested rights or can be
+   * added to administrators by the user, are suitable. In the latter case the bot will be
+   * automatically granted requested rights.
+   */
+  suspend fun Message.shareChatWithBot(
+    chatId: Long,
+    buttonId: Int,
+    sharedChatId: Long,
+    onlyCheck: Boolean
+  ) = api.shareChatWithBot(chatId, this.id, buttonId, sharedChatId, onlyCheck)
+
+  /**
+   * Suspend function, which shares users after pressing a keyboardButtonTypeRequestUsers button
+   * with the bot.
+   *
+   * @param chatId Identifier of the chat with the bot.  
+   * @param buttonId Identifier of the button.  
+   * @param sharedUserIds Identifiers of the shared users.  
+   * @param onlyCheck Pass true to check that the users can be shared by the button instead of
+   * actually sharing them.
+   */
+  suspend fun Message.shareUsersWithBot(
+    chatId: Long,
+    buttonId: Int,
+    sharedUserIds: LongArray?,
+    onlyCheck: Boolean
+  ) = api.shareUsersWithBot(chatId, this.id, buttonId, sharedUserIds, onlyCheck)
+
+  /**
+   * Suspend function, which stops a poll sent on behalf of a business account; for bots only.
+   *
+   * @param businessConnectionId Unique identifier of business connection on behalf of which the
+   * message with the poll was sent.  
+   * @param chatId The chat the message belongs to.  
+   * @param replyMarkup The new message reply markup; pass null if none.
+   *
+   * @return [TdApi.BusinessMessage] Describes a message from a business account as received by a
+   * bot.
+   */
+  suspend fun Message.stopBusinessPoll(
+    businessConnectionId: String?,
+    chatId: Long,
+    replyMarkup: ReplyMarkup?
+  ) = api.stopBusinessPoll(businessConnectionId, chatId, this.id, replyMarkup)
+
+  /**
+   * Suspend function, which stops a poll.
    *
    * @param chatId Identifier of the chat to which the poll belongs.  
-   * @param replyMarkup The new message reply markup; for bots only.
+   * @param replyMarkup The new message reply markup; pass null if none; for bots only.
    */
   suspend fun Message.stopPoll(chatId: Long, replyMarkup: ReplyMarkup?) = api.stopPoll(chatId,
       this.id, replyMarkup)
 
   /**
-   * Suspend function, which validates the order information provided by a user and returns the
-   * available shipping options for a flexible invoice.
+   * Suspend function, which extracts text or caption of the given message and translates it to the
+   * given language. If the current user is a Telegram Premium user, then text formatting is preserved.
    *
-   * @param chatId Chat identifier of the Invoice message.  
-   * @param orderInfo The order information, provided by the user.  
-   * @param allowSave True, if the order information can be saved.
+   * @param chatId Identifier of the chat to which the message belongs.  
+   * @param toLanguageCode Language code of the language to which the message is translated. Must be
+   * one of &quot;af&quot;, &quot;sq&quot;, &quot;am&quot;, &quot;ar&quot;, &quot;hy&quot;,
+   * &quot;az&quot;, &quot;eu&quot;, &quot;be&quot;, &quot;bn&quot;, &quot;bs&quot;, &quot;bg&quot;,
+   * &quot;ca&quot;, &quot;ceb&quot;, &quot;zh-CN&quot;, &quot;zh&quot;, &quot;zh-Hans&quot;,
+   * &quot;zh-TW&quot;, &quot;zh-Hant&quot;, &quot;co&quot;, &quot;hr&quot;, &quot;cs&quot;,
+   * &quot;da&quot;, &quot;nl&quot;, &quot;en&quot;, &quot;eo&quot;, &quot;et&quot;, &quot;fi&quot;,
+   * &quot;fr&quot;, &quot;fy&quot;, &quot;gl&quot;, &quot;ka&quot;, &quot;de&quot;, &quot;el&quot;,
+   * &quot;gu&quot;, &quot;ht&quot;, &quot;ha&quot;, &quot;haw&quot;, &quot;he&quot;, &quot;iw&quot;,
+   * &quot;hi&quot;, &quot;hmn&quot;, &quot;hu&quot;, &quot;is&quot;, &quot;ig&quot;, &quot;id&quot;,
+   * &quot;in&quot;, &quot;ga&quot;, &quot;it&quot;, &quot;ja&quot;, &quot;jv&quot;, &quot;kn&quot;,
+   * &quot;kk&quot;, &quot;km&quot;, &quot;rw&quot;, &quot;ko&quot;, &quot;ku&quot;, &quot;ky&quot;,
+   * &quot;lo&quot;, &quot;la&quot;, &quot;lv&quot;, &quot;lt&quot;, &quot;lb&quot;, &quot;mk&quot;,
+   * &quot;mg&quot;, &quot;ms&quot;, &quot;ml&quot;, &quot;mt&quot;, &quot;mi&quot;, &quot;mr&quot;,
+   * &quot;mn&quot;, &quot;my&quot;, &quot;ne&quot;, &quot;no&quot;, &quot;ny&quot;, &quot;or&quot;,
+   * &quot;ps&quot;, &quot;fa&quot;, &quot;pl&quot;, &quot;pt&quot;, &quot;pa&quot;, &quot;ro&quot;,
+   * &quot;ru&quot;, &quot;sm&quot;, &quot;gd&quot;, &quot;sr&quot;, &quot;st&quot;, &quot;sn&quot;,
+   * &quot;sd&quot;, &quot;si&quot;, &quot;sk&quot;, &quot;sl&quot;, &quot;so&quot;, &quot;es&quot;,
+   * &quot;su&quot;, &quot;sw&quot;, &quot;sv&quot;, &quot;tl&quot;, &quot;tg&quot;, &quot;ta&quot;,
+   * &quot;tt&quot;, &quot;te&quot;, &quot;th&quot;, &quot;tr&quot;, &quot;tk&quot;, &quot;uk&quot;,
+   * &quot;ur&quot;, &quot;ug&quot;, &quot;uz&quot;, &quot;vi&quot;, &quot;cy&quot;, &quot;xh&quot;,
+   * &quot;yi&quot;, &quot;ji&quot;, &quot;yo&quot;, &quot;zu&quot;.
    *
-   * @return [TdApi.ValidatedOrderInfo] Contains a temporary identifier of validated order
-   * information, which is stored for one hour. Also contains the available shipping options.
+   * @return [TdApi.FormattedText] A text with some entities.
    */
-  suspend fun Message.validateOrderInfo(
-    chatId: Long,
-    orderInfo: OrderInfo?,
-    allowSave: Boolean
-  ) = api.validateOrderInfo(chatId, this.id, orderInfo, allowSave)
+  suspend fun Message.translateText(chatId: Long, toLanguageCode: String?) =
+      api.translateMessageText(chatId, this.id, toLanguageCode)
+
+  /**
+   * Suspend function, which removes a pinned message from a chat; requires canPinMessages member
+   * right if the chat is a basic group or supergroup, or canEditMessages administrator right if the
+   * chat is a channel.
+   *
+   * @param chatId Identifier of the chat.  
+   */
+  suspend fun Message.unpinChat(chatId: Long) = api.unpinChatMessage(chatId, this.id)
 }

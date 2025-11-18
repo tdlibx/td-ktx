@@ -13,14 +13,14 @@ import org.drinkless.td.libcore.telegram.TdApi.UpdateBasicGroupFullInfo
 
 /**
  * emits [BasicGroup] if some data of a basic group has changed. This update is guaranteed to come
- * before the basic group identifier is returned to the client.
+ * before the basic group identifier is returned to the application.
  */
 fun TelegramFlow.basicGroupFlow(): Flow<BasicGroup> =
     this.getUpdatesFlowOfType<TdApi.UpdateBasicGroup>()
     .mapNotNull { it.basicGroup }
 
 /**
- * emits [UpdateBasicGroupFullInfo] if some data from basicGroupFullInfo has been changed.
+ * emits [UpdateBasicGroupFullInfo] if some data in basicGroupFullInfo has been changed.
  */
 fun TelegramFlow.basicGroupFullInfoFlow(): Flow<UpdateBasicGroupFullInfo> =
     this.getUpdatesFlowOfType()

@@ -10,18 +10,18 @@ import kotlin.Int
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.td.libcore.telegram.TdApi.HttpUrl
 import org.drinkless.td.libcore.telegram.TdApi.Proxy
 import org.drinkless.td.libcore.telegram.TdApi.ProxyType
 import org.drinkless.td.libcore.telegram.TdApi.Seconds
-import org.drinkless.td.libcore.telegram.TdApi.Text
 
 /**
  * Suspend function, which adds a proxy server for network requests. Can be called before
  * authorization.
  *
- * @param server Proxy server IP address.  
+ * @param server Proxy server domain or IP address.  
  * @param port Proxy server port.  
- * @param enable True, if the proxy should be enabled.  
+ * @param enable Pass true to immediately enable the proxy.  
  * @param type Proxy type.
  *
  * @return [Proxy] Contains information about a proxy server.
@@ -43,9 +43,9 @@ suspend fun TelegramFlow.disableProxy() = this.sendFunctionLaunch(TdApi.DisableP
  * authorization.
  *
  * @param proxyId Proxy identifier.  
- * @param server Proxy server IP address.  
+ * @param server Proxy server domain or IP address.  
  * @param port Proxy server port.  
- * @param enable True, if the proxy should be enabled.  
+ * @param enable Pass true to immediately enable the proxy.  
  * @param type Proxy type.
  *
  * @return [Proxy] Contains information about a proxy server.
@@ -73,9 +73,9 @@ suspend fun TelegramFlow.enableProxy(proxyId: Int) =
  *
  * @param proxyId Proxy identifier.
  *
- * @return [Text] Contains some text.
+ * @return [HttpUrl] Contains an HTTP URL.
  */
-suspend fun TelegramFlow.getProxyLink(proxyId: Int): Text =
+suspend fun TelegramFlow.getProxyLink(proxyId: Int): HttpUrl =
     this.sendFunctionAsync(TdApi.GetProxyLink(proxyId))
 
 /**
@@ -101,10 +101,10 @@ suspend fun TelegramFlow.removeProxy(proxyId: Int) =
  * Suspend function, which sends a simple network request to the Telegram servers via proxy; for
  * testing only. Can be called before authorization.
  *
- * @param server Proxy server IP address.  
+ * @param server Proxy server domain or IP address.  
  * @param port Proxy server port.  
  * @param type Proxy type.  
- * @param dcId Identifier of a datacenter, with which to test connection.  
+ * @param dcId Identifier of a datacenter with which to test connection.  
  * @param timeout The maximum overall timeout for the request.
  */
 suspend fun TelegramFlow.testProxy(

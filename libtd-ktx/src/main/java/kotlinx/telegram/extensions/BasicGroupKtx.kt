@@ -26,7 +26,7 @@ interface BasicGroupKtx : BaseKtx {
   /**
    * Suspend function, which returns an existing chat corresponding to a known basic group.
    *
-   * @param force If true, the chat will be created without network request. In this case all
+   * @param force Pass true to create the chat without a network request. In this case all
    * information about the chat except its type, title and photo can be incorrect.
    *
    * @return [TdApi.Chat] A chat. (Can be a private chat, basic group, supergroup, or secret chat.)
@@ -35,7 +35,7 @@ interface BasicGroupKtx : BaseKtx {
 
   /**
    * Suspend function, which returns information about a basic group by its identifier. This is an
-   * offline request if the current user is not a bot.
+   * offline method if the current user is not a bot.
    *
    *
    * @return [TdApi.BasicGroup] Represents a basic group of 0-200 users (must be upgraded to a

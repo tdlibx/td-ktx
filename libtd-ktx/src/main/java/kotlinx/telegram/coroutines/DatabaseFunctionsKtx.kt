@@ -10,15 +10,6 @@ import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.DatabaseStatistics
 
 /**
- * Suspend function, which checks the database encryption key for correctness. Works only when the
- * current authorization state is authorizationStateWaitEncryptionKey.
- *
- * @param encryptionKey Encryption key to check or set up.
- */
-suspend fun TelegramFlow.checkDatabaseEncryptionKey(encryptionKey: ByteArray?) =
-    this.sendFunctionLaunch(TdApi.CheckDatabaseEncryptionKey(encryptionKey))
-
-/**
  * Suspend function, which returns database statistics.
  *
  * @return [DatabaseStatistics] Contains database statistics.

@@ -9,9 +9,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.StickerSets
+import org.drinkless.td.libcore.telegram.TdApi.StickerSet
 import org.drinkless.td.libcore.telegram.TdApi.UpdateInstalledStickerSets
 import org.drinkless.td.libcore.telegram.TdApi.UpdateRecentStickers
+import org.drinkless.td.libcore.telegram.TdApi.UpdateTrendingStickerSets
+
+/**
+ * emits [StickerSet] if a sticker set has changed.
+ */
+fun TelegramFlow.stickerSetFlow(): Flow<StickerSet> =
+    this.getUpdatesFlowOfType<TdApi.UpdateStickerSet>()
+    .mapNotNull { it.stickerSet }
 
 /**
  * emits [UpdateInstalledStickerSets] if the list of installed sticker sets was updated.
@@ -20,11 +28,11 @@ fun TelegramFlow.installedStickerSetsFlow(): Flow<UpdateInstalledStickerSets> =
     this.getUpdatesFlowOfType()
 
 /**
- * emits [StickerSets] if the list of trending sticker sets was updated or some of them were viewed.
+ * emits [UpdateTrendingStickerSets] if the list of trending sticker sets was updated or some of
+ * them were viewed.
  */
-fun TelegramFlow.trendingStickerSetsFlow(): Flow<StickerSets> =
-    this.getUpdatesFlowOfType<TdApi.UpdateTrendingStickerSets>()
-    .mapNotNull { it.stickerSets }
+fun TelegramFlow.trendingStickerSetsFlow(): Flow<UpdateTrendingStickerSets> =
+    this.getUpdatesFlowOfType()
 
 /**
  * emits [UpdateRecentStickers] if the list of recently used stickers was updated.

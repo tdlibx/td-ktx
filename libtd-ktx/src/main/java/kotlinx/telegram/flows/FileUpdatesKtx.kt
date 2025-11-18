@@ -10,7 +10,11 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.File
+import org.drinkless.td.libcore.telegram.TdApi.UpdateFileAddedToDownloads
+import org.drinkless.td.libcore.telegram.TdApi.UpdateFileDownload
+import org.drinkless.td.libcore.telegram.TdApi.UpdateFileDownloads
 import org.drinkless.td.libcore.telegram.TdApi.UpdateFileGenerationStart
+import org.drinkless.td.libcore.telegram.TdApi.UpdateFileRemovedFromDownloads
 
 /**
  * emits [File] if information about a file was updated.
@@ -20,7 +24,7 @@ fun TelegramFlow.fileFlow(): Flow<File> = this.getUpdatesFlowOfType<TdApi.Update
 
 /**
  * emits [UpdateFileGenerationStart] if the file generation process needs to be started by the
- * client.
+ * application. Use setFileGenerationProgress and finishFileGeneration to generate the file.
  */
 fun TelegramFlow.fileGenerationStartFlow(): Flow<UpdateFileGenerationStart> =
     this.getUpdatesFlowOfType()
@@ -31,3 +35,28 @@ fun TelegramFlow.fileGenerationStartFlow(): Flow<UpdateFileGenerationStart> =
 fun TelegramFlow.fileGenerationStopFlow(): Flow<Long> =
     this.getUpdatesFlowOfType<TdApi.UpdateFileGenerationStop>()
     .mapNotNull { it.generationId }
+
+/**
+ * emits [UpdateFileDownloads] if the state of the file download list has changed.
+ */
+fun TelegramFlow.fileDownloadsFlow(): Flow<UpdateFileDownloads> = this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateFileAddedToDownloads] if a file was added to the file download list. This update is
+ * sent only after file download list is loaded for the first time.
+ */
+fun TelegramFlow.fileAddedToDownloadsFlow(): Flow<UpdateFileAddedToDownloads> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateFileDownload] if a file download was changed. This update is sent only after file
+ * download list is loaded for the first time.
+ */
+fun TelegramFlow.fileDownloadFlow(): Flow<UpdateFileDownload> = this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateFileRemovedFromDownloads] if a file was removed from the file download list. This
+ * update is sent only after file download list is loaded for the first time.
+ */
+fun TelegramFlow.fileRemovedFromDownloadsFlow(): Flow<UpdateFileRemovedFromDownloads> =
+    this.getUpdatesFlowOfType()

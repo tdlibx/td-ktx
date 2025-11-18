@@ -4,13 +4,181 @@
 //
 package kotlinx.telegram.coroutines
 
+import kotlin.Array
 import kotlin.Boolean
+import kotlin.Long
+import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.td.libcore.telegram.TdApi.AnimatedEmoji
+import org.drinkless.td.libcore.telegram.TdApi.EmojiCategories
+import org.drinkless.td.libcore.telegram.TdApi.EmojiCategoryType
+import org.drinkless.td.libcore.telegram.TdApi.EmojiKeywords
+import org.drinkless.td.libcore.telegram.TdApi.EmojiReaction
+import org.drinkless.td.libcore.telegram.TdApi.EmojiStatus
+import org.drinkless.td.libcore.telegram.TdApi.EmojiStatusCustomEmojis
+import org.drinkless.td.libcore.telegram.TdApi.EmojiStatuses
 import org.drinkless.td.libcore.telegram.TdApi.Emojis
 import org.drinkless.td.libcore.telegram.TdApi.HttpUrl
 import org.drinkless.td.libcore.telegram.TdApi.InputFile
+import org.drinkless.td.libcore.telegram.TdApi.Sticker
+import org.drinkless.td.libcore.telegram.TdApi.StickerType
+import org.drinkless.td.libcore.telegram.TdApi.Stickers
+import org.drinkless.td.libcore.telegram.TdApi.Text
+
+/**
+ * Suspend function, which clears the list of recently used emoji statuses for self status.
+ */
+suspend fun TelegramFlow.clearRecentEmojiStatuses() =
+    this.sendFunctionLaunch(TdApi.ClearRecentEmojiStatuses())
+
+/**
+ * Suspend function, which informs TDLib that a message with an animated emoji was clicked by the
+ * user. Returns a big animated sticker to be played or a 404 error if usual animation needs to be
+ * played.
+ *
+ * @param chatId Chat identifier of the message.  
+ * @param messageId Identifier of the clicked message.
+ *
+ * @return [Sticker] Describes a sticker.
+ */
+suspend fun TelegramFlow.clickAnimatedEmojiMessage(chatId: Long, messageId: Long): Sticker =
+    this.sendFunctionAsync(TdApi.ClickAnimatedEmojiMessage(chatId, messageId))
+
+/**
+ * Suspend function, which returns unique emoji that correspond to stickers to be found by the
+ * getStickers(stickerType, query, 1000000, chatId).
+ *
+ * @param stickerType Type of the stickers to search for.  
+ * @param query Search query.  
+ * @param chatId Chat identifier for which to find stickers.  
+ * @param returnOnlyMainEmoji Pass true if only main emoji for each found sticker must be included
+ * in the result.
+ *
+ * @return [Emojis] Represents a list of emojis.
+ */
+suspend fun TelegramFlow.getAllStickerEmojis(
+  stickerType: StickerType?,
+  query: String?,
+  chatId: Long,
+  returnOnlyMainEmoji: Boolean
+): Emojis = this.sendFunctionAsync(TdApi.GetAllStickerEmojis(stickerType, query, chatId,
+    returnOnlyMainEmoji))
+
+/**
+ * Suspend function, which returns an animated emoji corresponding to a given emoji. Returns a 404
+ * error if the emoji has no animated emoji.
+ *
+ * @param emoji The emoji.
+ *
+ * @return [AnimatedEmoji] Describes an animated or custom representation of an emoji.
+ */
+suspend fun TelegramFlow.getAnimatedEmoji(emoji: String?): AnimatedEmoji =
+    this.sendFunctionAsync(TdApi.GetAnimatedEmoji(emoji))
+
+/**
+ * Suspend function, which returns an emoji for the given country. Returns an empty string on
+ * failure. Can be called synchronously.
+ *
+ * @param countryCode A two-letter ISO 3166-1 alpha-2 country code as received from getCountries.
+ *
+ * @return [Text] Contains some text.
+ */
+suspend fun TelegramFlow.getCountryFlagEmoji(countryCode: String?): Text =
+    this.sendFunctionAsync(TdApi.GetCountryFlagEmoji(countryCode))
+
+/**
+ * Suspend function, which returns TGS stickers with generic animations for custom emoji reactions.
+ *
+ * @return [Stickers] Represents a list of stickers.
+ */
+suspend fun TelegramFlow.getCustomEmojiReactionAnimations(): Stickers =
+    this.sendFunctionAsync(TdApi.GetCustomEmojiReactionAnimations())
+
+/**
+ * Suspend function, which returns the list of custom emoji stickers by their identifiers. Stickers
+ * are returned in arbitrary order. Only found stickers are returned.
+ *
+ * @param customEmojiIds Identifiers of custom emoji stickers. At most 200 custom emoji stickers can
+ * be received simultaneously.
+ *
+ * @return [Stickers] Represents a list of stickers.
+ */
+suspend fun TelegramFlow.getCustomEmojiStickers(customEmojiIds: LongArray?): Stickers =
+    this.sendFunctionAsync(TdApi.GetCustomEmojiStickers(customEmojiIds))
+
+/**
+ * Suspend function, which returns default list of custom emoji stickers for reply background.
+ *
+ * @return [Stickers] Represents a list of stickers.
+ */
+suspend fun TelegramFlow.getDefaultBackgroundCustomEmojiStickers(): Stickers =
+    this.sendFunctionAsync(TdApi.GetDefaultBackgroundCustomEmojiStickers())
+
+/**
+ * Suspend function, which returns default emoji statuses for chats.
+ *
+ * @return [EmojiStatusCustomEmojis] Contains a list of custom emoji identifiers for emoji statuses.
+ */
+suspend fun TelegramFlow.getDefaultChatEmojiStatuses(): EmojiStatusCustomEmojis =
+    this.sendFunctionAsync(TdApi.GetDefaultChatEmojiStatuses())
+
+/**
+ * Suspend function, which returns default list of custom emoji stickers for placing on a chat
+ * photo.
+ *
+ * @return [Stickers] Represents a list of stickers.
+ */
+suspend fun TelegramFlow.getDefaultChatPhotoCustomEmojiStickers(): Stickers =
+    this.sendFunctionAsync(TdApi.GetDefaultChatPhotoCustomEmojiStickers())
+
+/**
+ * Suspend function, which returns default emoji statuses for self status.
+ *
+ * @return [EmojiStatusCustomEmojis] Contains a list of custom emoji identifiers for emoji statuses.
+ */
+suspend fun TelegramFlow.getDefaultEmojiStatuses(): EmojiStatusCustomEmojis =
+    this.sendFunctionAsync(TdApi.GetDefaultEmojiStatuses())
+
+/**
+ * Suspend function, which returns default list of custom emoji stickers for placing on a profile
+ * photo.
+ *
+ * @return [Stickers] Represents a list of stickers.
+ */
+suspend fun TelegramFlow.getDefaultProfilePhotoCustomEmojiStickers(): Stickers =
+    this.sendFunctionAsync(TdApi.GetDefaultProfilePhotoCustomEmojiStickers())
+
+/**
+ * Suspend function, which returns the list of emoji statuses, which can't be used as chat emoji
+ * status, even if they are from a sticker set with isAllowedAsChatEmojiStatus == true.
+ *
+ * @return [EmojiStatusCustomEmojis] Contains a list of custom emoji identifiers for emoji statuses.
+ */
+suspend fun TelegramFlow.getDisallowedChatEmojiStatuses(): EmojiStatusCustomEmojis =
+    this.sendFunctionAsync(TdApi.GetDisallowedChatEmojiStatuses())
+
+/**
+ * Suspend function, which returns available emoji categories.
+ *
+ * @param type Type of emoji categories to return; pass null to get default emoji categories.
+ *
+ * @return [EmojiCategories] Represents a list of emoji categories.
+ */
+suspend fun TelegramFlow.getEmojiCategories(type: EmojiCategoryType?): EmojiCategories =
+    this.sendFunctionAsync(TdApi.GetEmojiCategories(type))
+
+/**
+ * Suspend function, which returns information about an emoji reaction. Returns a 404 error if the
+ * reaction is not found.
+ *
+ * @param emoji Text representation of the reaction.
+ *
+ * @return [EmojiReaction] Contains information about an emoji reaction.
+ */
+suspend fun TelegramFlow.getEmojiReaction(emoji: String?): EmojiReaction =
+    this.sendFunctionAsync(TdApi.GetEmojiReaction(emoji))
 
 /**
  * Suspend function, which returns an HTTP URL which can be used to automatically log in to the
@@ -25,29 +193,147 @@ suspend fun TelegramFlow.getEmojiSuggestionsUrl(languageCode: String?): HttpUrl 
     this.sendFunctionAsync(TdApi.GetEmojiSuggestionsUrl(languageCode))
 
 /**
+ * Suspend function, which return emojis matching the keyword. Supported only if the file database
+ * is enabled. Order of results is unspecified.
+ *
+ * @param text Text to search for.  
+ * @param inputLanguageCodes List of possible IETF language tags of the user's input language; may
+ * be empty if unknown.
+ *
+ * @return [Emojis] Represents a list of emojis.
+ */
+suspend fun TelegramFlow.getKeywordEmojis(text: String?, inputLanguageCodes: Array<String>?): Emojis
+    = this.sendFunctionAsync(TdApi.GetKeywordEmojis(text, inputLanguageCodes))
+
+/**
+ * Suspend function, which returns recent emoji statuses for self status.
+ *
+ * @return [EmojiStatuses] Contains a list of emoji statuses.
+ */
+suspend fun TelegramFlow.getRecentEmojiStatuses(): EmojiStatuses =
+    this.sendFunctionAsync(TdApi.GetRecentEmojiStatuses())
+
+/**
  * Suspend function, which returns emoji corresponding to a sticker. The list is only for
  * informational purposes, because a sticker is always sent with a fixed emoji from the corresponding
  * Sticker object.
  *
  * @param sticker Sticker file identifier.
  *
- * @return [Emojis] Represents a list of emoji.
+ * @return [Emojis] Represents a list of emojis.
  */
 suspend fun TelegramFlow.getStickerEmojis(sticker: InputFile?): Emojis =
     this.sendFunctionAsync(TdApi.GetStickerEmojis(sticker))
 
 /**
+ * Suspend function, which returns up to 8 emoji statuses, which must be shown in the emoji status
+ * list for chats.
+ *
+ * @return [EmojiStatusCustomEmojis] Contains a list of custom emoji identifiers for emoji statuses.
+ */
+suspend fun TelegramFlow.getThemedChatEmojiStatuses(): EmojiStatusCustomEmojis =
+    this.sendFunctionAsync(TdApi.GetThemedChatEmojiStatuses())
+
+/**
+ * Suspend function, which returns up to 8 emoji statuses, which must be shown right after the
+ * default Premium Badge in the emoji status list for self status.
+ *
+ * @return [EmojiStatusCustomEmojis] Contains a list of custom emoji identifiers for emoji statuses.
+ */
+suspend fun TelegramFlow.getThemedEmojiStatuses(): EmojiStatusCustomEmojis =
+    this.sendFunctionAsync(TdApi.GetThemedEmojiStatuses())
+
+/**
+ * Suspend function, which returns available upgraded gift emoji statuses for self status.
+ *
+ * @return [EmojiStatuses] Contains a list of emoji statuses.
+ */
+suspend fun TelegramFlow.getUpgradedGiftEmojiStatuses(): EmojiStatuses =
+    this.sendFunctionAsync(TdApi.GetUpgradedGiftEmojiStatuses())
+
+/**
  * Suspend function, which searches for emojis by keywords. Supported only if the file database is
- * enabled.
+ * enabled. Order of results is unspecified.
  *
  * @param text Text to search for.  
- * @param exactMatch True, if only emojis, which exactly match text needs to be returned.  
- * @param inputLanguageCode IETF language tag of the user's input language; may be empty if unknown.
+ * @param inputLanguageCodes List of possible IETF language tags of the user's input language; may
+ * be empty if unknown.
  *
- * @return [Emojis] Represents a list of emoji.
+ * @return [EmojiKeywords] Represents a list of emojis with their keywords.
  */
-suspend fun TelegramFlow.searchEmojis(
-  text: String?,
-  exactMatch: Boolean,
-  inputLanguageCode: String?
-): Emojis = this.sendFunctionAsync(TdApi.SearchEmojis(text, exactMatch, inputLanguageCode))
+suspend fun TelegramFlow.searchEmojis(text: String?, inputLanguageCodes: Array<String>?):
+    EmojiKeywords = this.sendFunctionAsync(TdApi.SearchEmojis(text, inputLanguageCodes))
+
+/**
+ * Suspend function, which changes the emoji status of a chat. Use
+ * chatBoostLevelFeatures.canSetEmojiStatus to check whether an emoji status can be set. Requires
+ * canChangeInfo administrator right.
+ *
+ * @param chatId Chat identifier.  
+ * @param emojiStatus New emoji status; pass null to remove emoji status.
+ */
+suspend fun TelegramFlow.setChatEmojiStatus(chatId: Long, emojiStatus: EmojiStatus?) =
+    this.sendFunctionLaunch(TdApi.SetChatEmojiStatus(chatId, emojiStatus))
+
+/**
+ * Suspend function, which sets a custom emoji sticker set thumbnail.
+ *
+ * @param name Sticker set name. The sticker set must be owned by the current user.  
+ * @param customEmojiId Identifier of the custom emoji from the sticker set, which will be set as
+ * sticker set thumbnail; pass 0 to remove the sticker set thumbnail.
+ */
+suspend fun TelegramFlow.setCustomEmojiStickerSetThumbnail(name: String?, customEmojiId: Long) =
+    this.sendFunctionLaunch(TdApi.SetCustomEmojiStickerSetThumbnail(name, customEmojiId))
+
+/**
+ * Suspend function, which changes the emoji status of the current user; for Telegram Premium users
+ * only.
+ *
+ * @param emojiStatus New emoji status; pass null to switch to the default badge.
+ */
+suspend fun TelegramFlow.setEmojiStatus(emojiStatus: EmojiStatus?) =
+    this.sendFunctionLaunch(TdApi.SetEmojiStatus(emojiStatus))
+
+/**
+ * Suspend function, which changes the list of emojis corresponding to a sticker. The sticker must
+ * belong to a regular or custom emoji sticker set that is owned by the current user.
+ *
+ * @param sticker Sticker.  
+ * @param emojis New string with 1-20 emoji corresponding to the sticker.
+ */
+suspend fun TelegramFlow.setStickerEmojis(sticker: InputFile?, emojis: String?) =
+    this.sendFunctionLaunch(TdApi.SetStickerEmojis(sticker, emojis))
+
+/**
+ * Suspend function, which changes the custom emoji sticker set of a supergroup; requires
+ * canChangeInfo administrator right. The chat must have at least
+ * chatBoostFeatures.minCustomEmojiStickerSetBoostLevel boost level to pass the corresponding color.
+ *
+ * @param supergroupId Identifier of the supergroup.  
+ * @param customEmojiStickerSetId New value of the custom emoji sticker set identifier for the
+ * supergroup. Use 0 to remove the custom emoji sticker set in the supergroup.
+ */
+suspend fun TelegramFlow.setSupergroupCustomEmojiStickerSet(supergroupId: Long,
+    customEmojiStickerSetId: Long) =
+    this.sendFunctionLaunch(TdApi.SetSupergroupCustomEmojiStickerSet(supergroupId,
+    customEmojiStickerSetId))
+
+/**
+ * Suspend function, which changes the emoji status of a user; for bots only.
+ *
+ * @param userId Identifier of the user.  
+ * @param emojiStatus New emoji status; pass null to switch to the default badge.
+ */
+suspend fun TelegramFlow.setUserEmojiStatus(userId: Long, emojiStatus: EmojiStatus?) =
+    this.sendFunctionLaunch(TdApi.SetUserEmojiStatus(userId, emojiStatus))
+
+/**
+ * Suspend function, which toggles whether the bot can manage emoji status of the current user.
+ *
+ * @param botUserId User identifier of the bot.  
+ * @param canManageEmojiStatus Pass true if the bot is allowed to change emoji status of the user;
+ * pass false otherwise.
+ */
+suspend fun TelegramFlow.toggleBotCanManageEmojiStatus(botUserId: Long,
+    canManageEmojiStatus: Boolean) =
+    this.sendFunctionLaunch(TdApi.ToggleBotCanManageEmojiStatus(botUserId, canManageEmojiStatus))

@@ -6,37 +6,90 @@ package kotlinx.telegram.coroutines
 
 import kotlin.Array
 import kotlin.Boolean
+import kotlin.ByteArray
 import kotlin.Double
 import kotlin.Int
-import kotlin.IntArray
 import kotlin.Long
 import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.td.libcore.telegram.TdApi.AffiliateProgramSortOrder
+import org.drinkless.td.libcore.telegram.TdApi.AffiliateType
+import org.drinkless.td.libcore.telegram.TdApi.AttachmentMenuBot
 import org.drinkless.td.libcore.telegram.TdApi.AuthorizationState
+import org.drinkless.td.libcore.telegram.TdApi.BankCardInfo
+import org.drinkless.td.libcore.telegram.TdApi.Birthdate
+import org.drinkless.td.libcore.telegram.TdApi.BotCommand
+import org.drinkless.td.libcore.telegram.TdApi.BotCommandScope
+import org.drinkless.td.libcore.telegram.TdApi.BotCommands
+import org.drinkless.td.libcore.telegram.TdApi.BotMenuButton
+import org.drinkless.td.libcore.telegram.TdApi.BusinessConnection
+import org.drinkless.td.libcore.telegram.TdApi.BusinessFeature
+import org.drinkless.td.libcore.telegram.TdApi.BusinessFeatures
+import org.drinkless.td.libcore.telegram.TdApi.BusinessLocation
+import org.drinkless.td.libcore.telegram.TdApi.BusinessOpeningHours
 import org.drinkless.td.libcore.telegram.TdApi.CanTransferOwnershipResult
+import org.drinkless.td.libcore.telegram.TdApi.ChatAdministratorRights
 import org.drinkless.td.libcore.telegram.TdApi.Chats
+import org.drinkless.td.libcore.telegram.TdApi.CollectibleItemInfo
+import org.drinkless.td.libcore.telegram.TdApi.CollectibleItemType
+import org.drinkless.td.libcore.telegram.TdApi.ConnectedAffiliateProgram
 import org.drinkless.td.libcore.telegram.TdApi.ConnectedWebsites
+import org.drinkless.td.libcore.telegram.TdApi.CurrentWeather
 import org.drinkless.td.libcore.telegram.TdApi.CustomRequestResult
 import org.drinkless.td.libcore.telegram.TdApi.DeepLinkInfo
 import org.drinkless.td.libcore.telegram.TdApi.DeviceToken
 import org.drinkless.td.libcore.telegram.TdApi.Error
 import org.drinkless.td.libcore.telegram.TdApi.FileType
+import org.drinkless.td.libcore.telegram.TdApi.FormattedText
+import org.drinkless.td.libcore.telegram.TdApi.FoundAffiliatePrograms
+import org.drinkless.td.libcore.telegram.TdApi.FoundPosition
+import org.drinkless.td.libcore.telegram.TdApi.FoundPositions
+import org.drinkless.td.libcore.telegram.TdApi.FoundPublicPosts
+import org.drinkless.td.libcore.telegram.TdApi.GiveawayInfo
+import org.drinkless.td.libcore.telegram.TdApi.GiveawayParameters
 import org.drinkless.td.libcore.telegram.TdApi.Hashtags
+import org.drinkless.td.libcore.telegram.TdApi.HttpUrl
+import org.drinkless.td.libcore.telegram.TdApi.InputBusinessStartPage
+import org.drinkless.td.libcore.telegram.TdApi.InputMessageContent
+import org.drinkless.td.libcore.telegram.TdApi.InternalLinkType
 import org.drinkless.td.libcore.telegram.TdApi.JsonValue
+import org.drinkless.td.libcore.telegram.TdApi.LinkPreview
+import org.drinkless.td.libcore.telegram.TdApi.LinkPreviewOptions
 import org.drinkless.td.libcore.telegram.TdApi.LocalizationTargetInfo
+import org.drinkless.td.libcore.telegram.TdApi.Location
+import org.drinkless.td.libcore.telegram.TdApi.LoginUrlInfo
+import org.drinkless.td.libcore.telegram.TdApi.Message
+import org.drinkless.td.libcore.telegram.TdApi.MessageSendOptions
+import org.drinkless.td.libcore.telegram.TdApi.MessageSender
 import org.drinkless.td.libcore.telegram.TdApi.OptionValue
+import org.drinkless.td.libcore.telegram.TdApi.PremiumLimit
+import org.drinkless.td.libcore.telegram.TdApi.PremiumLimitType
+import org.drinkless.td.libcore.telegram.TdApi.PremiumState
 import org.drinkless.td.libcore.telegram.TdApi.Proxies
+import org.drinkless.td.libcore.telegram.TdApi.PublicPostSearchLimits
 import org.drinkless.td.libcore.telegram.TdApi.PushReceiverId
+import org.drinkless.td.libcore.telegram.TdApi.ReactionType
+import org.drinkless.td.libcore.telegram.TdApi.StarRevenueStatistics
+import org.drinkless.td.libcore.telegram.TdApi.StarTransactions
+import org.drinkless.td.libcore.telegram.TdApi.StatisticalGraph
 import org.drinkless.td.libcore.telegram.TdApi.StorageStatistics
+import org.drinkless.td.libcore.telegram.TdApi.StorePaymentPurpose
+import org.drinkless.td.libcore.telegram.TdApi.StoreTransaction
+import org.drinkless.td.libcore.telegram.TdApi.SuggestedAction
 import org.drinkless.td.libcore.telegram.TdApi.TMeUrls
-import org.drinkless.td.libcore.telegram.TdApi.TdlibParameters
 import org.drinkless.td.libcore.telegram.TdApi.TestInt
 import org.drinkless.td.libcore.telegram.TdApi.Text
+import org.drinkless.td.libcore.telegram.TdApi.ThemeParameters
+import org.drinkless.td.libcore.telegram.TdApi.TimeZones
+import org.drinkless.td.libcore.telegram.TdApi.TonRevenueStatistics
+import org.drinkless.td.libcore.telegram.TdApi.TonTransactions
+import org.drinkless.td.libcore.telegram.TdApi.TransactionDirection
 import org.drinkless.td.libcore.telegram.TdApi.Updates
 import org.drinkless.td.libcore.telegram.TdApi.User
 import org.drinkless.td.libcore.telegram.TdApi.Users
+import org.drinkless.td.libcore.telegram.TdApi.WebPageInstantView
 
 /**
  * Suspend function, which accepts Telegram terms of services.
@@ -45,6 +98,63 @@ import org.drinkless.td.libcore.telegram.TdApi.Users
  */
 suspend fun TelegramFlow.acceptTermsOfService(termsOfServiceId: String?) =
     this.sendFunctionLaunch(TdApi.AcceptTermsOfService(termsOfServiceId))
+
+/**
+ * Suspend function, which sent a suggested post based on a previously sent message in a channel
+ * direct messages chat. Can be also used to suggest price or time change for an existing suggested
+ * post. Returns the sent message.
+ *
+ * @param chatId Identifier of the channel direct messages chat.  
+ * @param messageId Identifier of the message in the chat which will be sent as suggested post. Use
+ * messageProperties.canAddOffer to check whether an offer can be added or
+ * messageProperties.canEditSuggestedPostInfo to check whether price or time of sending of the post can
+ * be changed.  
+ * @param options Options to be used to send the message. New information about the suggested post
+ * must always be specified.
+ *
+ * @return [Message] Describes a message.
+ */
+suspend fun TelegramFlow.addOffer(
+  chatId: Long,
+  messageId: Long,
+  options: MessageSendOptions?
+): Message = this.sendFunctionAsync(TdApi.AddOffer(chatId, messageId, options))
+
+/**
+ * Suspend function, which approves a suggested post in a channel direct messages chat.
+ *
+ * @param chatId Chat identifier of the channel direct messages chat.  
+ * @param messageId Identifier of the message with the suggested post. Use
+ * messageProperties.canBeApproved to check whether the suggested post can be approved.  
+ * @param sendDate Point in time (Unix timestamp) when the post is expected to be published; pass 0
+ * if the date has already been chosen. If specified, then the date must be in the future, but at most
+ * getOption(&quot;suggested_post_send_delay_max&quot;) seconds in the future.
+ */
+suspend fun TelegramFlow.approveSuggestedPost(
+  chatId: Long,
+  messageId: Long,
+  sendDate: Int
+) = this.sendFunctionLaunch(TdApi.ApproveSuggestedPost(chatId, messageId, sendDate))
+
+/**
+ * Suspend function, which informs server about an in-store purchase. For official applications
+ * only.
+ *
+ * @param transaction Information about the transaction.  
+ * @param purpose Transaction purpose.
+ */
+suspend fun TelegramFlow.assignStoreTransaction(transaction: StoreTransaction?,
+    purpose: StorePaymentPurpose?) =
+    this.sendFunctionLaunch(TdApi.AssignStoreTransaction(transaction, purpose))
+
+/**
+ * Suspend function, which checks whether an in-store purchase is possible. Must be called before
+ * any in-store purchase. For official applications only.
+ *
+ * @param purpose Transaction purpose.
+ */
+suspend fun TelegramFlow.canPurchaseFromStore(purpose: StorePaymentPurpose?) =
+    this.sendFunctionLaunch(TdApi.CanPurchaseFromStore(purpose))
 
 /**
  * Suspend function, which checks whether the current session can be used to transfer a chat
@@ -56,11 +166,85 @@ suspend fun TelegramFlow.canTransferOwnership(): CanTransferOwnershipResult =
     this.sendFunctionAsync(TdApi.CanTransferOwnership())
 
 /**
+ * Suspend function, which clears the list of recently used reactions.
+ */
+suspend fun TelegramFlow.clearRecentReactions() =
+    this.sendFunctionLaunch(TdApi.ClearRecentReactions())
+
+/**
+ * Suspend function, which clears the list of recently searched for hashtags or cashtags.
+ *
+ * @param clearCashtags Pass true to clear the list of recently searched for cashtags; otherwise,
+ * the list of recently searched for hashtags will be cleared.
+ */
+suspend fun TelegramFlow.clearSearchedForTags(clearCashtags: Boolean) =
+    this.sendFunctionLaunch(TdApi.ClearSearchedForTags(clearCashtags))
+
+/**
+ * Suspend function, which informs TDLib that the user clicked Premium subscription button on the
+ * Premium features screen.
+ */
+suspend fun TelegramFlow.clickPremiumSubscriptionButton() =
+    this.sendFunctionLaunch(TdApi.ClickPremiumSubscriptionButton())
+
+/**
  * Suspend function, which closes the TDLib instance. All databases will be flushed to disk and
  * properly closed. After the close completes, updateAuthorizationState with authorizationStateClosed
- * will be sent.
+ * will be sent. Can be called before initialization.
  */
 suspend fun TelegramFlow.close() = this.sendFunctionLaunch(TdApi.Close())
+
+/**
+ * Suspend function, which connects an affiliate program to the given affiliate. Returns information
+ * about the connected affiliate program.
+ *
+ * @param affiliate The affiliate to which the affiliate program will be connected.  
+ * @param botUserId Identifier of the bot, which affiliate program is connected.
+ *
+ * @return [ConnectedAffiliateProgram] Describes an affiliate program that was connected to an
+ * affiliate.
+ */
+suspend fun TelegramFlow.connectAffiliateProgram(affiliate: AffiliateType?, botUserId: Long):
+    ConnectedAffiliateProgram = this.sendFunctionAsync(TdApi.ConnectAffiliateProgram(affiliate,
+    botUserId))
+
+/**
+ * Suspend function, which creates a link for the given invoice; for bots only.
+ *
+ * @param businessConnectionId Unique identifier of business connection on behalf of which to send
+ * the request.  
+ * @param invoice Information about the invoice of the type inputMessageInvoice.
+ *
+ * @return [HttpUrl] Contains an HTTP URL.
+ */
+suspend fun TelegramFlow.createInvoiceLink(businessConnectionId: String?,
+    invoice: InputMessageContent?): HttpUrl =
+    this.sendFunctionAsync(TdApi.CreateInvoiceLink(businessConnectionId, invoice))
+
+/**
+ * Suspend function, which declines a suggested post in a channel direct messages chat.
+ *
+ * @param chatId Chat identifier of the channel direct messages chat.  
+ * @param messageId Identifier of the message with the suggested post. Use
+ * messageProperties.canBeDeclined to check whether the suggested post can be declined.  
+ * @param comment Comment for the creator of the suggested post; 0-128 characters.
+ */
+suspend fun TelegramFlow.declineSuggestedPost(
+  chatId: Long,
+  messageId: Long,
+  comment: String?
+) = this.sendFunctionLaunch(TdApi.DeclineSuggestedPost(chatId, messageId, comment))
+
+/**
+ * Suspend function, which deletes commands supported by the bot for the given user scope and
+ * language; for bots only.
+ *
+ * @param scope The scope to which the commands are relevant; pass null to delete commands in the
+ * default bot command scope.  
+ * @param languageCode A two-letter ISO 639-1 language code or an empty string.
+ */
+suspend fun TelegramFlow.deleteCommands(scope: BotCommandScope?, languageCode: String?) =
+    this.sendFunctionLaunch(TdApi.DeleteCommands(scope, languageCode))
 
 /**
  * Suspend function, which deletes saved credentials for all payment provider bots.
@@ -72,9 +256,23 @@ suspend fun TelegramFlow.deleteSavedCredentials() =
  * Suspend function, which closes the TDLib instance, destroying all local data without a proper
  * logout. The current user session will remain in the list of all active sessions. All local data will
  * be destroyed. After the destruction completes updateAuthorizationState with authorizationStateClosed
- * will be sent.
+ * will be sent. Can be called before authorization.
  */
 suspend fun TelegramFlow.destroy() = this.sendFunctionLaunch(TdApi.Destroy())
+
+/**
+ * Suspend function, which disconnects an affiliate program from the given affiliate and immediately
+ * deactivates its referral link. Returns updated information about the disconnected affiliate program.
+ *
+ * @param affiliate The affiliate to which the affiliate program is connected.  
+ * @param url The referral link of the affiliate program.
+ *
+ * @return [ConnectedAffiliateProgram] Describes an affiliate program that was connected to an
+ * affiliate.
+ */
+suspend fun TelegramFlow.disconnectAffiliateProgram(affiliate: AffiliateType?, url: String?):
+    ConnectedAffiliateProgram = this.sendFunctionAsync(TdApi.DisconnectAffiliateProgram(affiliate,
+    url))
 
 /**
  * Suspend function, which disconnects all websites from the current user's Telegram account.
@@ -100,14 +298,122 @@ suspend fun TelegramFlow.getApplicationConfig(): JsonValue =
     this.sendFunctionAsync(TdApi.GetApplicationConfig())
 
 /**
- * Suspend function, which returns the current authorization state; this is an offline request. For
+ * Suspend function, which returns the link for downloading official Telegram application to be used
+ * when the current user invites friends to Telegram.
+ *
+ * @return [HttpUrl] Contains an HTTP URL.
+ */
+suspend fun TelegramFlow.getApplicationDownloadLink(): HttpUrl =
+    this.sendFunctionAsync(TdApi.GetApplicationDownloadLink())
+
+/**
+ * Suspend function, which returns information about a bot that can be added to attachment or side
+ * menu.
+ *
+ * @param botUserId Bot's user identifier.
+ *
+ * @return [AttachmentMenuBot] Represents a bot, which can be added to attachment or side menu.
+ */
+suspend fun TelegramFlow.getAttachmentMenuBot(botUserId: Long): AttachmentMenuBot =
+    this.sendFunctionAsync(TdApi.GetAttachmentMenuBot(botUserId))
+
+/**
+ * Suspend function, which returns the current authorization state. This is an offline method. For
  * informational purposes only. Use updateAuthorizationState instead to maintain the current
- * authorization state.
+ * authorization state. Can be called before initialization.
  *
  * @return [AuthorizationState] This class is an abstract base class.
  */
 suspend fun TelegramFlow.getAuthorizationState(): AuthorizationState =
     this.sendFunctionAsync(TdApi.GetAuthorizationState())
+
+/**
+ * Suspend function, which returns information about a bank card.
+ *
+ * @param bankCardNumber The bank card number.
+ *
+ * @return [BankCardInfo] Information about a bank card.
+ */
+suspend fun TelegramFlow.getBankCardInfo(bankCardNumber: String?): BankCardInfo =
+    this.sendFunctionAsync(TdApi.GetBankCardInfo(bankCardNumber))
+
+/**
+ * Suspend function, which returns the name of a bot in the given language. Can be called only if
+ * userTypeBot.canBeEdited == true.
+ *
+ * @param botUserId Identifier of the target bot.  
+ * @param languageCode A two-letter ISO 639-1 language code or an empty string.
+ *
+ * @return [Text] Contains some text.
+ */
+suspend fun TelegramFlow.getBotName(botUserId: Long, languageCode: String?): Text =
+    this.sendFunctionAsync(TdApi.GetBotName(botUserId, languageCode))
+
+/**
+ * Suspend function, which returns a list of bots similar to the given bot.
+ *
+ * @param botUserId User identifier of the target bot.
+ *
+ * @return [Users] Represents a list of users.
+ */
+suspend fun TelegramFlow.getBotSimilarBots(botUserId: Long): Users =
+    this.sendFunctionAsync(TdApi.GetBotSimilarBots(botUserId))
+
+/**
+ * Suspend function, which returns information about a business connection by its identifier; for
+ * bots only.
+ *
+ * @param connectionId Identifier of the business connection to return.
+ *
+ * @return [BusinessConnection] Describes a connection of the bot with a business account.
+ */
+suspend fun TelegramFlow.getBusinessConnection(connectionId: String?): BusinessConnection =
+    this.sendFunctionAsync(TdApi.GetBusinessConnection(connectionId))
+
+/**
+ * Suspend function, which returns information about features, available to Business users.
+ *
+ * @param source Source of the request; pass null if the method is called from settings or some
+ * non-standard source.
+ *
+ * @return [BusinessFeatures] Contains information about features, available to Business user
+ * accounts.
+ */
+suspend fun TelegramFlow.getBusinessFeatures(source: BusinessFeature?): BusinessFeatures =
+    this.sendFunctionAsync(TdApi.GetBusinessFeatures(source))
+
+/**
+ * Suspend function, which returns all close friends of the current user.
+ *
+ * @return [Users] Represents a list of users.
+ */
+suspend fun TelegramFlow.getCloseFriends(): Users = this.sendFunctionAsync(TdApi.GetCloseFriends())
+
+/**
+ * Suspend function, which returns information about a given collectible item that was purchased at
+ * https://fragment.com.
+ *
+ * @param type Type of the collectible item. The item must be used by a user and must be visible to
+ * the current user.
+ *
+ * @return [CollectibleItemInfo] Contains information about a collectible item and its last
+ * purchase.
+ */
+suspend fun TelegramFlow.getCollectibleItemInfo(type: CollectibleItemType?): CollectibleItemInfo =
+    this.sendFunctionAsync(TdApi.GetCollectibleItemInfo(type))
+
+/**
+ * Suspend function, which returns the list of commands supported by the bot for the given user
+ * scope and language; for bots only.
+ *
+ * @param scope The scope to which the commands are relevant; pass null to get commands in the
+ * default bot command scope.  
+ * @param languageCode A two-letter ISO 639-1 language code or an empty string.
+ *
+ * @return [BotCommands] Contains a list of bot commands.
+ */
+suspend fun TelegramFlow.getCommands(scope: BotCommandScope?, languageCode: String?): BotCommands =
+    this.sendFunctionAsync(TdApi.GetCommands(scope, languageCode))
 
 /**
  * Suspend function, which returns all website where the current user used Telegram to log in.
@@ -120,13 +426,23 @@ suspend fun TelegramFlow.getConnectedWebsites(): ConnectedWebsites =
 
 /**
  * Suspend function, which returns all updates needed to restore current TDLib state, i.e. all
- * actual UpdateAuthorizationState/UpdateUser/UpdateNewChat and others. This is especially useful if
- * TDLib is run in a separate process. This is an offline method. Can be called before authorization.
+ * actual updateAuthorizationState/updateUser/updateNewChat and others. This is especially useful if
+ * TDLib is run in a separate process. Can be called before initialization.
  *
  * @return [Updates] Contains a list of updates.
  */
 suspend fun TelegramFlow.getCurrentState(): Updates =
     this.sendFunctionAsync(TdApi.GetCurrentState())
+
+/**
+ * Suspend function, which returns the current weather in the given location.
+ *
+ * @param location The location.
+ *
+ * @return [CurrentWeather] Describes the current weather.
+ */
+suspend fun TelegramFlow.getCurrentWeather(location: Location?): CurrentWeather =
+    this.sendFunctionAsync(TdApi.GetCurrentWeather(location))
 
 /**
  * Suspend function, which returns information about a tg:// deep link. Use
@@ -135,10 +451,47 @@ suspend fun TelegramFlow.getCurrentState(): Updates =
  *
  * @param link The link.
  *
- * @return [DeepLinkInfo] Contains information about a tg:// deep link.
+ * @return [DeepLinkInfo] Contains information about a tg: deep link.
  */
 suspend fun TelegramFlow.getDeepLinkInfo(link: String?): DeepLinkInfo =
     this.sendFunctionAsync(TdApi.GetDeepLinkInfo(link))
+
+/**
+ * Suspend function, which returns an HTTP URL which can be used to automatically authorize the
+ * current user on a website after clicking an HTTP link. Use the method getExternalLinkInfo to find
+ * whether a prior user confirmation is needed.
+ *
+ * @param link The HTTP link.  
+ * @param allowWriteAccess Pass true if the current user allowed the bot, returned in
+ * getExternalLinkInfo, to send them messages.
+ *
+ * @return [HttpUrl] Contains an HTTP URL.
+ */
+suspend fun TelegramFlow.getExternalLink(link: String?, allowWriteAccess: Boolean): HttpUrl =
+    this.sendFunctionAsync(TdApi.GetExternalLink(link, allowWriteAccess))
+
+/**
+ * Suspend function, which returns information about an action to be done when the current user
+ * clicks an external link. Don't use this method for links from secret chats if link preview is
+ * disabled in secret chats.
+ *
+ * @param link The link.
+ *
+ * @return [LoginUrlInfo] This class is an abstract base class.
+ */
+suspend fun TelegramFlow.getExternalLinkInfo(link: String?): LoginUrlInfo =
+    this.sendFunctionAsync(TdApi.GetExternalLinkInfo(link))
+
+/**
+ * Suspend function, which returns information about a giveaway.
+ *
+ * @param chatId Identifier of the channel chat which started the giveaway.  
+ * @param messageId Identifier of the giveaway or a giveaway winners message in the chat.
+ *
+ * @return [GiveawayInfo] This class is an abstract base class.
+ */
+suspend fun TelegramFlow.getGiveawayInfo(chatId: Long, messageId: Long): GiveawayInfo =
+    this.sendFunctionAsync(TdApi.GetGiveawayInfo(chatId, messageId))
 
 /**
  * Suspend function, which returns a list of common group chats with a given user. Chats are sorted
@@ -152,22 +505,38 @@ suspend fun TelegramFlow.getDeepLinkInfo(link: String?): DeepLinkInfo =
  * @return [Chats] Represents a list of chats.
  */
 suspend fun TelegramFlow.getGroupsInCommon(
-  userId: Int,
+  userId: Long,
   offsetChatId: Long,
   limit: Int
 ): Chats = this.sendFunctionAsync(TdApi.GetGroupsInCommon(userId, offsetChatId, limit))
 
 /**
- * Suspend function, which returns the default text for invitation messages to be used as a
- * placeholder when the current user invites friends to Telegram.
+ * Suspend function, which returns an HTTPS or a tg: link with the given type. Can be called before
+ * authorization.
  *
- * @return [Text] Contains some text.
+ * @param type Expected type of the link.  
+ * @param isHttp Pass true to create an HTTPS link (only available for some link types); pass false
+ * to create a tg: link.
+ *
+ * @return [HttpUrl] Contains an HTTP URL.
  */
-suspend fun TelegramFlow.getInviteText(): Text = this.sendFunctionAsync(TdApi.GetInviteText())
+suspend fun TelegramFlow.getInternalLink(type: InternalLinkType?, isHttp: Boolean): HttpUrl =
+    this.sendFunctionAsync(TdApi.GetInternalLink(type, isHttp))
 
 /**
- * Suspend function, which converts a JsonValue object to corresponding JSON-serialized string. This
- * is an offline method. Can be called before authorization. Can be called synchronously.
+ * Suspend function, which returns information about the type of internal link. Returns a 404 error
+ * if the link is not internal. Can be called before authorization.
+ *
+ * @param link The link.
+ *
+ * @return [InternalLinkType] This class is an abstract base class.
+ */
+suspend fun TelegramFlow.getInternalLinkType(link: String?): InternalLinkType =
+    this.sendFunctionAsync(TdApi.GetInternalLinkType(link))
+
+/**
+ * Suspend function, which converts a JsonValue object to corresponding JSON-serialized string. Can
+ * be called synchronously.
  *
  * @param jsonValue The JsonValue object.
  *
@@ -177,8 +546,8 @@ suspend fun TelegramFlow.getJsonString(jsonValue: JsonValue?): Text =
     this.sendFunctionAsync(TdApi.GetJsonString(jsonValue))
 
 /**
- * Suspend function, which converts a JSON-serialized string to corresponding JsonValue object. This
- * is an offline method. Can be called before authorization. Can be called synchronously.
+ * Suspend function, which converts a JSON-serialized string to corresponding JsonValue object. Can
+ * be called synchronously.
  *
  * @param json The JSON-serialized string.
  *
@@ -188,16 +557,42 @@ suspend fun TelegramFlow.getJsonValue(json: String?): JsonValue =
     this.sendFunctionAsync(TdApi.GetJsonValue(json))
 
 /**
- * Suspend function, which returns information about the current localization target. This is an
- * offline request if onlyLocal is true. Can be called before authorization.
+ * Suspend function, which returns a link preview by the text of a message. Do not call this
+ * function too often. Returns a 404 error if the text has no link preview.
  *
- * @param onlyLocal If true, returns only locally available information without sending network
+ * @param text Message text with formatting.  
+ * @param linkPreviewOptions Options to be used for generation of the link preview; pass null to use
+ * default link preview options.
+ *
+ * @return [LinkPreview] Describes a link preview.
+ */
+suspend fun TelegramFlow.getLinkPreview(text: FormattedText?,
+    linkPreviewOptions: LinkPreviewOptions?): LinkPreview =
+    this.sendFunctionAsync(TdApi.GetLinkPreview(text, linkPreviewOptions))
+
+/**
+ * Suspend function, which returns information about the current localization target. This is an
+ * offline method if onlyLocal is true. Can be called before authorization.
+ *
+ * @param onlyLocal Pass true to get only locally available information without sending network
  * requests.
  *
  * @return [LocalizationTargetInfo] Contains information about the current localization target.
  */
 suspend fun TelegramFlow.getLocalizationTargetInfo(onlyLocal: Boolean): LocalizationTargetInfo =
     this.sendFunctionAsync(TdApi.GetLocalizationTargetInfo(onlyLocal))
+
+/**
+ * Suspend function, which replaces text entities with Markdown formatting in a human-friendly
+ * format. Entities that can't be represented in Markdown unambiguously are kept as is. Can be called
+ * synchronously.
+ *
+ * @param text The text.
+ *
+ * @return [FormattedText] A text with some entities.
+ */
+suspend fun TelegramFlow.getMarkdownText(text: FormattedText?): FormattedText =
+    this.sendFunctionAsync(TdApi.GetMarkdownText(text))
 
 /**
  * Suspend function, which returns the current user.
@@ -207,8 +602,19 @@ suspend fun TelegramFlow.getLocalizationTargetInfo(onlyLocal: Boolean): Localiza
 suspend fun TelegramFlow.getMe(): User = this.sendFunctionAsync(TdApi.GetMe())
 
 /**
+ * Suspend function, which returns menu button set by the bot for the given user; for bots only.
+ *
+ * @param userId Identifier of the user or 0 to get the default menu button.
+ *
+ * @return [BotMenuButton] Describes a button to be shown instead of bot commands menu button.
+ */
+suspend fun TelegramFlow.getMenuButton(userId: Long): BotMenuButton =
+    this.sendFunctionAsync(TdApi.GetMenuButton(userId))
+
+/**
  * Suspend function, which returns the value of an option by its name. (Check the list of available
- * options on https://core.telegram.org/tdlib/options.) Can be called before authorization.
+ * options on https://core.telegram.org/tdlib/options.) Can be called before authorization. Can be
+ * called synchronously for options &quot;version&quot; and &quot;commit_hash&quot;.
  *
  * @param name The name of the option.
  *
@@ -218,17 +624,54 @@ suspend fun TelegramFlow.getOption(name: String?): OptionValue =
     this.sendFunctionAsync(TdApi.GetOption(name))
 
 /**
- * Suspend function, which returns list of proxies that are currently set up. Can be called before
- * authorization.
+ * Suspend function, which returns the list of bots owned by the current user.
+ *
+ * @return [Users] Represents a list of users.
+ */
+suspend fun TelegramFlow.getOwnedBots(): Users = this.sendFunctionAsync(TdApi.GetOwnedBots())
+
+/**
+ * Suspend function, which returns information about a limit, increased for Premium users. Returns a
+ * 404 error if the limit is unknown.
+ *
+ * @param limitType Type of the limit.
+ *
+ * @return [PremiumLimit] Contains information about a limit, increased for Premium users.
+ */
+suspend fun TelegramFlow.getPremiumLimit(limitType: PremiumLimitType?): PremiumLimit =
+    this.sendFunctionAsync(TdApi.GetPremiumLimit(limitType))
+
+/**
+ * Suspend function, which returns state of Telegram Premium subscription and promotion videos for
+ * Premium features.
+ *
+ * @return [PremiumState] Contains state of Telegram Premium subscription and promotion videos for
+ * Premium features.
+ */
+suspend fun TelegramFlow.getPremiumState(): PremiumState =
+    this.sendFunctionAsync(TdApi.GetPremiumState())
+
+/**
+ * Suspend function, which returns the list of proxies that are currently set up. Can be called
+ * before authorization.
  *
  * @return [Proxies] Represents a list of proxy servers.
  */
 suspend fun TelegramFlow.getProxies(): Proxies = this.sendFunctionAsync(TdApi.GetProxies())
 
 /**
+ * Suspend function, which checks public post search limits without actually performing the search.
+ *
+ * @param query Query that will be searched for.
+ *
+ * @return [PublicPostSearchLimits] Contains information about public post search limits.
+ */
+suspend fun TelegramFlow.getPublicPostSearchLimits(query: String?): PublicPostSearchLimits =
+    this.sendFunctionAsync(TdApi.GetPublicPostSearchLimits(query))
+
+/**
  * Suspend function, which returns a globally unique push notification subscription identifier for
- * identification of an account, which has received a push notification. This is an offline method. Can
- * be called before authorization. Can be called synchronously.
+ * identification of an account, which has received a push notification. Can be called synchronously.
  *
  * @param payload JSON-encoded push notification payload.
  *
@@ -258,6 +701,209 @@ suspend fun TelegramFlow.getRecentlyVisitedTMeUrls(referrer: String?): TMeUrls =
     this.sendFunctionAsync(TdApi.GetRecentlyVisitedTMeUrls(referrer))
 
 /**
+ * Suspend function, which returns recently searched for hashtags or cashtags by their prefix.
+ *
+ * @param tagPrefix Prefix of hashtags or cashtags to return.  
+ * @param limit The maximum number of items to be returned.
+ *
+ * @return [Hashtags] Contains a list of hashtags.
+ */
+suspend fun TelegramFlow.getSearchedForTags(tagPrefix: String?, limit: Int): Hashtags =
+    this.sendFunctionAsync(TdApi.GetSearchedForTags(tagPrefix, limit))
+
+/**
+ * Suspend function, which returns detailed Telegram Star revenue statistics.
+ *
+ * @param ownerId Identifier of the owner of the Telegram Stars; can be identifier of the current
+ * user, an owned bot, or a supergroup or a channel chat with
+ * supergroupFullInfo.canGetStarRevenueStatistics == true.  
+ * @param isDark Pass true if a dark theme is used by the application.
+ *
+ * @return [StarRevenueStatistics] A detailed statistics about Telegram Stars earned by a user or a
+ * chat.
+ */
+suspend fun TelegramFlow.getStarRevenueStatistics(ownerId: MessageSender?, isDark: Boolean):
+    StarRevenueStatistics = this.sendFunctionAsync(TdApi.GetStarRevenueStatistics(ownerId, isDark))
+
+/**
+ * Suspend function, which returns the list of Telegram Star transactions for the specified owner.
+ *
+ * @param ownerId Identifier of the owner of the Telegram Stars; can be the identifier of the
+ * current user, identifier of an owned bot, or identifier of a supergroup or a channel chat with
+ * supergroupFullInfo.canGetStarRevenueStatistics == true.  
+ * @param subscriptionId If non-empty, only transactions related to the Star Subscription will be
+ * returned.  
+ * @param direction Direction of the transactions to receive; pass null to get all transactions.  
+ * @param offset Offset of the first transaction to return as received from the previous request;
+ * use empty string to get the first chunk of results.  
+ * @param limit The maximum number of transactions to return.
+ *
+ * @return [StarTransactions] Represents a list of Telegram Star transactions.
+ */
+suspend fun TelegramFlow.getStarTransactions(
+  ownerId: MessageSender?,
+  subscriptionId: String?,
+  direction: TransactionDirection?,
+  offset: String?,
+  limit: Int
+): StarTransactions = this.sendFunctionAsync(TdApi.GetStarTransactions(ownerId, subscriptionId,
+    direction, offset, limit))
+
+/**
+ * Suspend function, which returns a URL for Telegram Star withdrawal.
+ *
+ * @param ownerId Identifier of the owner of the Telegram Stars; can be identifier of the current
+ * user, an owned bot, or an owned supergroup or channel chat.  
+ * @param starCount The number of Telegram Stars to withdraw; must be between
+ * getOption(&quot;star_withdrawal_count_min&quot;) and
+ * getOption(&quot;star_withdrawal_count_max&quot;).  
+ * @param password The 2-step verification password of the current user.
+ *
+ * @return [HttpUrl] Contains an HTTP URL.
+ */
+suspend fun TelegramFlow.getStarWithdrawalUrl(
+  ownerId: MessageSender?,
+  starCount: Long,
+  password: String?
+): HttpUrl = this.sendFunctionAsync(TdApi.GetStarWithdrawalUrl(ownerId, starCount, password))
+
+/**
+ * Suspend function, which loads an asynchronous or a zoomed in statistical graph.
+ *
+ * @param chatId Chat identifier.  
+ * @param token The token for graph loading.  
+ * @param x X-value for zoomed in graph or 0 otherwise.
+ *
+ * @return [StatisticalGraph] This class is an abstract base class.
+ */
+suspend fun TelegramFlow.getStatisticalGraph(
+  chatId: Long,
+  token: String?,
+  x: Long
+): StatisticalGraph = this.sendFunctionAsync(TdApi.GetStatisticalGraph(chatId, token, x))
+
+/**
+ * Suspend function, which returns localized name of the Telegram support user; for Telegram support
+ * only.
+ *
+ * @return [Text] Contains some text.
+ */
+suspend fun TelegramFlow.getSupportName(): Text = this.sendFunctionAsync(TdApi.GetSupportName())
+
+/**
+ * Suspend function, which converts a themeParameters object to corresponding JSON-serialized
+ * string. Can be called synchronously.
+ *
+ * @param theme Theme parameters to convert to JSON.
+ *
+ * @return [Text] Contains some text.
+ */
+suspend fun TelegramFlow.getThemeParametersJsonString(theme: ThemeParameters?): Text =
+    this.sendFunctionAsync(TdApi.GetThemeParametersJsonString(theme))
+
+/**
+ * Suspend function, which returns the list of supported time zones.
+ *
+ * @return [TimeZones] Contains a list of time zones.
+ */
+suspend fun TelegramFlow.getTimeZones(): TimeZones = this.sendFunctionAsync(TdApi.GetTimeZones())
+
+/**
+ * Suspend function, which returns detailed Toncoin revenue statistics of the current user.
+ *
+ * @param isDark Pass true if a dark theme is used by the application.
+ *
+ * @return [TonRevenueStatistics] A detailed statistics about Toncoins earned by the current user.
+ */
+suspend fun TelegramFlow.getTonRevenueStatistics(isDark: Boolean): TonRevenueStatistics =
+    this.sendFunctionAsync(TdApi.GetTonRevenueStatistics(isDark))
+
+/**
+ * Suspend function, which returns the list of Toncoin transactions of the current user.
+ *
+ * @param direction Direction of the transactions to receive; pass null to get all transactions.  
+ * @param offset Offset of the first transaction to return as received from the previous request;
+ * use empty string to get the first chunk of results.  
+ * @param limit The maximum number of transactions to return.
+ *
+ * @return [TonTransactions] Represents a list of Toncoin transactions.
+ */
+suspend fun TelegramFlow.getTonTransactions(
+  direction: TransactionDirection?,
+  offset: String?,
+  limit: Int
+): TonTransactions = this.sendFunctionAsync(TdApi.GetTonTransactions(direction, offset, limit))
+
+/**
+ * Suspend function, which returns a URL for Toncoin withdrawal from the current user's account. The
+ * user must have at least 10 toncoins to withdraw and can withdraw up to 100000 Toncoins in one
+ * transaction.
+ *
+ * @param password The 2-step verification password of the current user.
+ *
+ * @return [HttpUrl] Contains an HTTP URL.
+ */
+suspend fun TelegramFlow.getTonWithdrawalUrl(password: String?): HttpUrl =
+    this.sendFunctionAsync(TdApi.GetTonWithdrawalUrl(password))
+
+/**
+ * Suspend function, which returns an instant view version of a web page if available. This is an
+ * offline method if onlyLocal is true. Returns a 404 error if the web page has no instant view page.
+ *
+ * @param url The web page URL.  
+ * @param onlyLocal Pass true to get only locally available information without sending network
+ * requests.
+ *
+ * @return [WebPageInstantView] Describes an instant view page for a web page.
+ */
+suspend fun TelegramFlow.getWebPageInstantView(url: String?, onlyLocal: Boolean): WebPageInstantView
+    = this.sendFunctionAsync(TdApi.GetWebPageInstantView(url, onlyLocal))
+
+/**
+ * Suspend function, which allows to buy a Telegram Premium subscription for another user with
+ * payment in Telegram Stars; for bots only.
+ *
+ * @param userId Identifier of the user which will receive Telegram Premium.  
+ * @param starCount The number of Telegram Stars to pay for subscription.  
+ * @param monthCount Number of months the Telegram Premium subscription will be active for the user.
+ *  
+ * @param text Text to show to the user receiving Telegram Premium;
+ * 0-getOption(&quot;gift_text_length_max&quot;) characters. Only Bold, Italic, Underline,
+ * Strikethrough, Spoiler, and CustomEmoji entities are allowed.
+ */
+suspend fun TelegramFlow.giftPremiumWithStars(
+  userId: Long,
+  starCount: Long,
+  monthCount: Int,
+  text: FormattedText?
+) = this.sendFunctionLaunch(TdApi.GiftPremiumWithStars(userId, starCount, monthCount, text))
+
+/**
+ * Suspend function, which hides a suggested action.
+ *
+ * @param action Suggested action to hide.
+ */
+suspend fun TelegramFlow.hideSuggestedAction(action: SuggestedAction?) =
+    this.sendFunctionLaunch(TdApi.HideSuggestedAction(action))
+
+/**
+ * Suspend function, which launches a prepaid giveaway.
+ *
+ * @param giveawayId Unique identifier of the prepaid giveaway.  
+ * @param parameters Giveaway parameters.  
+ * @param winnerCount The number of users to receive giveaway prize.  
+ * @param starCount The number of Telegram Stars to be distributed through the giveaway; pass 0 for
+ * Telegram Premium giveaways.
+ */
+suspend fun TelegramFlow.launchPrepaidGiveaway(
+  giveawayId: Long,
+  parameters: GiveawayParameters?,
+  winnerCount: Int,
+  starCount: Long
+) = this.sendFunctionLaunch(TdApi.LaunchPrepaidGiveaway(giveawayId, parameters, winnerCount,
+    starCount))
+
+/**
  * Suspend function, which closes the TDLib instance after a proper logout. Requires an available
  * network connection. All local data will be destroyed. After the logout completes,
  * updateAuthorizationState with authorizationStateClosed will be sent.
@@ -265,22 +911,34 @@ suspend fun TelegramFlow.getRecentlyVisitedTMeUrls(referrer: String?): TMeUrls =
 suspend fun TelegramFlow.logOut() = this.sendFunctionLaunch(TdApi.LogOut())
 
 /**
+ * Suspend function, which informs TDLib that a bot was opened from the list of similar bots.
+ *
+ * @param botUserId Identifier of the original bot, which similar bots were requested.  
+ * @param openedBotUserId Identifier of the opened bot.
+ */
+suspend fun TelegramFlow.openBotSimilarBot(botUserId: Long, openedBotUserId: Long) =
+    this.sendFunctionLaunch(TdApi.OpenBotSimilarBot(botUserId, openedBotUserId))
+
+/**
  * Suspend function, which optimizes storage usage, i.e. deletes some files and returns new storage
  * usage statistics. Secret thumbnails can't be deleted.
  *
- * @param size Limit on the total size of files after deletion. Pass -1 to use the default limit.  
+ * @param size Limit on the total size of files after deletion, in bytes. Pass -1 to use the default
+ * limit.  
  * @param ttl Limit on the time that has passed since the last time a file was accessed (or creation
  * time for some filesystems). Pass -1 to use the default limit.  
- * @param count Limit on the total count of files after deletion. Pass -1 to use the default limit. 
- * 
+ * @param count Limit on the total number of files after deletion. Pass -1 to use the default limit.
+ *  
  * @param immunityDelay The amount of time after the creation of a file during which it can't be
  * deleted, in seconds. Pass -1 to use the default value.  
- * @param fileTypes If not empty, only files with the given type(s) are considered. By default, all
+ * @param fileTypes If non-empty, only files with the given types are considered. By default, all
  * types except thumbnails, profile photos, stickers and wallpapers are deleted.  
- * @param chatIds If not empty, only files from the given chats are considered. Use 0 as chat
+ * @param chatIds If non-empty, only files from the given chats are considered. Use 0 as chat
  * identifier to delete files not belonging to any chat (e.g., profile photos).  
- * @param excludeChatIds If not empty, files from the given chats are excluded. Use 0 as chat
+ * @param excludeChatIds If non-empty, files from the given chats are excluded. Use 0 as chat
  * identifier to exclude all files not belonging to any chat (e.g., profile photos).  
+ * @param returnDeletedFileStatistics Pass true if statistics about the files that were deleted must
+ * be returned instead of the whole storage usage statistics. Affects only returned statistics.  
  * @param chatLimit Same as in getStorageStatistics. Affects only returned statistics.
  *
  * @return [StorageStatistics] Contains the exact storage usage statistics split by chats and file
@@ -294,21 +952,57 @@ suspend fun TelegramFlow.optimizeStorage(
   fileTypes: Array<FileType>?,
   chatIds: LongArray?,
   excludeChatIds: LongArray?,
+  returnDeletedFileStatistics: Boolean,
   chatLimit: Int
 ): StorageStatistics = this.sendFunctionAsync(TdApi.OptimizeStorage(size, ttl, count, immunityDelay,
-    fileTypes, chatIds, excludeChatIds, chatLimit))
+    fileTypes, chatIds, excludeChatIds, returnDeletedFileStatistics, chatLimit))
+
+/**
+ * Suspend function, which parses Markdown entities in a human-friendly format, ignoring markup
+ * errors. Can be called synchronously.
+ *
+ * @param text The text to parse. For example, &quot;__italic__ ~~strikethrough~~ ||spoiler||
+ * **bold** `code` ```pre``` __[italic__ textUrl](telegram.org) __italic**bold italic__bold**&quot;.
+ *
+ * @return [FormattedText] A text with some entities.
+ */
+suspend fun TelegramFlow.parseMarkdown(text: FormattedText?): FormattedText =
+    this.sendFunctionAsync(TdApi.ParseMarkdown(text))
+
+/**
+ * Suspend function, which rates recognized speech in a video note or a voice note message.
+ *
+ * @param chatId Identifier of the chat to which the message belongs.  
+ * @param messageId Identifier of the message.  
+ * @param isGood Pass true if the speech recognition is good.
+ */
+suspend fun TelegramFlow.rateSpeechRecognition(
+  chatId: Long,
+  messageId: Long,
+  isGood: Boolean
+) = this.sendFunctionLaunch(TdApi.RateSpeechRecognition(chatId, messageId, isGood))
+
+/**
+ * Suspend function, which recognizes speech in a video note or a voice note message.
+ *
+ * @param chatId Identifier of the chat to which the message belongs.  
+ * @param messageId Identifier of the message. Use messageProperties.canRecognizeSpeech to check
+ * whether the message is suitable.
+ */
+suspend fun TelegramFlow.recognizeSpeech(chatId: Long, messageId: Long) =
+    this.sendFunctionLaunch(TdApi.RecognizeSpeech(chatId, messageId))
 
 /**
  * Suspend function, which registers the currently used device for receiving push notifications.
  * Returns a globally unique identifier of the push notification subscription.
  *
  * @param deviceToken Device token.  
- * @param otherUserIds List of user identifiers of other users currently using the client.
+ * @param otherUserIds List of user identifiers of other users currently using the application.
  *
  * @return [PushReceiverId] Contains a globally unique push receiver identifier, which can be used
  * to identify which account has received a push notification.
  */
-suspend fun TelegramFlow.registerDevice(deviceToken: DeviceToken?, otherUserIds: IntArray?):
+suspend fun TelegramFlow.registerDevice(deviceToken: DeviceToken?, otherUserIds: LongArray?):
     PushReceiverId = this.sendFunctionAsync(TdApi.RegisterDevice(deviceToken, otherUserIds))
 
 /**
@@ -320,6 +1014,34 @@ suspend fun TelegramFlow.removeRecentHashtag(hashtag: String?) =
     this.sendFunctionLaunch(TdApi.RemoveRecentHashtag(hashtag))
 
 /**
+ * Suspend function, which removes a hashtag or a cashtag from the list of recently searched for
+ * hashtags or cashtags.
+ *
+ * @param tag Hashtag or cashtag to delete.
+ */
+suspend fun TelegramFlow.removeSearchedForTag(tag: String?) =
+    this.sendFunctionLaunch(TdApi.RemoveSearchedForTag(tag))
+
+/**
+ * Suspend function, which searches affiliate programs that can be connected to the given affiliate.
+ *
+ * @param affiliate The affiliate for which affiliate programs are searched for.  
+ * @param sortOrder Sort order for the results.  
+ * @param offset Offset of the first affiliate program to return as received from the previous
+ * request; use empty string to get the first chunk of results.  
+ * @param limit The maximum number of affiliate programs to return.
+ *
+ * @return [FoundAffiliatePrograms] Represents a list of found affiliate programs.
+ */
+suspend fun TelegramFlow.searchAffiliatePrograms(
+  affiliate: AffiliateType?,
+  sortOrder: AffiliateProgramSortOrder?,
+  offset: String?,
+  limit: Int
+): FoundAffiliatePrograms = this.sendFunctionAsync(TdApi.SearchAffiliatePrograms(affiliate,
+    sortOrder, offset, limit))
+
+/**
  * Suspend function, which searches for recently used hashtags by their prefix.
  *
  * @param prefix Hashtag prefix to search for.  
@@ -329,6 +1051,64 @@ suspend fun TelegramFlow.removeRecentHashtag(hashtag: String?) =
  */
 suspend fun TelegramFlow.searchHashtags(prefix: String?, limit: Int): Hashtags =
     this.sendFunctionAsync(TdApi.SearchHashtags(prefix, limit))
+
+/**
+ * Suspend function, which searches for public channel posts using the given query. For optimal
+ * performance, the number of returned messages is chosen by TDLib and can be smaller than the
+ * specified limit.
+ *
+ * @param query Query to search for.  
+ * @param offset Offset of the first entry to return as received from the previous request; use
+ * empty string to get the first chunk of results.  
+ * @param limit The maximum number of messages to be returned; up to 100. For optimal performance,
+ * the number of returned messages is chosen by TDLib and can be smaller than the specified limit.  
+ * @param starCount The amount of Telegram Stars the user agreed to pay for the search; pass 0 for
+ * free searches.
+ *
+ * @return [FoundPublicPosts] Contains a list of messages found by a public post search.
+ */
+suspend fun TelegramFlow.searchPublicPosts(
+  query: String?,
+  offset: String?,
+  limit: Int,
+  starCount: Long
+): FoundPublicPosts = this.sendFunctionAsync(TdApi.SearchPublicPosts(query, offset, limit,
+    starCount))
+
+/**
+ * Suspend function, which searches for a given quote in a text. Returns found quote start position
+ * in UTF-16 code units. Returns a 404 error if the quote is not found. Can be called synchronously.
+ *
+ * @param text Text in which to search for the quote.  
+ * @param quote Quote to search for.  
+ * @param quotePosition Approximate quote position in UTF-16 code units.
+ *
+ * @return [FoundPosition] Contains 0-based match position.
+ */
+suspend fun TelegramFlow.searchQuote(
+  text: FormattedText?,
+  quote: FormattedText?,
+  quotePosition: Int
+): FoundPosition = this.sendFunctionAsync(TdApi.SearchQuote(text, quote, quotePosition))
+
+/**
+ * Suspend function, which searches specified query by word prefixes in the provided strings.
+ * Returns 0-based positions of strings that matched. Can be called synchronously.
+ *
+ * @param strings The strings to search in for the query.  
+ * @param query Query to search for.  
+ * @param limit The maximum number of objects to return.  
+ * @param returnNoneForEmptyQuery Pass true to receive no results for an empty query.
+ *
+ * @return [FoundPositions] Contains 0-based positions of matched objects.
+ */
+suspend fun TelegramFlow.searchStringsByPrefix(
+  strings: Array<String>?,
+  query: String?,
+  limit: Int,
+  returnNoneForEmptyQuery: Boolean
+): FoundPositions = this.sendFunctionAsync(TdApi.SearchStringsByPrefix(strings, query, limit,
+    returnNoneForEmptyQuery))
 
 /**
  * Suspend function, which sends a custom request; for bots only.
@@ -343,7 +1123,7 @@ suspend fun TelegramFlow.sendCustomRequest(method: String?, parameters: String?)
 
 /**
  * Suspend function, which succeeds after a specified amount of time has passed. Can be called
- * before authorization. Can be called before initialization.
+ * before initialization.
  *
  * @param seconds Number of seconds before the function returns.
  */
@@ -351,18 +1131,150 @@ suspend fun TelegramFlow.setAlarm(seconds: Double) =
     this.sendFunctionLaunch(TdApi.SetAlarm(seconds))
 
 /**
+ * Suspend function, which application or reCAPTCHA verification has been completed. Can be called
+ * before authorization.
+ *
+ * @param verificationId Unique identifier for the verification process as received from
+ * updateApplicationVerificationRequired or updateApplicationRecaptchaVerificationRequired.  
+ * @param token Play Integrity API token for the Android application, or secret from push
+ * notification for the iOS application for application verification, or reCAPTCHA token for reCAPTCHA
+ * verifications; pass an empty string to abort verification and receive the error
+ * &quot;VERIFICATION_FAILED&quot; for the request.
+ */
+suspend fun TelegramFlow.setApplicationVerificationToken(verificationId: Long, token: String?) =
+    this.sendFunctionLaunch(TdApi.SetApplicationVerificationToken(verificationId, token))
+
+/**
  * Suspend function, which changes the bio of the current user.
  *
- * @param bio The new value of the user bio; 0-70 characters without line feeds.
+ * @param bio The new value of the user bio; 0-getOption(&quot;bio_length_max&quot;) characters
+ * without line feeds.
  */
 suspend fun TelegramFlow.setBio(bio: String?) = this.sendFunctionLaunch(TdApi.SetBio(bio))
 
 /**
- * Suspend function, which changes the first and last name of the current user. If something
- * changes, updateUser will be sent.
+ * Suspend function, which changes the birthdate of the current user.
  *
- * @param firstName The new value of the first name for the user; 1-64 characters.  
- * @param lastName The new value of the optional last name for the user; 0-64 characters.
+ * @param birthdate The new value of the current user's birthdate; pass null to remove the
+ * birthdate.
+ */
+suspend fun TelegramFlow.setBirthdate(birthdate: Birthdate?) =
+    this.sendFunctionLaunch(TdApi.SetBirthdate(birthdate))
+
+/**
+ * Suspend function, which sets the name of a bot. Can be called only if userTypeBot.canBeEdited ==
+ * true.
+ *
+ * @param botUserId Identifier of the target bot.  
+ * @param languageCode A two-letter ISO 639-1 language code. If empty, the name will be shown to all
+ * users for whose languages there is no dedicated name.  
+ * @param name New bot's name on the specified language; 0-64 characters; must be non-empty if
+ * language code is empty.
+ */
+suspend fun TelegramFlow.setBotName(
+  botUserId: Long,
+  languageCode: String?,
+  name: String?
+) = this.sendFunctionLaunch(TdApi.SetBotName(botUserId, languageCode, name))
+
+/**
+ * Suspend function, which changes the business location of the current user. Requires Telegram
+ * Business subscription.
+ *
+ * @param location The new location of the business; pass null to remove the location.
+ */
+suspend fun TelegramFlow.setBusinessLocation(location: BusinessLocation?) =
+    this.sendFunctionLaunch(TdApi.SetBusinessLocation(location))
+
+/**
+ * Suspend function, which changes the business opening hours of the current user. Requires Telegram
+ * Business subscription.
+ *
+ * @param openingHours The new opening hours of the business; pass null to remove the opening hours;
+ * up to 28 time intervals can be specified.
+ */
+suspend fun TelegramFlow.setBusinessOpeningHours(openingHours: BusinessOpeningHours?) =
+    this.sendFunctionLaunch(TdApi.SetBusinessOpeningHours(openingHours))
+
+/**
+ * Suspend function, which changes the business start page of the current user. Requires Telegram
+ * Business subscription.
+ *
+ * @param startPage The new start page of the business; pass null to remove custom start page.
+ */
+suspend fun TelegramFlow.setBusinessStartPage(startPage: InputBusinessStartPage?) =
+    this.sendFunctionLaunch(TdApi.SetBusinessStartPage(startPage))
+
+/**
+ * Suspend function, which changes the list of close friends of the current user.
+ *
+ * @param userIds User identifiers of close friends; the users must be contacts of the current user.
+ */
+suspend fun TelegramFlow.setCloseFriends(userIds: LongArray?) =
+    this.sendFunctionLaunch(TdApi.SetCloseFriends(userIds))
+
+/**
+ * Suspend function, which sets the list of commands supported by the bot for the given user scope
+ * and language; for bots only.
+ *
+ * @param scope The scope to which the commands are relevant; pass null to change commands in the
+ * default bot command scope.  
+ * @param languageCode A two-letter ISO 639-1 language code. If empty, the commands will be applied
+ * to all users from the given scope, for which language there are no dedicated commands.  
+ * @param commands List of the bot's commands.
+ */
+suspend fun TelegramFlow.setCommands(
+  scope: BotCommandScope?,
+  languageCode: String?,
+  commands: Array<BotCommand>?
+) = this.sendFunctionLaunch(TdApi.SetCommands(scope, languageCode, commands))
+
+/**
+ * Suspend function, which sets default administrator rights for adding the bot to channel chats;
+ * for bots only.
+ *
+ * @param defaultChannelAdministratorRights Default administrator rights for adding the bot to
+ * channels; pass null to remove default rights.
+ */
+suspend
+    fun TelegramFlow.setDefaultChannelAdministratorRights(defaultChannelAdministratorRights: ChatAdministratorRights?)
+    =
+    this.sendFunctionLaunch(TdApi.SetDefaultChannelAdministratorRights(defaultChannelAdministratorRights))
+
+/**
+ * Suspend function, which sets default administrator rights for adding the bot to basic group and
+ * supergroup chats; for bots only.
+ *
+ * @param defaultGroupAdministratorRights Default administrator rights for adding the bot to basic
+ * group and supergroup chats; pass null to remove default rights.
+ */
+suspend
+    fun TelegramFlow.setDefaultGroupAdministratorRights(defaultGroupAdministratorRights: ChatAdministratorRights?)
+    =
+    this.sendFunctionLaunch(TdApi.SetDefaultGroupAdministratorRights(defaultGroupAdministratorRights))
+
+/**
+ * Suspend function, which changes type of default reaction for the current user.
+ *
+ * @param reactionType New type of the default reaction. The paid reaction can't be set as default.
+ */
+suspend fun TelegramFlow.setDefaultReactionType(reactionType: ReactionType?) =
+    this.sendFunctionLaunch(TdApi.SetDefaultReactionType(reactionType))
+
+/**
+ * Suspend function, which sets menu button for the given user or for all users; for bots only.
+ *
+ * @param userId Identifier of the user or 0 to set menu button for all users.  
+ * @param menuButton New menu button.
+ */
+suspend fun TelegramFlow.setMenuButton(userId: Long, menuButton: BotMenuButton?) =
+    this.sendFunctionLaunch(TdApi.SetMenuButton(userId, menuButton))
+
+/**
+ * Suspend function, which changes the first and last name of the current user.
+ *
+ * @param firstName The new value of the first name for the current user; 1-64 characters.  
+ * @param lastName The new value of the optional last name for the current user; 0-64 characters.
  */
 suspend fun TelegramFlow.setName(firstName: String?, lastName: String?) =
     this.sendFunctionLaunch(TdApi.SetName(firstName, lastName))
@@ -373,7 +1285,7 @@ suspend fun TelegramFlow.setName(firstName: String?, lastName: String?) =
  * authorization.
  *
  * @param name The name of the option.  
- * @param value The new value of the option.
+ * @param value The new value of the option; pass null to reset option value to a default value.
  */
 suspend fun TelegramFlow.setOption(name: String?, value: OptionValue?) =
     this.sendFunctionLaunch(TdApi.SetOption(name, value))
@@ -382,10 +1294,50 @@ suspend fun TelegramFlow.setOption(name: String?, value: OptionValue?) =
  * Suspend function, which sets the parameters for TDLib initialization. Works only when the current
  * authorization state is authorizationStateWaitTdlibParameters.
  *
- * @param parameters Parameters.
+ * @param useTestDc Pass true to use Telegram test environment instead of the production
+ * environment.  
+ * @param databaseDirectory The path to the directory for the persistent database; if empty, the
+ * current working directory will be used.  
+ * @param filesDirectory The path to the directory for storing files; if empty, databaseDirectory
+ * will be used.  
+ * @param databaseEncryptionKey Encryption key for the database. If the encryption key is invalid,
+ * then an error with code 401 will be returned.  
+ * @param useFileDatabase Pass true to keep information about downloaded and uploaded files between
+ * application restarts.  
+ * @param useChatInfoDatabase Pass true to keep cache of users, basic groups, supergroups, channels
+ * and secret chats between restarts. Implies useFileDatabase.  
+ * @param useMessageDatabase Pass true to keep cache of chats and messages between restarts. Implies
+ * useChatInfoDatabase.  
+ * @param useSecretChats Pass true to enable support for secret chats.  
+ * @param apiId Application identifier for Telegram API access, which can be obtained at
+ * https://my.telegram.org.  
+ * @param apiHash Application identifier hash for Telegram API access, which can be obtained at
+ * https://my.telegram.org.  
+ * @param systemLanguageCode IETF language tag of the user's operating system language; must be
+ * non-empty.  
+ * @param deviceModel Model of the device the application is being run on; must be non-empty.  
+ * @param systemVersion Version of the operating system the application is being run on. If empty,
+ * the version is automatically detected by TDLib.  
+ * @param applicationVersion Application version; must be non-empty.
  */
-suspend fun TelegramFlow.setTdlibParameters(parameters: TdlibParameters?) =
-    this.sendFunctionLaunch(TdApi.SetTdlibParameters(parameters))
+suspend fun TelegramFlow.setTdlibParameters(
+  useTestDc: Boolean,
+  databaseDirectory: String?,
+  filesDirectory: String?,
+  databaseEncryptionKey: ByteArray?,
+  useFileDatabase: Boolean,
+  useChatInfoDatabase: Boolean,
+  useMessageDatabase: Boolean,
+  useSecretChats: Boolean,
+  apiId: Int,
+  apiHash: String?,
+  systemLanguageCode: String?,
+  deviceModel: String?,
+  systemVersion: String?,
+  applicationVersion: String?
+) = this.sendFunctionLaunch(TdApi.SetTdlibParameters(useTestDc, databaseDirectory, filesDirectory,
+    databaseEncryptionKey, useFileDatabase, useChatInfoDatabase, useMessageDatabase, useSecretChats,
+    apiId, apiHash, systemLanguageCode, deviceModel, systemVersion, applicationVersion))
 
 /**
  * Suspend function, which forces an updates.getDifference call to the Telegram servers; for testing
@@ -395,8 +1347,7 @@ suspend fun TelegramFlow.testGetDifference() = this.sendFunctionLaunch(TdApi.Tes
 
 /**
  * Suspend function, which returns the specified error and ensures that the Error object is used;
- * for testing only. This is an offline method. Can be called before authorization. Can be called
- * synchronously.
+ * for testing only. Can be called synchronously.
  *
  * @param error The error to be returned.
  *
@@ -416,3 +1367,69 @@ suspend fun TelegramFlow.testReturnError(error: Error?): Error =
  */
 suspend fun TelegramFlow.testSquareInt(x: Int): TestInt =
     this.sendFunctionAsync(TdApi.TestSquareInt(x))
+
+/**
+ * Suspend function, which changes pause state of all files in the file download list.
+ *
+ * @param arePaused Pass true to pause all downloads; pass false to unpause them.
+ */
+suspend fun TelegramFlow.toggleAllDownloadsArePaused(arePaused: Boolean) =
+    this.sendFunctionLaunch(TdApi.ToggleAllDownloadsArePaused(arePaused))
+
+/**
+ * Suspend function, which adds or removes a bot to attachment and side menu. Bot can be added to
+ * the menu, only if userTypeBot.canBeAddedToAttachmentMenu == true.
+ *
+ * @param botUserId Bot's user identifier.  
+ * @param isAdded Pass true to add the bot to attachment menu; pass false to remove the bot from
+ * attachment menu.  
+ * @param allowWriteAccess Pass true if the current user allowed the bot to send them messages.
+ * Ignored if isAdded is false.
+ */
+suspend fun TelegramFlow.toggleBotIsAddedToAttachmentMenu(
+  botUserId: Long,
+  isAdded: Boolean,
+  allowWriteAccess: Boolean
+) = this.sendFunctionLaunch(TdApi.ToggleBotIsAddedToAttachmentMenu(botUserId, isAdded,
+    allowWriteAccess))
+
+/**
+ * Suspend function, which changes pause state of a file in the file download list.
+ *
+ * @param fileId Identifier of the downloaded file.  
+ * @param isPaused Pass true if the download is paused.
+ */
+suspend fun TelegramFlow.toggleDownloadIsPaused(fileId: Int, isPaused: Boolean) =
+    this.sendFunctionLaunch(TdApi.ToggleDownloadIsPaused(fileId, isPaused))
+
+/**
+ * Suspend function, which translates a text to the given language. If the current user is a
+ * Telegram Premium user, then text formatting is preserved.
+ *
+ * @param text Text to translate.  
+ * @param toLanguageCode Language code of the language to which the message is translated. Must be
+ * one of &quot;af&quot;, &quot;sq&quot;, &quot;am&quot;, &quot;ar&quot;, &quot;hy&quot;,
+ * &quot;az&quot;, &quot;eu&quot;, &quot;be&quot;, &quot;bn&quot;, &quot;bs&quot;, &quot;bg&quot;,
+ * &quot;ca&quot;, &quot;ceb&quot;, &quot;zh-CN&quot;, &quot;zh&quot;, &quot;zh-Hans&quot;,
+ * &quot;zh-TW&quot;, &quot;zh-Hant&quot;, &quot;co&quot;, &quot;hr&quot;, &quot;cs&quot;,
+ * &quot;da&quot;, &quot;nl&quot;, &quot;en&quot;, &quot;eo&quot;, &quot;et&quot;, &quot;fi&quot;,
+ * &quot;fr&quot;, &quot;fy&quot;, &quot;gl&quot;, &quot;ka&quot;, &quot;de&quot;, &quot;el&quot;,
+ * &quot;gu&quot;, &quot;ht&quot;, &quot;ha&quot;, &quot;haw&quot;, &quot;he&quot;, &quot;iw&quot;,
+ * &quot;hi&quot;, &quot;hmn&quot;, &quot;hu&quot;, &quot;is&quot;, &quot;ig&quot;, &quot;id&quot;,
+ * &quot;in&quot;, &quot;ga&quot;, &quot;it&quot;, &quot;ja&quot;, &quot;jv&quot;, &quot;kn&quot;,
+ * &quot;kk&quot;, &quot;km&quot;, &quot;rw&quot;, &quot;ko&quot;, &quot;ku&quot;, &quot;ky&quot;,
+ * &quot;lo&quot;, &quot;la&quot;, &quot;lv&quot;, &quot;lt&quot;, &quot;lb&quot;, &quot;mk&quot;,
+ * &quot;mg&quot;, &quot;ms&quot;, &quot;ml&quot;, &quot;mt&quot;, &quot;mi&quot;, &quot;mr&quot;,
+ * &quot;mn&quot;, &quot;my&quot;, &quot;ne&quot;, &quot;no&quot;, &quot;ny&quot;, &quot;or&quot;,
+ * &quot;ps&quot;, &quot;fa&quot;, &quot;pl&quot;, &quot;pt&quot;, &quot;pa&quot;, &quot;ro&quot;,
+ * &quot;ru&quot;, &quot;sm&quot;, &quot;gd&quot;, &quot;sr&quot;, &quot;st&quot;, &quot;sn&quot;,
+ * &quot;sd&quot;, &quot;si&quot;, &quot;sk&quot;, &quot;sl&quot;, &quot;so&quot;, &quot;es&quot;,
+ * &quot;su&quot;, &quot;sw&quot;, &quot;sv&quot;, &quot;tl&quot;, &quot;tg&quot;, &quot;ta&quot;,
+ * &quot;tt&quot;, &quot;te&quot;, &quot;th&quot;, &quot;tr&quot;, &quot;tk&quot;, &quot;uk&quot;,
+ * &quot;ur&quot;, &quot;ug&quot;, &quot;uz&quot;, &quot;vi&quot;, &quot;cy&quot;, &quot;xh&quot;,
+ * &quot;yi&quot;, &quot;ji&quot;, &quot;yo&quot;, &quot;zu&quot;.
+ *
+ * @return [FormattedText] A text with some entities.
+ */
+suspend fun TelegramFlow.translateText(text: FormattedText?, toLanguageCode: String?): FormattedText
+    = this.sendFunctionAsync(TdApi.TranslateText(text, toLanguageCode))

@@ -5,11 +5,14 @@
 package kotlinx.telegram.flows
 
 import kotlin.Array
+import kotlin.Boolean
+import kotlin.LongArray
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.NotificationGroup
+import org.drinkless.td.libcore.telegram.TdApi.ReactionNotificationSettings
 import org.drinkless.td.libcore.telegram.TdApi.UpdateHavePendingNotifications
 import org.drinkless.td.libcore.telegram.TdApi.UpdateNotification
 import org.drinkless.td.libcore.telegram.TdApi.UpdateNotificationGroup
@@ -24,6 +27,14 @@ fun TelegramFlow.scopeNotificationSettingsFlow(): Flow<UpdateScopeNotificationSe
     this.getUpdatesFlowOfType()
 
 /**
+ * emits notificationSettings [ReactionNotificationSettings] if notification settings for reactions
+ * were updated.
+ */
+fun TelegramFlow.reactionNotificationSettingsFlow(): Flow<ReactionNotificationSettings> =
+    this.getUpdatesFlowOfType<TdApi.UpdateReactionNotificationSettings>()
+    .mapNotNull { it.notificationSettings }
+
+/**
  * emits [UpdateNotification] if a notification was changed.
  */
 fun TelegramFlow.notificationFlow(): Flow<UpdateNotification> = this.getUpdatesFlowOfType()
@@ -36,7 +47,7 @@ fun TelegramFlow.notificationGroupFlow(): Flow<UpdateNotificationGroup> =
     this.getUpdatesFlowOfType()
 
 /**
- * emits groups [NotificationGroup[]] if contains active notifications that was shown on previous
+ * emits groups [NotificationGroup[]] if contains active notifications that were shown on previous
  * application launches. This update is sent only if the message database is used. In that case it
  * comes once before any updateNotification and updateNotificationGroup update.
  */
@@ -53,8 +64,28 @@ fun TelegramFlow.havePendingNotificationsFlow(): Flow<UpdateHavePendingNotificat
     this.getUpdatesFlowOfType()
 
 /**
- * emits [UpdateServiceNotification] if service notification from the server. Upon receiving this
- * the client must show a popup with the content of the notification.
+ * emits [UpdateServiceNotification] if a service notification from the server was received. Upon
+ * receiving this the application must show a popup with the content of the notification.
  */
 fun TelegramFlow.serviceNotificationFlow(): Flow<UpdateServiceNotification> =
     this.getUpdatesFlowOfType()
+
+/**
+ * emits notificationSoundIds [Long[]] if the list of saved notification sounds was updated. This
+ * update may not be sent until information about a notification sound was requested for the first
+ * time.
+ */
+fun TelegramFlow.savedNotificationSoundsFlow(): Flow<LongArray> =
+    this.getUpdatesFlowOfType<TdApi.UpdateSavedNotificationSounds>()
+    .mapNotNull { it.notificationSoundIds }
+
+/**
+ * emits isUpload [Boolean] if download or upload file speed for the user was limited, but it can be
+ * restored by subscription to Telegram Premium. The notification can be postponed until a being
+ * downloaded or uploaded file is visible to the user. Use
+ * getOption(&quot;premium_download_speedup&quot;) or getOption(&quot;premium_upload_speedup&quot;) to
+ * get expected speedup after subscription to Telegram Premium.
+ */
+fun TelegramFlow.speedLimitNotificationFlow(): Flow<Boolean> =
+    this.getUpdatesFlowOfType<TdApi.UpdateSpeedLimitNotification>()
+    .mapNotNull { it.isUpload }

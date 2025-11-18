@@ -4,22 +4,38 @@
 //
 package kotlinx.telegram.flows
 
+import kotlin.Array
+import kotlin.Long
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.Message
+import org.drinkless.td.libcore.telegram.TdApi.SavedMessagesTopic
+import org.drinkless.td.libcore.telegram.TdApi.UpdateAnimatedEmojiMessageClicked
+import org.drinkless.td.libcore.telegram.TdApi.UpdateAvailableMessageEffects
+import org.drinkless.td.libcore.telegram.TdApi.UpdateBusinessMessageEdited
+import org.drinkless.td.libcore.telegram.TdApi.UpdateBusinessMessagesDeleted
 import org.drinkless.td.libcore.telegram.TdApi.UpdateDeleteMessages
 import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageContent
 import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageContentOpened
 import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageEdited
+import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageFactCheck
+import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageInteractionInfo
+import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageIsPinned
 import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageLiveLocationViewed
 import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageMentionRead
+import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageReaction
+import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageReactions
 import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageSendAcknowledged
 import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageSendFailed
 import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageSendSucceeded
-import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageViews
-import org.drinkless.td.libcore.telegram.TdApi.UpdateUnreadMessageCount
+import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageSuggestedPostInfo
+import org.drinkless.td.libcore.telegram.TdApi.UpdateMessageUnreadReactions
+import org.drinkless.td.libcore.telegram.TdApi.UpdateNewBusinessMessage
+import org.drinkless.td.libcore.telegram.TdApi.UpdatePendingTextMessage
+import org.drinkless.td.libcore.telegram.TdApi.UpdateQuickReplyShortcutMessages
+import org.drinkless.td.libcore.telegram.TdApi.UpdateSavedMessagesTags
 
 /**
  * emits [Message] if a new message was received; can also be an outgoing message.
@@ -30,9 +46,9 @@ fun TelegramFlow.newMessageFlow(): Flow<Message> =
 
 /**
  * emits [UpdateMessageSendAcknowledged] if a request to send a message has reached the Telegram
- * server. This doesn't mean that the message will be sent successfully or even that the send message
- * request will be processed. This update will be sent only if the option &quot;use_quick_ack&quot; is
- * set to true. This update may be sent multiple times for the same message.
+ * server. This doesn't mean that the message will be sent successfully. This update is sent only if
+ * the option &quot;use_quick_ack&quot; is set to true. This update may be sent multiple times for the
+ * same message.
  */
 fun TelegramFlow.messageSendAcknowledgedFlow(): Flow<UpdateMessageSendAcknowledged> =
     this.getUpdatesFlowOfType()
@@ -63,14 +79,21 @@ fun TelegramFlow.messageContentFlow(): Flow<UpdateMessageContent> = this.getUpda
 fun TelegramFlow.messageEditedFlow(): Flow<UpdateMessageEdited> = this.getUpdatesFlowOfType()
 
 /**
- * emits [UpdateMessageViews] if the view count of the message has changed.
+ * emits [UpdateMessageIsPinned] if the message pinned state was changed.
  */
-fun TelegramFlow.messageViewsFlow(): Flow<UpdateMessageViews> = this.getUpdatesFlowOfType()
+fun TelegramFlow.messageIsPinnedFlow(): Flow<UpdateMessageIsPinned> = this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateMessageInteractionInfo] if the information about interactions with a message has
+ * changed.
+ */
+fun TelegramFlow.messageInteractionInfoFlow(): Flow<UpdateMessageInteractionInfo> =
+    this.getUpdatesFlowOfType()
 
 /**
  * emits [UpdateMessageContentOpened] if the message content was opened. Updates voice note messages
- * to &quot;listened&quot;, video note messages to &quot;viewed&quot; and starts the TTL timer for
- * self-destructing messages.
+ * to &quot;listened&quot;, video note messages to &quot;viewed&quot; and starts the self-destruct
+ * timer.
  */
 fun TelegramFlow.messageContentOpenedFlow(): Flow<UpdateMessageContentOpened> =
     this.getUpdatesFlowOfType()
@@ -82,10 +105,44 @@ fun TelegramFlow.messageMentionReadFlow(): Flow<UpdateMessageMentionRead> =
     this.getUpdatesFlowOfType()
 
 /**
+ * emits [UpdateMessageUnreadReactions] if the list of unread reactions added to a message was
+ * changed.
+ */
+fun TelegramFlow.messageUnreadReactionsFlow(): Flow<UpdateMessageUnreadReactions> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateMessageFactCheck] if a fact-check added to a message was changed.
+ */
+fun TelegramFlow.messageFactCheckFlow(): Flow<UpdateMessageFactCheck> = this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateMessageSuggestedPostInfo] if information about suggested post of a message was
+ * changed.
+ */
+fun TelegramFlow.messageSuggestedPostInfoFlow(): Flow<UpdateMessageSuggestedPostInfo> =
+    this.getUpdatesFlowOfType()
+
+/**
  * emits [UpdateMessageLiveLocationViewed] if a message with a live location was viewed. When the
- * update is received, the client is supposed to update the live location.
+ * update is received, the application is expected to update the live location.
  */
 fun TelegramFlow.messageLiveLocationViewedFlow(): Flow<UpdateMessageLiveLocationViewed> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits topic [SavedMessagesTopic] if basic information about a Saved Messages topic has changed.
+ * This update is guaranteed to come before the topic identifier is returned to the application.
+ */
+fun TelegramFlow.savedMessagesTopicFlow(): Flow<SavedMessagesTopic> =
+    this.getUpdatesFlowOfType<TdApi.UpdateSavedMessagesTopic>()
+    .mapNotNull { it.topic }
+
+/**
+ * emits [UpdateQuickReplyShortcutMessages] if the list of quick reply shortcut messages has
+ * changed.
+ */
+fun TelegramFlow.quickReplyShortcutMessagesFlow(): Flow<UpdateQuickReplyShortcutMessages> =
     this.getUpdatesFlowOfType()
 
 /**
@@ -94,8 +151,79 @@ fun TelegramFlow.messageLiveLocationViewedFlow(): Flow<UpdateMessageLiveLocation
 fun TelegramFlow.deleteMessagesFlow(): Flow<UpdateDeleteMessages> = this.getUpdatesFlowOfType()
 
 /**
- * emits [UpdateUnreadMessageCount] if number of unread messages in a chat list has changed. This
- * update is sent only if the message database is used.
+ * emits [UpdatePendingTextMessage] if a new pending text message was received in a chat with a bot.
+ * The message must be shown in the chat for at most getOption(&quot;pending_text_message_period&quot;)
+ * seconds, replace any other pending message with the same draftId, and be deleted whenever any
+ * incoming message from the bot in the message thread is received.
  */
-fun TelegramFlow.unreadMessageCountFlow(): Flow<UpdateUnreadMessageCount> =
+fun TelegramFlow.pendingTextMessageFlow(): Flow<UpdatePendingTextMessage> =
     this.getUpdatesFlowOfType()
+
+/**
+ * emits webAppLaunchId [Long] if a message was sent by an opened Web App, so the Web App needs to
+ * be closed.
+ */
+fun TelegramFlow.webAppMessageSentFlow(): Flow<Long> =
+    this.getUpdatesFlowOfType<TdApi.UpdateWebAppMessageSent>()
+    .mapNotNull { it.webAppLaunchId }
+
+/**
+ * emits [UpdateAvailableMessageEffects] if the list of available message effects has changed.
+ */
+fun TelegramFlow.availableMessageEffectsFlow(): Flow<UpdateAvailableMessageEffects> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateSavedMessagesTags] if tags used in Saved Messages or a Saved Messages topic have
+ * changed.
+ */
+fun TelegramFlow.savedMessagesTagsFlow(): Flow<UpdateSavedMessagesTags> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits messages [Message[]] if the list of messages with active live location that need to be
+ * updated by the application has changed. The list is persistent across application restarts only if
+ * the message database is used.
+ */
+fun TelegramFlow.activeLiveLocationMessagesFlow(): Flow<Array<Message>> =
+    this.getUpdatesFlowOfType<TdApi.UpdateActiveLiveLocationMessages>()
+    .mapNotNull { it.messages }
+
+/**
+ * emits [UpdateAnimatedEmojiMessageClicked] if some animated emoji message was clicked and a big
+ * animated sticker must be played if the message is visible on the screen.
+ * chatActionWatchingAnimations with the text of the message needs to be sent if the sticker is played.
+ */
+fun TelegramFlow.animatedEmojiMessageClickedFlow(): Flow<UpdateAnimatedEmojiMessageClicked> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateNewBusinessMessage] if a new message was added to a business account; for bots only.
+ */
+fun TelegramFlow.newBusinessMessageFlow(): Flow<UpdateNewBusinessMessage> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateBusinessMessageEdited] if a message in a business account was edited; for bots only.
+ */
+fun TelegramFlow.businessMessageEditedFlow(): Flow<UpdateBusinessMessageEdited> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateBusinessMessagesDeleted] if messages in a business account were deleted; for bots
+ * only.
+ */
+fun TelegramFlow.businessMessagesDeletedFlow(): Flow<UpdateBusinessMessagesDeleted> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateMessageReaction] if user changed its reactions on a message with public reactions;
+ * for bots only.
+ */
+fun TelegramFlow.messageReactionFlow(): Flow<UpdateMessageReaction> = this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateMessageReactions] if reactions added to a message with anonymous reactions have
+ * changed; for bots only.
+ */
+fun TelegramFlow.messageReactionsFlow(): Flow<UpdateMessageReactions> = this.getUpdatesFlowOfType()

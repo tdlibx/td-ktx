@@ -38,7 +38,7 @@ interface SecretChatKtx : BaseKtx {
 
   /**
    * Suspend function, which returns information about a secret chat by its identifier. This is an
-   * offline request.
+   * offline method.
    *
    *
    * @return [TdApi.SecretChat] Represents a secret chat.

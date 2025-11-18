@@ -12,16 +12,25 @@ import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.td.libcore.telegram.TdApi.CheckStickerSetNameResult
 import org.drinkless.td.libcore.telegram.TdApi.InputFile
 import org.drinkless.td.libcore.telegram.TdApi.InputSticker
+import org.drinkless.td.libcore.telegram.TdApi.MaskPosition
+import org.drinkless.td.libcore.telegram.TdApi.Outline
+import org.drinkless.td.libcore.telegram.TdApi.Sticker
+import org.drinkless.td.libcore.telegram.TdApi.StickerFormat
 import org.drinkless.td.libcore.telegram.TdApi.StickerSet
 import org.drinkless.td.libcore.telegram.TdApi.StickerSets
+import org.drinkless.td.libcore.telegram.TdApi.StickerType
 import org.drinkless.td.libcore.telegram.TdApi.Stickers
+import org.drinkless.td.libcore.telegram.TdApi.Text
+import org.drinkless.td.libcore.telegram.TdApi.TrendingStickerSets
 
 /**
  * Suspend function, which adds a new sticker to the list of favorite stickers. The new sticker is
  * added to the top of the list. If the sticker was already in the list, it is removed from the list
- * first. Only stickers belonging to a sticker set can be added to this list.
+ * first. Only stickers belonging to a sticker set or in WEBP or WEBM format can be added to this list.
+ * Emoji stickers can't be added to favorite stickers.
  *
  * @param sticker Sticker file to add.
  */
@@ -31,7 +40,8 @@ suspend fun TelegramFlow.addFavoriteSticker(sticker: InputFile?) =
 /**
  * Suspend function, which manually adds a new sticker to the list of recently used stickers. The
  * new sticker is added to the top of the list. If the sticker was already in the list, it is removed
- * from the list first. Only stickers belonging to a sticker set can be added to this list.
+ * from the list first. Only stickers belonging to a sticker set or in WEBP or WEBM format can be added
+ * to this list. Emoji stickers can't be added to recent stickers.
  *
  * @param isAttached Pass true to add the sticker to the list of stickers recently attached to photo
  * or video files; pass false to add the sticker to the list of recently sent stickers.  
@@ -43,19 +53,18 @@ suspend fun TelegramFlow.addRecentSticker(isAttached: Boolean, sticker: InputFil
     this.sendFunctionAsync(TdApi.AddRecentSticker(isAttached, sticker))
 
 /**
- * Suspend function, which adds a new sticker to a set; for bots only. Returns the sticker set.
+ * Suspend function, which adds a new sticker to a set.
  *
- * @param userId Sticker set owner.  
- * @param name Sticker set name.  
+ * @param userId Sticker set owner; ignored for regular users.  
+ * @param name Sticker set name. The sticker set must be owned by the current user, and contain less
+ * than 200 stickers for custom emoji sticker sets and less than 120 otherwise.  
  * @param sticker Sticker to add to the set.
- *
- * @return [StickerSet] Represents a sticker set.
  */
 suspend fun TelegramFlow.addStickerToSet(
-  userId: Int,
+  userId: Long,
   name: String?,
   sticker: InputSticker?
-): StickerSet = this.sendFunctionAsync(TdApi.AddStickerToSet(userId, name, sticker))
+) = this.sendFunctionLaunch(TdApi.AddStickerToSet(userId, name, sticker))
 
 /**
  * Suspend function, which installs/uninstalls or activates/archives a sticker set.
@@ -72,6 +81,16 @@ suspend fun TelegramFlow.changeStickerSet(
 ) = this.sendFunctionLaunch(TdApi.ChangeStickerSet(setId, isInstalled, isArchived))
 
 /**
+ * Suspend function, which checks whether a name can be used for a new sticker set.
+ *
+ * @param name Name to be checked.
+ *
+ * @return [CheckStickerSetNameResult] This class is an abstract base class.
+ */
+suspend fun TelegramFlow.checkStickerSetName(name: String?): CheckStickerSetNameResult =
+    this.sendFunctionAsync(TdApi.CheckStickerSetName(name))
+
+/**
  * Suspend function, which clears the list of recently used stickers.
  *
  * @param isAttached Pass true to clear the list of stickers recently attached to photo or video
@@ -81,48 +100,64 @@ suspend fun TelegramFlow.clearRecentStickers(isAttached: Boolean) =
     this.sendFunctionLaunch(TdApi.ClearRecentStickers(isAttached))
 
 /**
- * Suspend function, which creates a new sticker set; for bots only. Returns the newly created
- * sticker set.
+ * Suspend function, which creates a new sticker set. Returns the newly created sticker set.
  *
- * @param userId Sticker set owner.  
+ * @param userId Sticker set owner; ignored for regular users.  
  * @param title Sticker set title; 1-64 characters.  
  * @param name Sticker set name. Can contain only English letters, digits and underscores. Must end
- * with *&quot;_by_&lt;bot username&gt;&quot;* (*&lt;botUsername&gt;* is case insensitive); 1-64
- * characters.  
- * @param isMasks True, if stickers are masks.  
- * @param stickers List of stickers to be added to the set.
+ * with *&quot;_by_&lt;bot username&gt;&quot;* (*&lt;botUsername&gt;* is case insensitive) for bots;
+ * 0-64 characters. If empty, then the name returned by getSuggestedStickerSetName will be used
+ * automatically.  
+ * @param stickerType Type of the stickers in the set.  
+ * @param needsRepainting Pass true if stickers in the sticker set must be repainted; for custom
+ * emoji sticker sets only.  
+ * @param stickers List of stickers to be added to the set; 1-200 stickers for custom emoji sticker
+ * sets, and 1-120 stickers otherwise. For TGS stickers, uploadStickerFile must be used before the
+ * sticker is shown.  
+ * @param source Source of the sticker set; may be empty if unknown.
  *
  * @return [StickerSet] Represents a sticker set.
  */
 suspend fun TelegramFlow.createNewStickerSet(
-  userId: Int,
+  userId: Long,
   title: String?,
   name: String?,
-  isMasks: Boolean,
-  stickers: Array<InputSticker>?
-): StickerSet = this.sendFunctionAsync(TdApi.CreateNewStickerSet(userId, title, name, isMasks,
-    stickers))
+  stickerType: StickerType?,
+  needsRepainting: Boolean,
+  stickers: Array<InputSticker>?,
+  source: String?
+): StickerSet = this.sendFunctionAsync(TdApi.CreateNewStickerSet(userId, title, name, stickerType,
+    needsRepainting, stickers, source))
+
+/**
+ * Suspend function, which completely deletes a sticker set.
+ *
+ * @param name Sticker set name. The sticker set must be owned by the current user.
+ */
+suspend fun TelegramFlow.deleteStickerSet(name: String?) =
+    this.sendFunctionLaunch(TdApi.DeleteStickerSet(name))
 
 /**
  * Suspend function, which returns a list of archived sticker sets.
  *
- * @param isMasks Pass true to return mask stickers sets; pass false to return ordinary sticker
- * sets.  
- * @param offsetStickerSetId Identifier of the sticker set from which to return the result.  
- * @param limit The maximum number of sticker sets to return.
+ * @param stickerType Type of the sticker sets to return.  
+ * @param offsetStickerSetId Identifier of the sticker set from which to return the result; use 0 to
+ * get results from the beginning.  
+ * @param limit The maximum number of sticker sets to return; up to 100.
  *
  * @return [StickerSets] Represents a list of sticker sets.
  */
 suspend fun TelegramFlow.getArchivedStickerSets(
-  isMasks: Boolean,
+  stickerType: StickerType?,
   offsetStickerSetId: Long,
   limit: Int
-): StickerSets = this.sendFunctionAsync(TdApi.GetArchivedStickerSets(isMasks, offsetStickerSetId,
-    limit))
+): StickerSets = this.sendFunctionAsync(TdApi.GetArchivedStickerSets(stickerType,
+    offsetStickerSetId, limit))
 
 /**
- * Suspend function, which returns a list of sticker sets attached to a file. Currently only photos
- * and videos can have attached sticker sets.
+ * Suspend function, which returns a list of sticker sets attached to a file, including regular,
+ * mask, and emoji sticker sets. Currently, only animations, photos, and videos can have attached
+ * sticker sets.
  *
  * @param fileId File identifier.
  *
@@ -140,14 +175,66 @@ suspend fun TelegramFlow.getFavoriteStickers(): Stickers =
     this.sendFunctionAsync(TdApi.GetFavoriteStickers())
 
 /**
+ * Suspend function, which returns greeting stickers from regular sticker sets that can be used for
+ * the start page of other users.
+ *
+ * @return [Stickers] Represents a list of stickers.
+ */
+suspend fun TelegramFlow.getGreetingStickers(): Stickers =
+    this.sendFunctionAsync(TdApi.GetGreetingStickers())
+
+/**
  * Suspend function, which returns a list of installed sticker sets.
  *
- * @param isMasks Pass true to return mask sticker sets; pass false to return ordinary sticker sets.
+ * @param stickerType Type of the sticker sets to return.
  *
  * @return [StickerSets] Represents a list of sticker sets.
  */
-suspend fun TelegramFlow.getInstalledStickerSets(isMasks: Boolean): StickerSets =
-    this.sendFunctionAsync(TdApi.GetInstalledStickerSets(isMasks))
+suspend fun TelegramFlow.getInstalledStickerSets(stickerType: StickerType?): StickerSets =
+    this.sendFunctionAsync(TdApi.GetInstalledStickerSets(stickerType))
+
+/**
+ * Suspend function, which returns sticker sets owned by the current user.
+ *
+ * @param offsetStickerSetId Identifier of the sticker set from which to return owned sticker sets;
+ * use 0 to get results from the beginning.  
+ * @param limit The maximum number of sticker sets to be returned; must be positive and can't be
+ * greater than 100. For optimal performance, the number of returned objects is chosen by TDLib and can
+ * be smaller than the specified limit.
+ *
+ * @return [StickerSets] Represents a list of sticker sets.
+ */
+suspend fun TelegramFlow.getOwnedStickerSets(offsetStickerSetId: Long, limit: Int): StickerSets =
+    this.sendFunctionAsync(TdApi.GetOwnedStickerSets(offsetStickerSetId, limit))
+
+/**
+ * Suspend function, which returns the sticker to be used as representation of the Telegram Premium
+ * subscription.
+ *
+ * @param monthCount Number of months the Telegram Premium subscription will be active.
+ *
+ * @return [Sticker] Describes a sticker.
+ */
+suspend fun TelegramFlow.getPremiumInfoSticker(monthCount: Int): Sticker =
+    this.sendFunctionAsync(TdApi.GetPremiumInfoSticker(monthCount))
+
+/**
+ * Suspend function, which returns examples of premium stickers for demonstration purposes.
+ *
+ * @return [Stickers] Represents a list of stickers.
+ */
+suspend fun TelegramFlow.getPremiumStickerExamples(): Stickers =
+    this.sendFunctionAsync(TdApi.GetPremiumStickerExamples())
+
+/**
+ * Suspend function, which returns premium stickers from regular sticker sets.
+ *
+ * @param limit The maximum number of stickers to be returned; 0-100.
+ *
+ * @return [Stickers] Represents a list of stickers.
+ */
+suspend fun TelegramFlow.getPremiumStickers(limit: Int): Stickers =
+    this.sendFunctionAsync(TdApi.GetPremiumStickers(limit))
 
 /**
  * Suspend function, which returns a list of recently used stickers.
@@ -161,6 +248,24 @@ suspend fun TelegramFlow.getRecentStickers(isAttached: Boolean): Stickers =
     this.sendFunctionAsync(TdApi.GetRecentStickers(isAttached))
 
 /**
+ * Suspend function, which returns outline of a sticker. This is an offline method. Returns a 404
+ * error if the outline isn't known.
+ *
+ * @param stickerFileId File identifier of the sticker.  
+ * @param forAnimatedEmoji Pass true to get the outline scaled for animated emoji.  
+ * @param forClickedAnimatedEmojiMessage Pass true to get the outline scaled for clicked animated
+ * emoji message.
+ *
+ * @return [Outline] Represents outline of an image.
+ */
+suspend fun TelegramFlow.getStickerOutline(
+  stickerFileId: Int,
+  forAnimatedEmoji: Boolean,
+  forClickedAnimatedEmojiMessage: Boolean
+): Outline = this.sendFunctionAsync(TdApi.GetStickerOutline(stickerFileId, forAnimatedEmoji,
+    forClickedAnimatedEmojiMessage))
+
+/**
  * Suspend function, which returns information about a sticker set by its identifier.
  *
  * @param setId Identifier of the sticker set.
@@ -171,24 +276,64 @@ suspend fun TelegramFlow.getStickerSet(setId: Long): StickerSet =
     this.sendFunctionAsync(TdApi.GetStickerSet(setId))
 
 /**
- * Suspend function, which returns stickers from the installed sticker sets that correspond to a
- * given emoji. If the emoji is not empty, favorite and recently used stickers may also be returned.
+ * Suspend function, which returns name of a sticker set by its identifier.
  *
- * @param emoji String representation of emoji. If empty, returns all known installed stickers.  
- * @param limit The maximum number of stickers to be returned.
+ * @param setId Identifier of the sticker set.
+ *
+ * @return [Text] Contains some text.
+ */
+suspend fun TelegramFlow.getStickerSetName(setId: Long): Text =
+    this.sendFunctionAsync(TdApi.GetStickerSetName(setId))
+
+/**
+ * Suspend function, which returns stickers from the installed sticker sets that correspond to any
+ * of the given emoji or can be found by sticker-specific keywords. If the query is non-empty, then
+ * favorite, recently used or trending stickers may also be returned.
+ *
+ * @param stickerType Type of the stickers to return.  
+ * @param query Search query; a space-separated list of emojis or a keyword prefix. If empty,
+ * returns all known installed stickers.  
+ * @param limit The maximum number of stickers to be returned.  
+ * @param chatId Chat identifier for which to return stickers. Available custom emoji stickers may
+ * be different for different chats.
  *
  * @return [Stickers] Represents a list of stickers.
  */
-suspend fun TelegramFlow.getStickers(emoji: String?, limit: Int): Stickers =
-    this.sendFunctionAsync(TdApi.GetStickers(emoji, limit))
+suspend fun TelegramFlow.getStickers(
+  stickerType: StickerType?,
+  query: String?,
+  limit: Int,
+  chatId: Long
+): Stickers = this.sendFunctionAsync(TdApi.GetStickers(stickerType, query, limit, chatId))
 
 /**
- * Suspend function, which returns a list of trending sticker sets.
+ * Suspend function, which returns a suggested name for a new sticker set with a given title.
  *
- * @return [StickerSets] Represents a list of sticker sets.
+ * @param title Sticker set title; 1-64 characters.
+ *
+ * @return [Text] Contains some text.
  */
-suspend fun TelegramFlow.getTrendingStickerSets(): StickerSets =
-    this.sendFunctionAsync(TdApi.GetTrendingStickerSets())
+suspend fun TelegramFlow.getSuggestedStickerSetName(title: String?): Text =
+    this.sendFunctionAsync(TdApi.GetSuggestedStickerSetName(title))
+
+/**
+ * Suspend function, which returns a list of trending sticker sets. For optimal performance, the
+ * number of returned sticker sets is chosen by TDLib.
+ *
+ * @param stickerType Type of the sticker sets to return.  
+ * @param offset The offset from which to return the sticker sets; must be non-negative.  
+ * @param limit The maximum number of sticker sets to be returned; up to 100. For optimal
+ * performance, the number of returned sticker sets is chosen by TDLib and can be smaller than the
+ * specified limit, even if the end of the list has not been reached.
+ *
+ * @return [TrendingStickerSets] Represents a list of trending sticker sets.
+ */
+suspend fun TelegramFlow.getTrendingStickerSets(
+  stickerType: StickerType?,
+  offset: Int,
+  limit: Int
+): TrendingStickerSets = this.sendFunctionAsync(TdApi.GetTrendingStickerSets(stickerType, offset,
+    limit))
 
 /**
  * Suspend function, which removes a sticker from the list of favorite stickers.
@@ -209,10 +354,10 @@ suspend fun TelegramFlow.removeRecentSticker(isAttached: Boolean, sticker: Input
     this.sendFunctionLaunch(TdApi.RemoveRecentSticker(isAttached, sticker))
 
 /**
- * Suspend function, which removes a sticker from the set to which it belongs; for bots only. The
- * sticker set must have been created by the bot.
+ * Suspend function, which removes a sticker from the set to which it belongs. The sticker set must
+ * be owned by the current user.
  *
- * @param sticker Sticker.
+ * @param sticker Sticker to remove from the set.
  */
 suspend fun TelegramFlow.removeStickerFromSet(sticker: InputFile?) =
     this.sendFunctionLaunch(TdApi.RemoveStickerFromSet(sticker))
@@ -220,81 +365,157 @@ suspend fun TelegramFlow.removeStickerFromSet(sticker: InputFile?) =
 /**
  * Suspend function, which changes the order of installed sticker sets.
  *
- * @param isMasks Pass true to change the order of mask sticker sets; pass false to change the order
- * of ordinary sticker sets.  
+ * @param stickerType Type of the sticker sets to reorder.  
  * @param stickerSetIds Identifiers of installed sticker sets in the new correct order.
  */
-suspend fun TelegramFlow.reorderInstalledStickerSets(isMasks: Boolean, stickerSetIds: LongArray?) =
-    this.sendFunctionLaunch(TdApi.ReorderInstalledStickerSets(isMasks, stickerSetIds))
+suspend fun TelegramFlow.reorderInstalledStickerSets(stickerType: StickerType?,
+    stickerSetIds: LongArray?) =
+    this.sendFunctionLaunch(TdApi.ReorderInstalledStickerSets(stickerType, stickerSetIds))
+
+/**
+ * Suspend function, which replaces existing sticker in a set. The function is equivalent to
+ * removeStickerFromSet, then addStickerToSet, then setStickerPositionInSet.
+ *
+ * @param userId Sticker set owner; ignored for regular users.  
+ * @param name Sticker set name. The sticker set must be owned by the current user.  
+ * @param oldSticker Sticker to remove from the set.  
+ * @param newSticker Sticker to add to the set.
+ */
+suspend fun TelegramFlow.replaceStickerInSet(
+  userId: Long,
+  name: String?,
+  oldSticker: InputFile?,
+  newSticker: InputSticker?
+) = this.sendFunctionLaunch(TdApi.ReplaceStickerInSet(userId, name, oldSticker, newSticker))
 
 /**
  * Suspend function, which searches for installed sticker sets by looking for specified query in
  * their title and name.
  *
- * @param isMasks Pass true to return mask sticker sets; pass false to return ordinary sticker sets.
- *  
+ * @param stickerType Type of the sticker sets to search for.  
  * @param query Query to search for.  
  * @param limit The maximum number of sticker sets to return.
  *
  * @return [StickerSets] Represents a list of sticker sets.
  */
 suspend fun TelegramFlow.searchInstalledStickerSets(
-  isMasks: Boolean,
+  stickerType: StickerType?,
   query: String?,
   limit: Int
-): StickerSets = this.sendFunctionAsync(TdApi.SearchInstalledStickerSets(isMasks, query, limit))
+): StickerSets = this.sendFunctionAsync(TdApi.SearchInstalledStickerSets(stickerType, query, limit))
 
 /**
  * Suspend function, which searches for a sticker set by its name.
  *
- * @param name Name of the sticker set.
+ * @param name Name of the sticker set.  
+ * @param ignoreCache Pass true to ignore local cache of sticker sets and always send a network
+ * request.
  *
  * @return [StickerSet] Represents a sticker set.
  */
-suspend fun TelegramFlow.searchStickerSet(name: String?): StickerSet =
-    this.sendFunctionAsync(TdApi.SearchStickerSet(name))
+suspend fun TelegramFlow.searchStickerSet(name: String?, ignoreCache: Boolean): StickerSet =
+    this.sendFunctionAsync(TdApi.SearchStickerSet(name, ignoreCache))
 
 /**
- * Suspend function, which searches for ordinary sticker sets by looking for specified query in
- * their title and name. Excludes installed sticker sets from the results.
+ * Suspend function, which searches for sticker sets by looking for specified query in their title
+ * and name. Excludes installed sticker sets from the results.
  *
+ * @param stickerType Type of the sticker sets to return.  
  * @param query Query to search for.
  *
  * @return [StickerSets] Represents a list of sticker sets.
  */
-suspend fun TelegramFlow.searchStickerSets(query: String?): StickerSets =
-    this.sendFunctionAsync(TdApi.SearchStickerSets(query))
+suspend fun TelegramFlow.searchStickerSets(stickerType: StickerType?, query: String?): StickerSets =
+    this.sendFunctionAsync(TdApi.SearchStickerSets(stickerType, query))
 
 /**
- * Suspend function, which searches for stickers from public sticker sets that correspond to a given
- * emoji.
+ * Suspend function, which searches for stickers from public sticker sets that correspond to any of
+ * the given emoji.
  *
- * @param emoji String representation of emoji; must be non-empty.  
- * @param limit The maximum number of stickers to be returned.
+ * @param stickerType Type of the stickers to return.  
+ * @param emojis Space-separated list of emojis to search for.  
+ * @param query Query to search for; may be empty to search for emoji only.  
+ * @param inputLanguageCodes List of possible IETF language tags of the user's input language; may
+ * be empty if unknown.  
+ * @param offset The offset from which to return the stickers; must be non-negative.  
+ * @param limit The maximum number of stickers to be returned; 0-100.
  *
  * @return [Stickers] Represents a list of stickers.
  */
-suspend fun TelegramFlow.searchStickers(emoji: String?, limit: Int): Stickers =
-    this.sendFunctionAsync(TdApi.SearchStickers(emoji, limit))
+suspend fun TelegramFlow.searchStickers(
+  stickerType: StickerType?,
+  emojis: String?,
+  query: String?,
+  inputLanguageCodes: Array<String>?,
+  offset: Int,
+  limit: Int
+): Stickers = this.sendFunctionAsync(TdApi.SearchStickers(stickerType, emojis, query,
+    inputLanguageCodes, offset, limit))
 
 /**
- * Suspend function, which changes the position of a sticker in the set to which it belongs; for
- * bots only. The sticker set must have been created by the bot.
+ * Suspend function, which changes the list of keywords of a sticker. The sticker must belong to a
+ * regular or custom emoji sticker set that is owned by the current user.
  *
  * @param sticker Sticker.  
- * @param position New position of the sticker in the set, zero-based.
+ * @param keywords List of up to 20 keywords with total length up to 64 characters, which can be
+ * used to find the sticker.
+ */
+suspend fun TelegramFlow.setStickerKeywords(sticker: InputFile?, keywords: Array<String>?) =
+    this.sendFunctionLaunch(TdApi.SetStickerKeywords(sticker, keywords))
+
+/**
+ * Suspend function, which changes the mask position of a mask sticker. The sticker must belong to a
+ * mask sticker set that is owned by the current user.
+ *
+ * @param sticker Sticker.  
+ * @param maskPosition Position where the mask is placed; pass null to remove mask position.
+ */
+suspend fun TelegramFlow.setStickerMaskPosition(sticker: InputFile?, maskPosition: MaskPosition?) =
+    this.sendFunctionLaunch(TdApi.SetStickerMaskPosition(sticker, maskPosition))
+
+/**
+ * Suspend function, which changes the position of a sticker in the set to which it belongs. The
+ * sticker set must be owned by the current user.
+ *
+ * @param sticker Sticker.  
+ * @param position New position of the sticker in the set, 0-based.
  */
 suspend fun TelegramFlow.setStickerPositionInSet(sticker: InputFile?, position: Int) =
     this.sendFunctionLaunch(TdApi.SetStickerPositionInSet(sticker, position))
 
 /**
- * Suspend function, which changes the sticker set of a supergroup; requires canChangeInfo rights.
+ * Suspend function, which sets a sticker set thumbnail.
+ *
+ * @param userId Sticker set owner; ignored for regular users.  
+ * @param name Sticker set name. The sticker set must be owned by the current user.  
+ * @param thumbnail Thumbnail to set; pass null to remove the sticker set thumbnail.  
+ * @param format Format of the thumbnail; pass null if thumbnail is removed.
+ */
+suspend fun TelegramFlow.setStickerSetThumbnail(
+  userId: Long,
+  name: String?,
+  thumbnail: InputFile?,
+  format: StickerFormat?
+) = this.sendFunctionLaunch(TdApi.SetStickerSetThumbnail(userId, name, thumbnail, format))
+
+/**
+ * Suspend function, which sets a sticker set title.
+ *
+ * @param name Sticker set name. The sticker set must be owned by the current user.  
+ * @param title New sticker set title.
+ */
+suspend fun TelegramFlow.setStickerSetTitle(name: String?, title: String?) =
+    this.sendFunctionLaunch(TdApi.SetStickerSetTitle(name, title))
+
+/**
+ * Suspend function, which changes the sticker set of a supergroup; requires canChangeInfo
+ * administrator right.
  *
  * @param supergroupId Identifier of the supergroup.  
  * @param stickerSetId New value of the supergroup sticker set identifier. Use 0 to remove the
  * supergroup sticker set.
  */
-suspend fun TelegramFlow.setSupergroupStickerSet(supergroupId: Int, stickerSetId: Long) =
+suspend fun TelegramFlow.setSupergroupStickerSet(supergroupId: Long, stickerSetId: Long) =
     this.sendFunctionLaunch(TdApi.SetSupergroupStickerSet(supergroupId, stickerSetId))
 
 /**

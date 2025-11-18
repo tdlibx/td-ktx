@@ -6,6 +6,7 @@ package kotlinx.telegram.coroutines
 
 import kotlin.Array
 import kotlin.Int
+import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
@@ -28,7 +29,7 @@ suspend fun TelegramFlow.deletePassportElement(type: PassportElementType?) =
 /**
  * Suspend function, which returns all available Telegram Passport elements.
  *
- * @param password Password of the current user.
+ * @param password The 2-step verification password of the current user.
  *
  * @return [PassportElements] Contains information about saved Telegram Passport elements.
  */
@@ -41,14 +42,14 @@ suspend fun TelegramFlow.getAllPassportElements(password: String?): PassportElem
  *
  * @param botUserId User identifier of the service's bot.  
  * @param scope Telegram Passport element types requested by the service.  
- * @param publicKey Service's publicKey.  
- * @param nonce Authorization form nonce provided by the service.
+ * @param publicKey Service's public key.  
+ * @param nonce Unique request identifier provided by the service.
  *
  * @return [PassportAuthorizationForm] Contains information about a Telegram Passport authorization
  * form that was requested.
  */
 suspend fun TelegramFlow.getPassportAuthorizationForm(
-  botUserId: Int,
+  botUserId: Long,
   scope: String?,
   publicKey: String?,
   nonce: String?
@@ -60,22 +61,22 @@ suspend fun TelegramFlow.getPassportAuthorizationForm(
  * completing a Telegram Passport authorization form. Result can be received only once for each
  * authorization form.
  *
- * @param autorizationFormId Authorization form identifier.  
- * @param password Password of the current user.
+ * @param authorizationFormId Authorization form identifier.  
+ * @param password The 2-step verification password of the current user.
  *
  * @return [PassportElementsWithErrors] Contains information about a Telegram Passport elements and
  * corresponding errors.
  */
-suspend fun TelegramFlow.getPassportAuthorizationFormAvailableElements(autorizationFormId: Int,
+suspend fun TelegramFlow.getPassportAuthorizationFormAvailableElements(authorizationFormId: Int,
     password: String?): PassportElementsWithErrors =
-    this.sendFunctionAsync(TdApi.GetPassportAuthorizationFormAvailableElements(autorizationFormId,
+    this.sendFunctionAsync(TdApi.GetPassportAuthorizationFormAvailableElements(authorizationFormId,
     password))
 
 /**
  * Suspend function, which returns one of the available Telegram Passport elements.
  *
  * @param type Telegram Passport element type.  
- * @param password Password of the current user.
+ * @param password The 2-step verification password of the current user.
  *
  * @return [PassportElement] This class is an abstract base class.
  */
@@ -85,15 +86,15 @@ suspend fun TelegramFlow.getPassportElement(type: PassportElementType?, password
 /**
  * Suspend function, which sends a Telegram Passport authorization form, effectively sharing data
  * with the service. This method must be called after getPassportAuthorizationFormAvailableElements if
- * some previously available elements need to be used.
+ * some previously available elements are going to be reused.
  *
- * @param autorizationFormId Authorization form identifier.  
+ * @param authorizationFormId Authorization form identifier.  
  * @param types Types of Telegram Passport elements chosen by user to complete the authorization
  * form.
  */
-suspend fun TelegramFlow.sendPassportAuthorizationForm(autorizationFormId: Int,
+suspend fun TelegramFlow.sendPassportAuthorizationForm(authorizationFormId: Int,
     types: Array<PassportElementType>?) =
-    this.sendFunctionLaunch(TdApi.SendPassportAuthorizationForm(autorizationFormId, types))
+    this.sendFunctionLaunch(TdApi.SendPassportAuthorizationForm(authorizationFormId, types))
 
 /**
  * Suspend function, which adds an element to the user's Telegram Passport. May return an error with
@@ -101,7 +102,7 @@ suspend fun TelegramFlow.sendPassportAuthorizationForm(autorizationFormId: Int,
  * chosen phone number or the chosen email address must be verified first.
  *
  * @param element Input Telegram Passport element.  
- * @param password Password of the current user.
+ * @param password The 2-step verification password of the current user.
  *
  * @return [PassportElement] This class is an abstract base class.
  */
@@ -116,6 +117,6 @@ suspend fun TelegramFlow.setPassportElement(element: InputPassportElement?, pass
  * @param userId User identifier.  
  * @param errors The errors.
  */
-suspend fun TelegramFlow.setPassportElementErrors(userId: Int,
+suspend fun TelegramFlow.setPassportElementErrors(userId: Long,
     errors: Array<InputPassportElementError>?) =
     this.sendFunctionLaunch(TdApi.SetPassportElementErrors(userId, errors))

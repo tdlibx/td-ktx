@@ -7,22 +7,48 @@ package kotlinx.telegram.coroutines
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.td.libcore.telegram.TdApi.EmailAddressAuthentication
 import org.drinkless.td.libcore.telegram.TdApi.EmailAddressAuthenticationCodeInfo
 import org.drinkless.td.libcore.telegram.TdApi.PasswordState
 import org.drinkless.td.libcore.telegram.TdApi.RecoveryEmailAddress
 
 /**
+ * Suspend function, which cancels verification of the 2-step verification recovery email address.
+ *
+ * @return [PasswordState] Represents the current state of 2-step verification.
+ */
+suspend fun TelegramFlow.cancelRecoveryEmailAddressVerification(): PasswordState =
+    this.sendFunctionAsync(TdApi.CancelRecoveryEmailAddressVerification())
+
+/**
+ * Suspend function, which checks the authentication of an email address. Works only when the
+ * current authorization state is authorizationStateWaitEmailCode.
+ *
+ * @param code Email address authentication to check.
+ */
+suspend fun TelegramFlow.checkAuthenticationEmailCode(code: EmailAddressAuthentication?) =
+    this.sendFunctionLaunch(TdApi.CheckAuthenticationEmailCode(code))
+
+/**
  * Suspend function, which checks the email address verification code for Telegram Passport.
  *
- * @param code Verification code.
+ * @param code Verification code to check.
  */
 suspend fun TelegramFlow.checkEmailAddressVerificationCode(code: String?) =
     this.sendFunctionLaunch(TdApi.CheckEmailAddressVerificationCode(code))
 
 /**
+ * Suspend function, which checks the login email address authentication.
+ *
+ * @param code Email address authentication to check.
+ */
+suspend fun TelegramFlow.checkLoginEmailAddressCode(code: EmailAddressAuthentication?) =
+    this.sendFunctionLaunch(TdApi.CheckLoginEmailAddressCode(code))
+
+/**
  * Suspend function, which checks the 2-step verification recovery email address verification code.
  *
- * @param code Verification code.
+ * @param code Verification code to check.
  *
  * @return [PasswordState] Represents the current state of 2-step verification.
  */
@@ -33,7 +59,7 @@ suspend fun TelegramFlow.checkRecoveryEmailAddressCode(code: String?): PasswordS
  * Suspend function, which returns a 2-step verification recovery email address that was previously
  * set up. This method can be used to verify a password provided by the user.
  *
- * @param password The password for the current user.
+ * @param password The 2-step verification password for the current user.
  *
  * @return [RecoveryEmailAddress] Contains information about the current recovery email address.
  */
@@ -41,7 +67,7 @@ suspend fun TelegramFlow.getRecoveryEmailAddress(password: String?): RecoveryEma
     this.sendFunctionAsync(TdApi.GetRecoveryEmailAddress(password))
 
 /**
- * Suspend function, which re-sends the code to verify an email address to be added to a user's
+ * Suspend function, which resends the code to verify an email address to be added to a user's
  * Telegram Passport.
  *
  * @return [EmailAddressAuthenticationCodeInfo] Information about the email address authentication
@@ -51,12 +77,29 @@ suspend fun TelegramFlow.resendEmailAddressVerificationCode(): EmailAddressAuthe
     this.sendFunctionAsync(TdApi.ResendEmailAddressVerificationCode())
 
 /**
+ * Suspend function, which resends the login email address verification code.
+ *
+ * @return [EmailAddressAuthenticationCodeInfo] Information about the email address authentication
+ * code that was sent.
+ */
+suspend fun TelegramFlow.resendLoginEmailAddressCode(): EmailAddressAuthenticationCodeInfo =
+    this.sendFunctionAsync(TdApi.ResendLoginEmailAddressCode())
+
+/**
  * Suspend function, which resends the 2-step verification recovery email address verification code.
  *
  * @return [PasswordState] Represents the current state of 2-step verification.
  */
 suspend fun TelegramFlow.resendRecoveryEmailAddressCode(): PasswordState =
     this.sendFunctionAsync(TdApi.ResendRecoveryEmailAddressCode())
+
+/**
+ * Suspend function, which resets the login email address. May return an error with a message
+ * &quot;TASK_ALREADY_EXISTS&quot; if reset is still pending. Works only when the current authorization
+ * state is authorizationStateWaitEmailCode and authorizationState.canResetEmailAddress == true.
+ */
+suspend fun TelegramFlow.resetAuthenticationEmailAddress() =
+    this.sendFunctionLaunch(TdApi.ResetAuthenticationEmailAddress())
 
 /**
  * Suspend function, which sends a code to verify an email address to be added to a user's Telegram
@@ -72,13 +115,39 @@ suspend fun TelegramFlow.sendEmailAddressVerificationCode(emailAddress: String?)
     this.sendFunctionAsync(TdApi.SendEmailAddressVerificationCode(emailAddress))
 
 /**
+ * Suspend function, which sets the email address of the user and sends an authentication code to
+ * the email address. Works only when the current authorization state is
+ * authorizationStateWaitEmailAddress.
+ *
+ * @param emailAddress The email address of the user.
+ */
+suspend fun TelegramFlow.setAuthenticationEmailAddress(emailAddress: String?) =
+    this.sendFunctionLaunch(TdApi.SetAuthenticationEmailAddress(emailAddress))
+
+/**
+ * Suspend function, which changes the login email address of the user. The email address can be
+ * changed only if the current user already has login email and passwordState.loginEmailAddressPattern
+ * is non-empty. The change will not be applied until the new login email address is confirmed with
+ * checkLoginEmailAddressCode. To use Apple ID/Google ID instead of an email address, call
+ * checkLoginEmailAddressCode directly.
+ *
+ * @param newLoginEmailAddress New login email address.
+ *
+ * @return [EmailAddressAuthenticationCodeInfo] Information about the email address authentication
+ * code that was sent.
+ */
+suspend fun TelegramFlow.setLoginEmailAddress(newLoginEmailAddress: String?):
+    EmailAddressAuthenticationCodeInfo =
+    this.sendFunctionAsync(TdApi.SetLoginEmailAddress(newLoginEmailAddress))
+
+/**
  * Suspend function, which changes the 2-step verification recovery email address of the user. If a
  * new recovery email address is specified, then the change will not be applied until the new recovery
  * email address is confirmed. If newRecoveryEmailAddress is the same as the email address that is
  * currently set up, this call succeeds immediately and aborts all other requests waiting for an email
  * confirmation.
  *
- * @param password Password of the current user.  
+ * @param password The 2-step verification password of the current user.  
  * @param newRecoveryEmailAddress New recovery email address.
  *
  * @return [PasswordState] Represents the current state of 2-step verification.

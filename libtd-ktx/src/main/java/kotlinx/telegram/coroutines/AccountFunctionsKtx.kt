@@ -4,10 +4,17 @@
 //
 package kotlinx.telegram.coroutines
 
+import kotlin.Boolean
+import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.AccountTtl
+import org.drinkless.td.libcore.telegram.TdApi.GiftSettings
+import org.drinkless.td.libcore.telegram.TdApi.HttpUrl
+import org.drinkless.td.libcore.telegram.TdApi.InputChatPhoto
+import org.drinkless.td.libcore.telegram.TdApi.MessageSender
+import org.drinkless.td.libcore.telegram.TdApi.StarAmount
 
 /**
  * Suspend function, which deletes the account of the current user, deleting all information
@@ -15,10 +22,12 @@ import org.drinkless.td.libcore.telegram.TdApi.AccountTtl
  * new account. Can be called before authorization when the current authorization state is
  * authorizationStateWaitPassword.
  *
- * @param reason The reason why the account was deleted; optional.
+ * @param reason The reason why the account was deleted; optional.  
+ * @param password The 2-step verification password of the current user. If the current user isn't
+ * authorized, then an empty string can be passed and account deletion can be canceled within one week.
  */
-suspend fun TelegramFlow.deleteAccount(reason: String?) =
-    this.sendFunctionLaunch(TdApi.DeleteAccount(reason))
+suspend fun TelegramFlow.deleteAccount(reason: String?, password: String?) =
+    this.sendFunctionLaunch(TdApi.DeleteAccount(reason, password))
 
 /**
  * Suspend function, which returns the period of inactivity after which the account of the current
@@ -30,6 +39,29 @@ suspend fun TelegramFlow.deleteAccount(reason: String?) =
 suspend fun TelegramFlow.getAccountTtl(): AccountTtl = this.sendFunctionAsync(TdApi.GetAccountTtl())
 
 /**
+ * Suspend function, which returns the amount of Telegram Stars owned by a business account; for
+ * bots only.
+ *
+ * @param businessConnectionId Unique identifier of business connection.
+ *
+ * @return [StarAmount] Describes a possibly non-integer amount of Telegram Stars.
+ */
+suspend fun TelegramFlow.getBusinessAccountStarAmount(businessConnectionId: String?): StarAmount =
+    this.sendFunctionAsync(TdApi.GetBusinessAccountStarAmount(businessConnectionId))
+
+/**
+ * Suspend function, which returns a URL for a Telegram Ad platform account that can be used to set
+ * up advertisements for the chat paid in the owned Telegram Stars.
+ *
+ * @param ownerId Identifier of the owner of the Telegram Stars; can be identifier of an owned bot,
+ * or identifier of an owned channel chat.
+ *
+ * @return [HttpUrl] Contains an HTTP URL.
+ */
+suspend fun TelegramFlow.getStarAdAccountUrl(ownerId: MessageSender?): HttpUrl =
+    this.sendFunctionAsync(TdApi.GetStarAdAccountUrl(ownerId))
+
+/**
  * Suspend function, which changes the period of inactivity after which the account of the current
  * user will automatically be deleted.
  *
@@ -37,3 +69,73 @@ suspend fun TelegramFlow.getAccountTtl(): AccountTtl = this.sendFunctionAsync(Td
  */
 suspend fun TelegramFlow.setAccountTtl(ttl: AccountTtl?) =
     this.sendFunctionLaunch(TdApi.SetAccountTtl(ttl))
+
+/**
+ * Suspend function, which changes the bio of a business account; for bots only.
+ *
+ * @param businessConnectionId Unique identifier of business connection.  
+ * @param bio The new value of the bio; 0-getOption(&quot;bio_length_max&quot;) characters without
+ * line feeds.
+ */
+suspend fun TelegramFlow.setBusinessAccountBio(businessConnectionId: String?, bio: String?) =
+    this.sendFunctionLaunch(TdApi.SetBusinessAccountBio(businessConnectionId, bio))
+
+/**
+ * Suspend function, which changes settings for gift receiving of a business account; for bots only.
+ *
+ * @param businessConnectionId Unique identifier of business connection.  
+ * @param settings The new settings.
+ */
+suspend fun TelegramFlow.setBusinessAccountGiftSettings(businessConnectionId: String?,
+    settings: GiftSettings?) =
+    this.sendFunctionLaunch(TdApi.SetBusinessAccountGiftSettings(businessConnectionId, settings))
+
+/**
+ * Suspend function, which changes the first and last name of a business account; for bots only.
+ *
+ * @param businessConnectionId Unique identifier of business connection.  
+ * @param firstName The new value of the first name for the business account; 1-64 characters.  
+ * @param lastName The new value of the optional last name for the business account; 0-64
+ * characters.
+ */
+suspend fun TelegramFlow.setBusinessAccountName(
+  businessConnectionId: String?,
+  firstName: String?,
+  lastName: String?
+) = this.sendFunctionLaunch(TdApi.SetBusinessAccountName(businessConnectionId, firstName, lastName))
+
+/**
+ * Suspend function, which changes a profile photo of a business account; for bots only.
+ *
+ * @param businessConnectionId Unique identifier of business connection.  
+ * @param photo Profile photo to set; pass null to remove the photo.  
+ * @param isPublic Pass true to set the public photo, which will be visible even if the main photo
+ * is hidden by privacy settings.
+ */
+suspend fun TelegramFlow.setBusinessAccountProfilePhoto(
+  businessConnectionId: String?,
+  photo: InputChatPhoto?,
+  isPublic: Boolean
+) = this.sendFunctionLaunch(TdApi.SetBusinessAccountProfilePhoto(businessConnectionId, photo,
+    isPublic))
+
+/**
+ * Suspend function, which changes the editable username of a business account; for bots only.
+ *
+ * @param businessConnectionId Unique identifier of business connection.  
+ * @param username The new value of the username.
+ */
+suspend fun TelegramFlow.setBusinessAccountUsername(businessConnectionId: String?,
+    username: String?) =
+    this.sendFunctionLaunch(TdApi.SetBusinessAccountUsername(businessConnectionId, username))
+
+/**
+ * Suspend function, which transfer Telegram Stars from the business account to the business bot;
+ * for bots only.
+ *
+ * @param businessConnectionId Unique identifier of business connection.  
+ * @param starCount Number of Telegram Stars to transfer.
+ */
+suspend fun TelegramFlow.transferBusinessAccountStars(businessConnectionId: String?,
+    starCount: Long) =
+    this.sendFunctionLaunch(TdApi.TransferBusinessAccountStars(businessConnectionId, starCount))

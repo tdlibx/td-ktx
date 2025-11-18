@@ -4,116 +4,126 @@
 //
 package kotlinx.telegram.coroutines
 
-import kotlin.Int
+import kotlin.Boolean
+import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.AuthenticationCodeInfo
 import org.drinkless.td.libcore.telegram.TdApi.PhoneNumberAuthenticationSettings
+import org.drinkless.td.libcore.telegram.TdApi.PhoneNumberCodeType
+import org.drinkless.td.libcore.telegram.TdApi.PhoneNumberInfo
+import org.drinkless.td.libcore.telegram.TdApi.ResendCodeReason
+import org.drinkless.td.libcore.telegram.TdApi.User
 
 /**
- * Suspend function, which changes the phone number of the user and sends an authentication code to
- * the user's new phone number. On success, returns information about the sent code.
+ * Suspend function, which check the authentication code and completes the request for which the
+ * code was sent if appropriate.
  *
- * @param phoneNumber The new phone number of the user in international format.  
- * @param settings Settings for the authentication of the user's phone number.
+ * @param code Authentication code to check.
+ */
+suspend fun TelegramFlow.checkPhoneNumberCode(code: String?) =
+    this.sendFunctionLaunch(TdApi.CheckPhoneNumberCode(code))
+
+/**
+ * Suspend function, which returns information about a phone number by its prefix. Can be called
+ * before authorization.
+ *
+ * @param phoneNumberPrefix The phone number prefix.
+ *
+ * @return [PhoneNumberInfo] Contains information about a phone number.
+ */
+suspend fun TelegramFlow.getPhoneNumberInfo(phoneNumberPrefix: String?): PhoneNumberInfo =
+    this.sendFunctionAsync(TdApi.GetPhoneNumberInfo(phoneNumberPrefix))
+
+/**
+ * Suspend function, which returns information about a phone number by its prefix synchronously.
+ * getCountries must be called at least once after changing localization to the specified language if
+ * properly localized country information is expected. Can be called synchronously.
+ *
+ * @param languageCode A two-letter ISO 639-1 language code for country information localization.  
+ * @param phoneNumberPrefix The phone number prefix.
+ *
+ * @return [PhoneNumberInfo] Contains information about a phone number.
+ */
+suspend fun TelegramFlow.getPhoneNumberInfoSync(languageCode: String?, phoneNumberPrefix: String?):
+    PhoneNumberInfo = this.sendFunctionAsync(TdApi.GetPhoneNumberInfoSync(languageCode,
+    phoneNumberPrefix))
+
+/**
+ * Suspend function, which reports that authentication code wasn't delivered via SMS to the
+ * specified phone number; for official mobile applications only.
+ *
+ * @param mobileNetworkCode Current mobile network code.
+ */
+suspend fun TelegramFlow.reportPhoneNumberCodeMissing(mobileNetworkCode: String?) =
+    this.sendFunctionLaunch(TdApi.ReportPhoneNumberCodeMissing(mobileNetworkCode))
+
+/**
+ * Suspend function, which resends the authentication code sent to a phone number. Works only if the
+ * previously received authenticationCodeInfo nextCodeType was not null and the server-specified
+ * timeout has passed.
+ *
+ * @param reason Reason of code resending; pass null if unknown.
  *
  * @return [AuthenticationCodeInfo] Information about the authentication code that was sent.
  */
-suspend fun TelegramFlow.changePhoneNumber(phoneNumber: String?,
-    settings: PhoneNumberAuthenticationSettings?): AuthenticationCodeInfo =
-    this.sendFunctionAsync(TdApi.ChangePhoneNumber(phoneNumber, settings))
+suspend fun TelegramFlow.resendPhoneNumberCode(reason: ResendCodeReason?): AuthenticationCodeInfo =
+    this.sendFunctionAsync(TdApi.ResendPhoneNumberCode(reason))
 
 /**
- * Suspend function, which checks the authentication code sent to confirm a new phone number of the
- * user.
+ * Suspend function, which searches a user by their phone number. Returns a 404 error if the user
+ * can't be found.
  *
- * @param code Verification code received by SMS, phone call or flash call.
- */
-suspend fun TelegramFlow.checkChangePhoneNumberCode(code: String?) =
-    this.sendFunctionLaunch(TdApi.CheckChangePhoneNumberCode(code))
-
-/**
- * Suspend function, which checks phone number confirmation code.
+ * @param phoneNumber Phone number to search for.  
+ * @param onlyLocal Pass true to get only locally available information without sending network
+ * requests.
  *
- * @param code The phone number confirmation code.
+ * @return [User] Represents a user.
  */
-suspend fun TelegramFlow.checkPhoneNumberConfirmationCode(code: String?) =
-    this.sendFunctionLaunch(TdApi.CheckPhoneNumberConfirmationCode(code))
+suspend fun TelegramFlow.searchUserByPhoneNumber(phoneNumber: String?, onlyLocal: Boolean): User =
+    this.sendFunctionAsync(TdApi.SearchUserByPhoneNumber(phoneNumber, onlyLocal))
 
 /**
- * Suspend function, which checks the phone number verification code for Telegram Passport.
+ * Suspend function, which sends a code to the specified phone number. Aborts previous phone number
+ * verification if there was one. On success, returns information about the sent code.
  *
- * @param code Verification code.
- */
-suspend fun TelegramFlow.checkPhoneNumberVerificationCode(code: String?) =
-    this.sendFunctionLaunch(TdApi.CheckPhoneNumberVerificationCode(code))
-
-/**
- * Suspend function, which re-sends the authentication code sent to confirm a new phone number for
- * the user. Works only if the previously received authenticationCodeInfo nextCodeType was not null.
+ * @param phoneNumber The phone number, in international format.  
+ * @param settings Settings for the authentication of the user's phone number; pass null to use
+ * default settings.  
+ * @param type Type of the request for which the code is sent.
  *
  * @return [AuthenticationCodeInfo] Information about the authentication code that was sent.
  */
-suspend fun TelegramFlow.resendChangePhoneNumberCode(): AuthenticationCodeInfo =
-    this.sendFunctionAsync(TdApi.ResendChangePhoneNumberCode())
-
-/**
- * Suspend function, which resends phone number confirmation code.
- *
- * @return [AuthenticationCodeInfo] Information about the authentication code that was sent.
- */
-suspend fun TelegramFlow.resendPhoneNumberConfirmationCode(): AuthenticationCodeInfo =
-    this.sendFunctionAsync(TdApi.ResendPhoneNumberConfirmationCode())
-
-/**
- * Suspend function, which re-sends the code to verify a phone number to be added to a user's
- * Telegram Passport.
- *
- * @return [AuthenticationCodeInfo] Information about the authentication code that was sent.
- */
-suspend fun TelegramFlow.resendPhoneNumberVerificationCode(): AuthenticationCodeInfo =
-    this.sendFunctionAsync(TdApi.ResendPhoneNumberVerificationCode())
-
-/**
- * Suspend function, which sends phone number confirmation code. Should be called when user presses
- * &quot;https://t.me/confirmphone?phone=*******&amp;hash=**********&quot; or
- * &quot;tg://confirmphone?phone=*******&amp;hash=**********&quot; link.
- *
- * @param hash Value of the &quot;hash&quot; parameter from the link.  
- * @param phoneNumber Value of the &quot;phone&quot; parameter from the link.  
- * @param settings Settings for the authentication of the user's phone number.
- *
- * @return [AuthenticationCodeInfo] Information about the authentication code that was sent.
- */
-suspend fun TelegramFlow.sendPhoneNumberConfirmationCode(
-  hash: String?,
+suspend fun TelegramFlow.sendPhoneNumberCode(
   phoneNumber: String?,
-  settings: PhoneNumberAuthenticationSettings?
-): AuthenticationCodeInfo = this.sendFunctionAsync(TdApi.SendPhoneNumberConfirmationCode(hash,
-    phoneNumber, settings))
+  settings: PhoneNumberAuthenticationSettings?,
+  type: PhoneNumberCodeType?
+): AuthenticationCodeInfo = this.sendFunctionAsync(TdApi.SendPhoneNumberCode(phoneNumber, settings,
+    type))
 
 /**
- * Suspend function, which sends a code to verify a phone number to be added to a user's Telegram
- * Passport.
+ * Suspend function, which sends Firebase Authentication SMS to the specified phone number. Works
+ * only when received a code of the type authenticationCodeTypeFirebaseAndroid or
+ * authenticationCodeTypeFirebaseIos.
  *
- * @param phoneNumber The phone number of the user, in international format.  
- * @param settings Settings for the authentication of the user's phone number.
- *
- * @return [AuthenticationCodeInfo] Information about the authentication code that was sent.
+ * @param token Play Integrity API or SafetyNet Attestation API token for the Android application,
+ * or secret from push notification for the iOS application.
  */
-suspend fun TelegramFlow.sendPhoneNumberVerificationCode(phoneNumber: String?,
-    settings: PhoneNumberAuthenticationSettings?): AuthenticationCodeInfo =
-    this.sendFunctionAsync(TdApi.SendPhoneNumberVerificationCode(phoneNumber, settings))
+suspend fun TelegramFlow.sendPhoneNumberFirebaseSms(token: String?) =
+    this.sendFunctionLaunch(TdApi.SendPhoneNumberFirebaseSms(token))
 
 /**
  * Suspend function, which sets the phone number of the user and sends an authentication code to the
  * user. Works only when the current authorization state is authorizationStateWaitPhoneNumber, or if
  * there is no pending authentication query and the current authorization state is
- * authorizationStateWaitCode, authorizationStateWaitRegistration, or authorizationStateWaitPassword.
+ * authorizationStateWaitPremiumPurchase, authorizationStateWaitEmailAddress,
+ * authorizationStateWaitEmailCode, authorizationStateWaitCode, authorizationStateWaitRegistration, or
+ * authorizationStateWaitPassword.
  *
  * @param phoneNumber The phone number of the user, in international format.  
- * @param settings Settings for the authentication of the user's phone number.
+ * @param settings Settings for the authentication of the user's phone number; pass null to use
+ * default settings.
  */
 suspend fun TelegramFlow.setAuthenticationPhoneNumber(phoneNumber: String?,
     settings: PhoneNumberAuthenticationSettings?) =
@@ -126,5 +136,5 @@ suspend fun TelegramFlow.setAuthenticationPhoneNumber(phoneNumber: String?,
  * @param userId Identifier of the user with whom to share the phone number. The user must be a
  * mutual contact.
  */
-suspend fun TelegramFlow.sharePhoneNumber(userId: Int) =
+suspend fun TelegramFlow.sharePhoneNumber(userId: Long) =
     this.sendFunctionLaunch(TdApi.SharePhoneNumber(userId))

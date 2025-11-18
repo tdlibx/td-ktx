@@ -6,6 +6,7 @@ package kotlinx.telegram.extensions
 
 import kotlin.Array
 import kotlin.Boolean
+import kotlin.ByteArray
 import kotlin.Int
 import kotlin.Long
 import kotlin.String
@@ -13,11 +14,14 @@ import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.acceptCall
 import kotlinx.telegram.coroutines.discardCall
 import kotlinx.telegram.coroutines.sendCallDebugInformation
+import kotlinx.telegram.coroutines.sendCallLog
 import kotlinx.telegram.coroutines.sendCallRating
+import kotlinx.telegram.coroutines.sendCallSignalingData
 import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.Call
 import org.drinkless.td.libcore.telegram.TdApi.CallProblem
 import org.drinkless.td.libcore.telegram.TdApi.CallProtocol
+import org.drinkless.td.libcore.telegram.TdApi.InputFile
 
 /**
  * Interface for access [TdApi.Call] extension functions. Can be used alongside with other extension
@@ -32,30 +36,42 @@ interface CallKtx : BaseKtx {
   /**
    * Suspend function, which accepts an incoming call.
    *
-   * @param protocol Description of the call protocols supported by the client.
+   * @param protocol The call protocols supported by the application.
    */
   suspend fun Call.accept(protocol: CallProtocol?) = api.acceptCall(this.id, protocol)
 
   /**
    * Suspend function, which discards a call.
    *
-   * @param isDisconnected True, if the user was disconnected.  
+   * @param isDisconnected Pass true if the user was disconnected.  
+   * @param inviteLink If the call was upgraded to a group call, pass invite link to the group call.
+   *  
    * @param duration The call duration, in seconds.  
+   * @param isVideo Pass true if the call was a video call.  
    * @param connectionId Identifier of the connection used during the call.
    */
   suspend fun Call.discard(
     isDisconnected: Boolean,
+    inviteLink: String?,
     duration: Int,
+    isVideo: Boolean,
     connectionId: Long
-  ) = api.discardCall(this.id, isDisconnected, duration, connectionId)
+  ) = api.discardCall(this.id, isDisconnected, inviteLink, duration, isVideo, connectionId)
 
   /**
-   * Suspend function, which sends debug information for a call.
+   * Suspend function, which sends debug information for a call to Telegram servers.
    *
    * @param debugInformation Debug information in application-specific format.
    */
   suspend fun Call.sendDebugInformation(debugInformation: String?) =
       api.sendCallDebugInformation(this.id, debugInformation)
+
+  /**
+   * Suspend function, which sends log file for a call to Telegram servers.
+   *
+   * @param logFile Call log file. Only inputFileLocal and inputFileGenerated are supported.
+   */
+  suspend fun Call.sendLog(logFile: InputFile?) = api.sendCallLog(this.id, logFile)
 
   /**
    * Suspend function, which sends a call rating.
@@ -69,4 +85,11 @@ interface CallKtx : BaseKtx {
     comment: String?,
     problems: Array<CallProblem>?
   ) = api.sendCallRating(this.id, rating, comment, problems)
+
+  /**
+   * Suspend function, which sends call signaling data.
+   *
+   * @param data The data.
+   */
+  suspend fun Call.sendSignalingData(data: ByteArray?) = api.sendCallSignalingData(this.id, data)
 }

@@ -4,11 +4,15 @@
 //
 package kotlinx.telegram.coroutines
 
-import kotlin.IntArray
+import kotlin.Boolean
+import kotlin.Long
+import kotlin.LongArray
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.td.libcore.telegram.TdApi.ResendCodeReason
 import org.drinkless.td.libcore.telegram.TdApi.Session
+import org.drinkless.td.libcore.telegram.TdApi.StoreTransaction
 
 /**
  * Suspend function, which checks the authentication token of a bot; to log in as a bot. Works only
@@ -24,10 +28,21 @@ suspend fun TelegramFlow.checkAuthenticationBotToken(token: String?) =
  * Suspend function, which checks the authentication code. Works only when the current authorization
  * state is authorizationStateWaitCode.
  *
- * @param code The verification code received via SMS, Telegram message, phone call, or flash call.
+ * @param code Authentication code to check.
  */
 suspend fun TelegramFlow.checkAuthenticationCode(code: String?) =
     this.sendFunctionLaunch(TdApi.CheckAuthenticationCode(code))
+
+/**
+ * Suspend function, which checks whether an in-store purchase of Telegram Premium is possible
+ * before authorization. Works only when the current authorization state is
+ * authorizationStateWaitPremiumPurchase.
+ *
+ * @param currency ISO 4217 currency code of the payment currency.  
+ * @param amount Paid amount, in the smallest units of the currency.
+ */
+suspend fun TelegramFlow.checkAuthenticationPremiumPurchase(currency: String?, amount: Long) =
+    this.sendFunctionLaunch(TdApi.CheckAuthenticationPremiumPurchase(currency, amount))
 
 /**
  * Suspend function, which confirms QR code authentication on another device. Returns created
@@ -36,23 +51,71 @@ suspend fun TelegramFlow.checkAuthenticationCode(code: String?) =
  * @param link A link from a QR code. The link must be scanned by the in-app camera.
  *
  * @return [Session] Contains information about one session in a Telegram application used by the
- * current user. Sessions should be shown to the user in the returned order.
+ * current user. Sessions must be shown to the user in the returned order.
  */
 suspend fun TelegramFlow.confirmQrCodeAuthentication(link: String?): Session =
     this.sendFunctionAsync(TdApi.ConfirmQrCodeAuthentication(link))
 
 /**
- * Suspend function, which requests QR code authentication by scanning a QR code on another logged
- * in device. Works only when the current authorization state is authorizationStateWaitPhoneNumber.
+ * Suspend function, which reports that authentication code wasn't delivered via SMS; for official
+ * mobile applications only. Works only when the current authorization state is
+ * authorizationStateWaitCode.
  *
- * @param otherUserIds List of user identifiers of other users currently using the client.
+ * @param mobileNetworkCode Current mobile network code.
  */
-suspend fun TelegramFlow.requestQrCodeAuthentication(otherUserIds: IntArray?) =
+suspend fun TelegramFlow.reportAuthenticationCodeMissing(mobileNetworkCode: String?) =
+    this.sendFunctionLaunch(TdApi.ReportAuthenticationCodeMissing(mobileNetworkCode))
+
+/**
+ * Suspend function, which requests QR code authentication by scanning a QR code on another logged
+ * in device. Works only when the current authorization state is authorizationStateWaitPhoneNumber, or
+ * if there is no pending authentication query and the current authorization state is
+ * authorizationStateWaitPremiumPurchase, authorizationStateWaitEmailAddress,
+ * authorizationStateWaitEmailCode, authorizationStateWaitCode, authorizationStateWaitRegistration, or
+ * authorizationStateWaitPassword.
+ *
+ * @param otherUserIds List of user identifiers of other users currently using the application.
+ */
+suspend fun TelegramFlow.requestQrCodeAuthentication(otherUserIds: LongArray?) =
     this.sendFunctionLaunch(TdApi.RequestQrCodeAuthentication(otherUserIds))
 
 /**
- * Suspend function, which re-sends an authentication code to the user. Works only when the current
- * authorization state is authorizationStateWaitCode and the nextCodeType of the result is not null.
+ * Suspend function, which resends an authentication code to the user. Works only when the current
+ * authorization state is authorizationStateWaitCode, the nextCodeType of the result is not null and
+ * the server-specified timeout has passed, or when the current authorization state is
+ * authorizationStateWaitEmailCode.
+ *
+ * @param reason Reason of code resending; pass null if unknown.
  */
-suspend fun TelegramFlow.resendAuthenticationCode() =
-    this.sendFunctionLaunch(TdApi.ResendAuthenticationCode())
+suspend fun TelegramFlow.resendAuthenticationCode(reason: ResendCodeReason?) =
+    this.sendFunctionLaunch(TdApi.ResendAuthenticationCode(reason))
+
+/**
+ * Suspend function, which sends Firebase Authentication SMS to the phone number of the user. Works
+ * only when the current authorization state is authorizationStateWaitCode and the server returned code
+ * of the type authenticationCodeTypeFirebaseAndroid or authenticationCodeTypeFirebaseIos.
+ *
+ * @param token Play Integrity API or SafetyNet Attestation API token for the Android application,
+ * or secret from push notification for the iOS application.
+ */
+suspend fun TelegramFlow.sendAuthenticationFirebaseSms(token: String?) =
+    this.sendFunctionLaunch(TdApi.SendAuthenticationFirebaseSms(token))
+
+/**
+ * Suspend function, which informs server about an in-store purchase of Telegram Premium before
+ * authorization. Works only when the current authorization state is
+ * authorizationStateWaitPremiumPurchase.
+ *
+ * @param transaction Information about the transaction.  
+ * @param isRestore Pass true if this is a restore of a Telegram Premium purchase; only for App
+ * Store.  
+ * @param currency ISO 4217 currency code of the payment currency.  
+ * @param amount Paid amount, in the smallest units of the currency.
+ */
+suspend fun TelegramFlow.setAuthenticationPremiumPurchaseTransaction(
+  transaction: StoreTransaction?,
+  isRestore: Boolean,
+  currency: String?,
+  amount: Long
+) = this.sendFunctionLaunch(TdApi.SetAuthenticationPremiumPurchaseTransaction(transaction,
+    isRestore, currency, amount))

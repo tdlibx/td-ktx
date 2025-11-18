@@ -5,11 +5,48 @@
 package kotlinx.telegram.coroutines
 
 import kotlin.Int
+import kotlin.Long
 import kotlin.String
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.td.libcore.telegram.TdApi.InputFile
 import org.drinkless.td.libcore.telegram.TdApi.NotificationSettingsScope
+import org.drinkless.td.libcore.telegram.TdApi.NotificationSound
+import org.drinkless.td.libcore.telegram.TdApi.NotificationSounds
+import org.drinkless.td.libcore.telegram.TdApi.ReactionNotificationSettings
 import org.drinkless.td.libcore.telegram.TdApi.ScopeNotificationSettings
+
+/**
+ * Suspend function, which adds a new notification sound to the list of saved notification sounds.
+ * The new notification sound is added to the top of the list. If it is already in the list, its
+ * position isn't changed.
+ *
+ * @param sound Notification sound file to add.
+ *
+ * @return [NotificationSound] Describes a notification sound in MP3 format.
+ */
+suspend fun TelegramFlow.addSavedNotificationSound(sound: InputFile?): NotificationSound =
+    this.sendFunctionAsync(TdApi.AddSavedNotificationSound(sound))
+
+/**
+ * Suspend function, which returns saved notification sound by its identifier. Returns a 404 error
+ * if there is no saved notification sound with the specified identifier.
+ *
+ * @param notificationSoundId Identifier of the notification sound.
+ *
+ * @return [NotificationSounds] Contains a list of notification sounds.
+ */
+suspend fun TelegramFlow.getSavedNotificationSound(notificationSoundId: Long): NotificationSounds =
+    this.sendFunctionAsync(TdApi.GetSavedNotificationSound(notificationSoundId))
+
+/**
+ * Suspend function, which returns the list of saved notification sounds. If a sound isn't in the
+ * list, then default sound needs to be used.
+ *
+ * @return [NotificationSounds] Contains a list of notification sounds.
+ */
+suspend fun TelegramFlow.getSavedNotificationSounds(): NotificationSounds =
+    this.sendFunctionAsync(TdApi.GetSavedNotificationSounds())
 
 /**
  * Suspend function, which returns the notification settings for chats of a given type.
@@ -54,11 +91,28 @@ suspend fun TelegramFlow.removeNotificationGroup(notificationGroupId: Int, maxNo
     this.sendFunctionLaunch(TdApi.RemoveNotificationGroup(notificationGroupId, maxNotificationId))
 
 /**
- * Suspend function, which resets all notification settings to their default values. By default, all
- * chats are unmuted, the sound is set to &quot;default&quot; and message previews are shown.
+ * Suspend function, which removes a notification sound from the list of saved notification sounds.
+ *
+ * @param notificationSoundId Identifier of the notification sound.
+ */
+suspend fun TelegramFlow.removeSavedNotificationSound(notificationSoundId: Long) =
+    this.sendFunctionLaunch(TdApi.RemoveSavedNotificationSound(notificationSoundId))
+
+/**
+ * Suspend function, which resets all chat and scope notification settings to their default values.
+ * By default, all chats are unmuted and message previews are shown.
  */
 suspend fun TelegramFlow.resetAllNotificationSettings() =
     this.sendFunctionLaunch(TdApi.ResetAllNotificationSettings())
+
+/**
+ * Suspend function, which changes notification settings for reactions.
+ *
+ * @param notificationSettings The new notification settings for reactions.
+ */
+suspend
+    fun TelegramFlow.setReactionNotificationSettings(notificationSettings: ReactionNotificationSettings?)
+    = this.sendFunctionLaunch(TdApi.SetReactionNotificationSettings(notificationSettings))
 
 /**
  * Suspend function, which changes notification settings for chats of a given type.

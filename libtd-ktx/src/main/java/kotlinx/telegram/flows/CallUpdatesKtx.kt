@@ -9,6 +9,13 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
 import org.drinkless.td.libcore.telegram.TdApi
 import org.drinkless.td.libcore.telegram.TdApi.Call
+import org.drinkless.td.libcore.telegram.TdApi.GroupCall
+import org.drinkless.td.libcore.telegram.TdApi.UpdateGroupCallNewMessage
+import org.drinkless.td.libcore.telegram.TdApi.UpdateGroupCallParticipant
+import org.drinkless.td.libcore.telegram.TdApi.UpdateGroupCallParticipants
+import org.drinkless.td.libcore.telegram.TdApi.UpdateGroupCallVerificationState
+import org.drinkless.td.libcore.telegram.TdApi.UpdateNewBusinessCallbackQuery
+import org.drinkless.td.libcore.telegram.TdApi.UpdateNewCallSignalingData
 import org.drinkless.td.libcore.telegram.TdApi.UpdateNewCallbackQuery
 import org.drinkless.td.libcore.telegram.TdApi.UpdateNewInlineCallbackQuery
 
@@ -17,6 +24,48 @@ import org.drinkless.td.libcore.telegram.TdApi.UpdateNewInlineCallbackQuery
  */
 fun TelegramFlow.callFlow(): Flow<Call> = this.getUpdatesFlowOfType<TdApi.UpdateCall>()
     .mapNotNull { it.call }
+
+/**
+ * emits [GroupCall] if information about a group call was updated.
+ */
+fun TelegramFlow.groupCallFlow(): Flow<GroupCall> =
+    this.getUpdatesFlowOfType<TdApi.UpdateGroupCall>()
+    .mapNotNull { it.groupCall }
+
+/**
+ * emits [UpdateGroupCallParticipant] if information about a group call participant was changed. The
+ * updates are sent only after the group call is received through getGroupCall and only if the call is
+ * joined or being joined.
+ */
+fun TelegramFlow.groupCallParticipantFlow(): Flow<UpdateGroupCallParticipant> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateGroupCallParticipants] if the list of group call participants that can send and
+ * receive encrypted call data has changed; for group calls not bound to a chat only.
+ */
+fun TelegramFlow.groupCallParticipantsFlow(): Flow<UpdateGroupCallParticipants> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateGroupCallVerificationState] if the verification state of an encrypted group call has
+ * changed; for group calls not bound to a chat only.
+ */
+fun TelegramFlow.groupCallVerificationStateFlow(): Flow<UpdateGroupCallVerificationState> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateGroupCallNewMessage] if a new message was received in a group call. It must be shown
+ * for at most getOption(&quot;group_call_message_show_time_max&quot;) seconds after receiving.
+ */
+fun TelegramFlow.groupCallNewMessageFlow(): Flow<UpdateGroupCallNewMessage> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateNewCallSignalingData] if new call signaling data arrived.
+ */
+fun TelegramFlow.newCallSignalingDataFlow(): Flow<UpdateNewCallSignalingData> =
+    this.getUpdatesFlowOfType()
 
 /**
  * emits [UpdateNewCallbackQuery] if a new incoming callback query; for bots only.
@@ -28,4 +77,11 @@ fun TelegramFlow.newCallbackQueryFlow(): Flow<UpdateNewCallbackQuery> = this.get
  * bot; for bots only.
  */
 fun TelegramFlow.newInlineCallbackQueryFlow(): Flow<UpdateNewInlineCallbackQuery> =
+    this.getUpdatesFlowOfType()
+
+/**
+ * emits [UpdateNewBusinessCallbackQuery] if a new incoming callback query from a business message;
+ * for bots only.
+ */
+fun TelegramFlow.newBusinessCallbackQueryFlow(): Flow<UpdateNewBusinessCallbackQuery> =
     this.getUpdatesFlowOfType()
