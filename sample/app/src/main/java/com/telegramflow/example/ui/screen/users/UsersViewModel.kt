@@ -12,13 +12,15 @@ import org.drinkless.tdlib.TdApi
 import javax.inject.Inject
 
 @HiltViewModel
-class UsersViewModel @Inject constructor() : ViewModel() {
+class UsersViewModel @Inject constructor(
+    private val telegramRepository: TelegramRepository,
+) : ViewModel() {
 
     val users: MutableStateFlow<List<User>> = MutableStateFlow(emptyList())
 
     init {
         viewModelScope.launch {
-            TelegramRepository.userOnlineFlow.collectLatest {
+            telegramRepository.userOnlineFlow.collectLatest {
                 users.update { currentUsers ->
                     val updatedUser = User(
                         id = it.id,

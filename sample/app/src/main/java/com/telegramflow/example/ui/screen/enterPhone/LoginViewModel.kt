@@ -11,7 +11,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val telegramRepository: TelegramRepository,
+) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -19,27 +21,27 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     init {
         viewModelScope.launch {
             delay(300)
-            TelegramRepository.api.attachClient()
+            telegramRepository.attachClient()
         }
     }
 
-    val authState = TelegramRepository.authFlow
+    val authState = telegramRepository.authFlow
 
     fun phoneEntered(phoneNumber: String) {
         launchWithLoading {
-            TelegramRepository.sendPhone(phoneNumber)
+            telegramRepository.sendPhone(phoneNumber)
         }
     }
 
     fun codeEntered(code: String) {
         launchWithLoading {
-            TelegramRepository.sendCode(code)
+            telegramRepository.sendCode(code)
         }
     }
 
     fun passwordEntered(password: String) {
         launchWithLoading {
-            TelegramRepository.sendPassword(password)
+            telegramRepository.sendPassword(password)
         }
     }
 
