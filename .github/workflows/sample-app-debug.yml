@@ -35,6 +35,14 @@ jobs:
           name: sample-app-deep-debug
           path: sample/app/build/outputs/apk/deepDebug/*.apk
 
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
+          groups: testers
+          file: sample/app/build/outputs/apk/deepDebug/app-deep-debug.apk
+
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v1
         with:
