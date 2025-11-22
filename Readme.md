@@ -16,7 +16,7 @@ implementation("com.github.tdlibx:td:1.8.6")
 implementation(project(":libtd-ktx"))
 ```
 
-The project ships a TDLib wrapper module (`libtd-ktx`) and a Compose sample under `sample/` that demonstrates usage with Hilt and Navigation.
+The project ships a TDLib wrapper module (`libtd-ktx`) and a Compose sample under `sample/` that demonstrates usage with Hilt and the Navigation 3 typed destination APIs.
 
 ## Getting started
 1. Create a single `TelegramFlow` instance and keep it in a long-lived scope (e.g., via DI).

@@ -40,12 +40,12 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun AppNavigation() {
         val navController = rememberNavController()
-        NavHost(navController = navController, startDestination = Screen.Login.route) {
-            composable(Screen.Users.route) {
+        NavHost(navController = navController, startDestination = LoginRoute) {
+            composable<UsersRoute> {
                 UsersScreen()
             }
 
-            composable(Screen.Login.route) {
+            composable<LoginRoute> {
                 var phoneNumber by remember { mutableStateOf("") }
                 var password by remember { mutableStateOf("") }
                 var code by remember { mutableStateOf("") }
@@ -57,12 +57,8 @@ class MainActivity : ComponentActivity() {
                     onCodeChanged = { code = it },
                     onPasswordChanged = { password = it },
                     onNextClicked = {
-                        navController.navigate(
-                            Screen.Users.route,
-                        ) {
-                            popUpTo(Screen.Login.route) {
-                                inclusive = true
-                            }
+                        navController.navigate(UsersRoute) {
+                            popUpTo<LoginRoute> { inclusive = true }
                             launchSingleTop = true
                         }
                     }
