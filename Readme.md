@@ -12,9 +12,10 @@ Telegram Flow is a Kotlin-first extension toolkit for [TDLib](https://github.com
 Add the library dependency from Maven Central:
 
 ```kotlin
-implementation("com.github.tdlibx:td:1.8.56")
 implementation(project(":libtd-ktx"))
 ```
+
+The `libtd-ktx` module exposes TDLib (`com.github.tdlibx:td:1.8.56`) as an API dependency, so no extra TDLib declaration is required.
 
 The project ships a TDLib wrapper module (`libtd-ktx`) and a Compose sample under `sample/` that demonstrates usage with Hilt and the Navigation 3 typed destination APIs.
 
