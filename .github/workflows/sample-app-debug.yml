@@ -6,9 +6,13 @@ on:
       - master
 
 jobs:
-  # JOB 1: Build the APK
+  # JOB 1: Build (Compiles the APK)
   build:
     runs-on: ubuntu-latest
+    # Telegram keys are needed here for the build process
+    env:
+      TELEGRAM_APP_ID: ${{ secrets.TELEGRAM_APP_ID }}
+      TELEGRAM_APP_HASH: ${{ secrets.TELEGRAM_APP_HASH }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,32 +29,30 @@ jobs:
       - name: Build deepDebug APK
         run: ./gradlew --no-daemon clean :sample:app:assembleDeepDebug
 
-      # Save the APK so the next job can use it
+      # Save the APK for the next job
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: deep-debug-apk
-          # This saves the file preserving the folder structure
-          path: sample/app/build/outputs/apk/deepDebug/app-deepDebug.apk
-          retention-days: 1 # Keeps storage clean
+          name: deep-debug-artifacts
+          # Uses wildcard to catch whatever file name Gradle produces
+          path: sample/app/build/outputs/apk/deepDebug/*.apk
+          retention-days: 1
 
-  # JOB 2: Upload to Firebase & Release (Runs only if Build succeeds)
+  # JOB 2: Distribute (Uploads to Firebase & GitHub)
   distribute:
-    needs: build # This keyword makes it wait for 'build' to finish
+    needs: build # Waits for 'build' to finish
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      # We still need checkout to access file paths or release notes if they are in the repo
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Download the APK generated in the previous job
+      # Download the APKs saved in the previous job
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
-          name: deep-debug-apk
-          # We download it to the same path so your existing scripts work unchanged
+          name: deep-debug-artifacts
           path: sample/app/build/outputs/apk/deepDebug
 
       - name: Upload to Firebase App Distribution
@@ -59,7 +61,7 @@ jobs:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
           groups: testers
-          # Note: The path is now populated by the download step above
+          # Using your original file name:
           file: sample/app/build/outputs/apk/deepDebug/app-deepDebug.apk
 
       - name: Publish GitHub release
