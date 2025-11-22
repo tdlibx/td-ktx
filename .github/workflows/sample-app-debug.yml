@@ -41,7 +41,7 @@ jobs:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
           groups: testers
-          file: sample/app/build/outputs/apk/deepDebug/app-deep-debug.apk
+          file: sample/app/build/outputs/apk/deepDebug/app-deepDebug.apk
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v1
