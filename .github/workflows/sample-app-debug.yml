@@ -6,13 +6,9 @@ on:
       - master
 
 jobs:
-  assemble-deep-debug:
+  # JOB 1: Build the APK
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    env:
-      TELEGRAM_APP_ID: ${{ secrets.TELEGRAM_APP_ID }}
-      TELEGRAM_APP_HASH: ${{ secrets.TELEGRAM_APP_HASH }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,11 +25,33 @@ jobs:
       - name: Build deepDebug APK
         run: ./gradlew --no-daemon clean :sample:app:assembleDeepDebug
 
-      - name: Upload deepDebug APK artifact
+      # Save the APK so the next job can use it
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: sample-app-deep-debug
-          path: sample/app/build/outputs/apk/deepDebug/*.apk
+          name: deep-debug-apk
+          # This saves the file preserving the folder structure
+          path: sample/app/build/outputs/apk/deepDebug/app-deepDebug.apk
+          retention-days: 1 # Keeps storage clean
+
+  # JOB 2: Upload to Firebase & Release (Runs only if Build succeeds)
+  distribute:
+    needs: build # This keyword makes it wait for 'build' to finish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # We still need checkout to access file paths or release notes if they are in the repo
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Download the APK generated in the previous job
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: deep-debug-apk
+          # We download it to the same path so your existing scripts work unchanged
+          path: sample/app/build/outputs/apk/deepDebug
 
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
@@ -41,6 +59,7 @@ jobs:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
           groups: testers
+          # Note: The path is now populated by the download step above
           file: sample/app/build/outputs/apk/deepDebug/app-deepDebug.apk
 
       - name: Publish GitHub release
