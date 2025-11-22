@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  # JOB 1: Build the APK
   build:
     runs-on: ubuntu-latest
     env:
@@ -28,7 +30,6 @@ jobs:
       - name: Build deepDebug APK
         run: ./gradlew --no-daemon clean :sample:app:assembleDeepDebug
 
-      # Archive the APK so the distribute job can see it
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -36,7 +37,6 @@ jobs:
           path: sample/app/build/outputs/apk/deepDebug/*.apk
           retention-days: 1
 
-  # JOB 2: Distribute using Official Firebase CLI
   distribute:
     needs: build
     runs-on: ubuntu-latest
@@ -60,29 +60,35 @@ jobs:
       - name: Upload to Firebase (Manual CLI)
         env:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-          # 1. Map the secret to an ENV variable here
           CREDENTIAL_CONTENT: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
           GOOGLE_APPLICATION_CREDENTIALS: service-account.json
         run: |
-          # 2. Echo the ENV variable (quoted), NOT the direct secret
           echo "$CREDENTIAL_CONTENT" > service-account.json
-
+          
           APK_PATH="sample/app/build/outputs/apk/deepDebug/app-deepDebug.apk"
 
           if [ ! -f "$APK_PATH" ]; then
             echo "Error: APK not found at $APK_PATH"
-            ls -R sample/app/build/outputs/apk/
             exit 1
           fi
 
-          # 3. Run with debug flags
+          # 2. LOGIC: Determine release notes based on event type
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            # For PRs: "PR #15: Title of the PR"
+            NOTES="PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
+          else
+            # For Master: "Commit SHA"
+            NOTES="Master Build: ${{ github.sha }}"
+          fi
+
           firebase appdistribution:distribute "$APK_PATH" \
             --app "$FIREBASE_APP_ID" \
             --groups "testers" \
-            --release-notes "Automated build from commit $GITHUB_SHA" \
+            --release-notes "$NOTES" \
             --debug
 
       - name: Publish GitHub release
+        if: github.event_name == 'push'
         uses: softprops/action-gh-release@v1
         with:
           tag_name: deep-debug-${{ github.run_number }}
