@@ -6,10 +6,9 @@ on:
       - master
 
 jobs:
-  # JOB 1: Build (Compiles the APK)
+  # JOB 1: Build the APK
   build:
     runs-on: ubuntu-latest
-    # Telegram keys are needed here for the build process
     env:
       TELEGRAM_APP_ID: ${{ secrets.TELEGRAM_APP_ID }}
       TELEGRAM_APP_HASH: ${{ secrets.TELEGRAM_APP_HASH }}
@@ -29,18 +28,17 @@ jobs:
       - name: Build deepDebug APK
         run: ./gradlew --no-daemon clean :sample:app:assembleDeepDebug
 
-      # Save the APK for the next job
+      # Archive the APK so the distribute job can see it
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: deep-debug-artifacts
-          # Uses wildcard to catch whatever file name Gradle produces
           path: sample/app/build/outputs/apk/deepDebug/*.apk
           retention-days: 1
 
-  # JOB 2: Distribute (Uploads to Firebase & GitHub)
+  # JOB 2: Distribute using Official Firebase CLI
   distribute:
-    needs: build # Waits for 'build' to finish
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -48,21 +46,43 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Download the APKs saved in the previous job
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
           name: deep-debug-artifacts
           path: sample/app/build/outputs/apk/deepDebug
 
-      - name: Upload to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
-        with:
-          appId: ${{ secrets.FIREBASE_APP_ID }}
-          serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
-          groups: testers
-          # Using your original file name:
-          file: sample/app/build/outputs/apk/deepDebug/app-deepDebug.apk
+      - name: Install Firebase CLI
+        run: |
+          npm install -g firebase-tools
+          firebase --version
+
+      - name: Upload to Firebase (Manual CLI)
+        env:
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          # Path to the temporary credential file we will create
+          GOOGLE_APPLICATION_CREDENTIALS: service-account.json
+        run: |
+          # 1. Create the auth file from the Secret string
+          echo "${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}" > service-account.json
+
+          # 2. Define the file path (Standard Gradle output)
+          APK_PATH="sample/app/build/outputs/apk/deepDebug/app-deepDebug.apk"
+
+          # 3. Verify file exists before trying to upload
+          if [ ! -f "$APK_PATH" ]; then
+            echo "Error: APK not found at $APK_PATH"
+            ls -R sample/app/build/outputs/apk/
+            exit 1
+          fi
+
+          # 4. Upload using the official CLI
+          # Note: We use the 'testers' group you created in previous steps
+          firebase appdistribution:distribute "$APK_PATH" \
+            --app "$FIREBASE_APP_ID" \
+            --groups "testers" \
+            --release-notes "Automated build from commit $GITHUB_SHA" \
+            --debug
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v1
