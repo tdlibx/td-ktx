@@ -16,6 +16,17 @@ implementation(project(":libtd-ktx"))
 ```
 
 The `libtd-ktx` module exposes TDLib (`com.github.tdlibx:td:1.8.56`) as an API dependency, so no extra TDLib declaration is required.
+Because TDLib ships only an `arm64-v8a` native binary, configure your app to filter to that ABI:
+
+```groovy
+android {
+    defaultConfig {
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+    }
+}
+```
 
 The project ships a TDLib wrapper module (`libtd-ktx`) and a Compose sample under `sample/` that demonstrates usage with Hilt and the Navigation 3 typed destination APIs.
 
