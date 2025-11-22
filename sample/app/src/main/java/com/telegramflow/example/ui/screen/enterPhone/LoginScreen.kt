@@ -56,13 +56,13 @@ fun LoginScreen(
     onNextClicked: () -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: LoginViewModel = hiltViewModel(),
-    password: String = remember { "" },
-    code: String = remember { "" },
-    authstate: State<AuthState?> = viewModel.authState.collectAsState(null),
+    password: String,
+    code: String,
+    authState: State<AuthState?> = viewModel.authState.collectAsState(null),
     loadingState: State<Boolean> = viewModel.isLoading.collectAsState()
 ) {
 
-    val state: AuthState?  = authstate.value
+    val state: AuthState? = authState.value
     val isLoading: Boolean = loadingState.value
     var isPasswordVisible by remember { mutableStateOf(false) }
 
@@ -147,7 +147,7 @@ fun LoginScreen(
                 singleLine = true,
                 enabled = !isLoading,
                 visualTransformation =
-                if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
@@ -158,7 +158,6 @@ fun LoginScreen(
                     .padding(8.dp)
             )
 
-            // Add a password visibility toggle button
             IconButton(
                 onClick = { isPasswordVisible = !isPasswordVisible },
                 modifier = Modifier.align(Alignment.End)
@@ -183,7 +182,6 @@ fun LoginScreen(
                     Text(stringResource(id = R.string.action_continue))
                 }
             }
-        // Override shapes to not use the ones coming from the MdcTheme
         MaterialTheme(shapes = Shapes()) {
             SnackbarHost(
                 hostState = snackbarHostState,
@@ -199,8 +197,7 @@ fun LoginScreen(
 
 @Preview
 @Composable
-private fun EnterPhoneScreenPreview(
-) {
+private fun EnterPhoneScreenPreview() {
     TelegramFlowComposeTheme {
         LoginScreen(
             phoneNumber = "",
@@ -210,7 +207,7 @@ private fun EnterPhoneScreenPreview(
             onCodeChanged = { },
             onPasswordChanged = { },
             onNextClicked = {},
-            authstate = remember {
+            authState = remember {
                 mutableStateOf(AuthState.EnterPhone)
             },
             loadingState = remember {

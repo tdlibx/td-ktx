@@ -152,20 +152,22 @@ private fun UsersPreview(
 ) {
     TelegramFlowComposeTheme {
         UsersScreen(
-            users = remember {
-                mutableStateOf(
-                    listOf(
-                        User(
-                            "John",
-                            "Doe",
-                            true
-                        ),
-                        User(
-                            "John",
-                            "Doe",
-                            false
-                        )
-                    )
+              users = remember {
+                  mutableStateOf(
+                      listOf(
+                          User(
+                              id = 1,
+                              "John",
+                              "Doe",
+                              true
+                          ),
+                          User(
+                              id = 2,
+                              "John",
+                              "Doe",
+                              false
+                          )
+                      )
                 )
             }
         )
