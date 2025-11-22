@@ -1,21 +1,22 @@
 package kotlinx.telegram.core
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.drinkless.tdlib.TdApi
 
 /**
  * Class that converts results handler from [TdApi] client to [Flow]
- * of the [TdApi.Object] using [MutableStateFlow]
+ * of the [TdApi.Object] using [MutableSharedFlow]
  */
-@ExperimentalCoroutinesApi
 class ResultHandlerStateFlow(
-    private val stateFlow: MutableStateFlow<TdApi.Object?> = MutableStateFlow(null)
-) : TelegramFlow.ResultHandlerFlow, Flow<TdApi.Object> by stateFlow.filterNotNull() {
+    private val sharedFlow: MutableSharedFlow<TdApi.Object> = MutableSharedFlow(
+        extraBufferCapacity = 64,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+) : TelegramFlow.ResultHandlerFlow, Flow<TdApi.Object> by sharedFlow {
 
     override fun onResult(result: TdApi.Object?) {
-        stateFlow.value = result
+        result?.let(sharedFlow::tryEmit)
     }
 }

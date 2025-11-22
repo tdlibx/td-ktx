@@ -5,7 +5,7 @@ import org.drinkless.tdlib.TdApi
 sealed class TelegramException(message: String) : Throwable(message) {
     object ClientNotAttached :
         TelegramException(
-            "Client is not attached. Please call TelegramScope.attachClient() " +
+            "Client is not attached. Please call TelegramFlow.attachClient() " +
                 "before calling a Telegram function"
         )
 
