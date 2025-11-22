@@ -5,7 +5,6 @@ package com.telegramflow.example.ui.screen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,8 +25,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: MainViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -43,15 +40,12 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun AppNavigation() {
         val navController = rememberNavController()
-        NavHost(navController = navController, startDestination = Screen.Dashboard.route) {
-
-            // Splash
-            composable(Screen.Users.route) {
+        NavHost(navController = navController, startDestination = LoginRoute) {
+            composable<UsersRoute> {
                 UsersScreen()
             }
 
-            // Dashboard
-            composable(Screen.Dashboard.route) {
+            composable<LoginRoute> {
                 var phoneNumber by remember { mutableStateOf("") }
                 var password by remember { mutableStateOf("") }
                 var code by remember { mutableStateOf("") }
@@ -63,12 +57,8 @@ class MainActivity : ComponentActivity() {
                     onCodeChanged = { code = it },
                     onPasswordChanged = { password = it },
                     onNextClicked = {
-                        navController.navigate(
-                            Screen.Users.route,
-                        ) {
-                            popUpTo(Screen.Dashboard.route) {
-                                inclusive = true
-                            }
+                        navController.navigate(UsersRoute) {
+                            popUpTo<LoginRoute> { inclusive = true }
                             launchSingleTop = true
                         }
                     }
