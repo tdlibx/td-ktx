@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.telegram.core.TelegramFlow
-import kotlinx.telegram.coroutines.attachClient
 import kotlinx.telegram.coroutines.checkAuthenticationCode
 import kotlinx.telegram.coroutines.checkAuthenticationPassword
 import kotlinx.telegram.coroutines.getUser
