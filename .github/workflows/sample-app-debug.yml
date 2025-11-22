@@ -60,24 +60,22 @@ jobs:
       - name: Upload to Firebase (Manual CLI)
         env:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-          # Path to the temporary credential file we will create
+          # 1. Map the secret to an ENV variable here
+          CREDENTIAL_CONTENT: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
           GOOGLE_APPLICATION_CREDENTIALS: service-account.json
         run: |
-          # 1. Create the auth file from the Secret string
-          echo "${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}" > service-account.json
+          # 2. Echo the ENV variable (quoted), NOT the direct secret
+          echo "$CREDENTIAL_CONTENT" > service-account.json
 
-          # 2. Define the file path (Standard Gradle output)
           APK_PATH="sample/app/build/outputs/apk/deepDebug/app-deepDebug.apk"
 
-          # 3. Verify file exists before trying to upload
           if [ ! -f "$APK_PATH" ]; then
             echo "Error: APK not found at $APK_PATH"
             ls -R sample/app/build/outputs/apk/
             exit 1
           fi
 
-          # 4. Upload using the official CLI
-          # Note: We use the 'testers' group you created in previous steps
+          # 3. Run with debug flags
           firebase appdistribution:distribute "$APK_PATH" \
             --app "$FIREBASE_APP_ID" \
             --groups "testers" \
