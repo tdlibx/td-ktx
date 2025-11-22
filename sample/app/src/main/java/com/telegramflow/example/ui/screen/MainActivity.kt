@@ -55,7 +55,6 @@ class MainActivity : ComponentActivity() {
                 var phoneNumber by remember { mutableStateOf("") }
                 var password by remember { mutableStateOf("") }
                 var code by remember { mutableStateOf("") }
-                var isLoading by remember { mutableStateOf(false) }
                 LoginScreen(
                     phoneNumber = phoneNumber,
                     password = password,
@@ -66,9 +65,13 @@ class MainActivity : ComponentActivity() {
                     onNextClicked = {
                         navController.navigate(
                             Screen.Users.route,
-                        )
-                    },
-                    isLoading = isLoading
+                        ) {
+                            popUpTo(Screen.Dashboard.route) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
         }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
@@ -27,12 +28,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -50,16 +54,33 @@ fun LoginScreen(
     onCodeChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onNextClicked: () -> Unit,
-    isLoading: Boolean,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: LoginViewModel = hiltViewModel(),
     password: String = remember { "" },
     code: String = remember { "" },
-    authstate: State<AuthState?> = viewModel.authState.collectAsState(null)
+    authstate: State<AuthState?> = viewModel.authState.collectAsState(null),
+    loadingState: State<Boolean> = viewModel.isLoading.collectAsState()
 ) {
 
     val state: AuthState?  = authstate.value
-    var isPasswordVisible: Boolean = remember { false }
+    val isLoading: Boolean = loadingState.value
+    var isPasswordVisible by remember { mutableStateOf(false) }
+
+    val canSubmit = when (state) {
+        is AuthState.EnterPhone -> phoneNumber.isNotBlank()
+        is AuthState.EnterCode -> code.isNotBlank()
+        is AuthState.EnterPassword -> password.isNotBlank()
+        else -> false
+    } && !isLoading
+
+    val onSubmit: () -> Unit = {
+        when (state) {
+            is AuthState.EnterPhone -> viewModel.phoneEntered(phoneNumber)
+            is AuthState.EnterCode -> viewModel.codeEntered(code)
+            is AuthState.EnterPassword -> viewModel.passwordEntered(password)
+            else -> {}
+        }
+    }
 
     LaunchedEffect(state) {
         if (state is AuthState.LoggedIn) {
@@ -81,15 +102,23 @@ fun LoginScreen(
                 .size(200.dp)
         )
 
-        Text(text = state?.dialogHint ?: "null")
+        Text(
+            text = state?.dialogHint ?: stringResource(id = R.string.welcome_hint),
+            style = MaterialTheme.typography.h6,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
         if (state is AuthState.EnterPhone)
             TextField(
                 value = phoneNumber,
                 onValueChange = onPhoneNumberChanged,
-                label = { state.dialogHint },
+                label = { Text(state.dialogHint) },
+                singleLine = true,
+                enabled = !isLoading,
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Go
                 ),
+                keyboardActions = KeyboardActions(onGo = { if (canSubmit) onSubmit() }),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -98,10 +127,14 @@ fun LoginScreen(
             TextField(
                 value = code,
                 onValueChange = onCodeChanged,
-                label = { state.dialogHint },
+                label = { Text(state.dialogHint) },
+                singleLine = true,
+                enabled = !isLoading,
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
                 ),
+                keyboardActions = KeyboardActions(onDone = { if (canSubmit) onSubmit() }),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -111,11 +144,15 @@ fun LoginScreen(
                 value = password,
                 onValueChange = onPasswordChanged,
                 label = { Text(state.dialogHint) },
+                singleLine = true,
+                enabled = !isLoading,
                 visualTransformation =
                 if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Password
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
                 ),
+                keyboardActions = KeyboardActions(onDone = { if (canSubmit) onSubmit() }),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -134,23 +171,18 @@ fun LoginScreen(
         }
         if (state !is AuthState.LoggedIn)
             Button(
-                onClick = {
-                    when {
-                        state is AuthState.EnterPhone -> viewModel.phoneEntered(phoneNumber)
-                        state is AuthState.EnterCode -> viewModel.codeEntered(code)
-                        state is AuthState.EnterPassword -> viewModel.passwordEntered(password)
-                    }
-                },
+                onClick = onSubmit,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                enabled = phoneNumber.isNotBlank() && !isLoading
+                enabled = canSubmit
             ) {
-                Text("Next")
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.size(20.dp))
+                } else {
+                    Text(stringResource(id = R.string.action_continue))
+                }
             }
-        if (isLoading) {
-            CircularProgressIndicator()
-        }
         // Override shapes to not use the ones coming from the MdcTheme
         MaterialTheme(shapes = Shapes()) {
             SnackbarHost(
@@ -178,9 +210,11 @@ private fun EnterPhoneScreenPreview(
             onCodeChanged = { },
             onPasswordChanged = { },
             onNextClicked = {},
-            isLoading = false,
             authstate = remember {
                 mutableStateOf(AuthState.EnterPhone)
+            },
+            loadingState = remember {
+                mutableStateOf(false)
             }
         )
     }
