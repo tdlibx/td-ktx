@@ -1,4 +1,4 @@
-name: Sample app deep-debug build
+name: Sample app release build
 
 on:
   push:
@@ -27,14 +27,14 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Build deepDebug APK
-        run: ./gradlew --no-daemon clean :sample:app:assembleDeepDebug
+      - name: Build Release APK
+        run: ./gradlew --no-daemon clean :sample:app:assembleRelease
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: deep-debug-artifacts
-          path: sample/app/build/outputs/apk/deepDebug/*.apk
+          name: release-artifacts
+          path: sample/app/build/outputs/apk/release/app-release.apk
           retention-days: 1
 
   distribute:
@@ -49,8 +49,8 @@ jobs:
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
-          name: deep-debug-artifacts
-          path: sample/app/build/outputs/apk/deepDebug
+          name: release-artifacts
+          path: sample/app/build/outputs/apk/release
 
       - name: Install Firebase CLI
         run: |
@@ -65,20 +65,20 @@ jobs:
         run: |
           echo "$CREDENTIAL_CONTENT" > service-account.json
           
-          APK_PATH="sample/app/build/outputs/apk/deepDebug/app-deepDebug.apk"
+          # CHANGED: Explicitly using app-release.apk
+          APK_PATH="sample/app/build/outputs/apk/release/app-release.apk"
 
           if [ ! -f "$APK_PATH" ]; then
             echo "Error: APK not found at $APK_PATH"
+            ls -R sample/app/build/outputs/apk/
             exit 1
           fi
 
           # 2. LOGIC: Determine release notes based on event type
           if [ "${{ github.event_name }}" == "pull_request" ]; then
-            # For PRs: "PR #15: Title of the PR"
             NOTES="PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
           else
-            # For Master: "Commit SHA"
-            NOTES="Master Build: ${{ github.sha }}"
+            NOTES="Master Release: ${{ github.sha }}"
           fi
 
           firebase appdistribution:distribute "$APK_PATH" \
@@ -91,12 +91,12 @@ jobs:
         if: github.event_name == 'push'
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: deep-debug-${{ github.run_number }}
-          name: DeepDebug build #${{ github.run_number }}
+          tag_name: release-${{ github.run_number }}
+          name: Release build #${{ github.run_number }}
           body: |
-            Automated deepDebug build for commit ${{ github.sha }} on master.
-            This release contains the sample Compose client APK built from sample/app's deepDebug variant.
-          prerelease: true
-          files: sample/app/build/outputs/apk/deepDebug/*.apk
+            Automated Release build for commit ${{ github.sha }} on master.
+            This release contains the sample Compose client APK built from sample/app's Release variant.
+          prerelease: false
+          files: sample/app/build/outputs/apk/release/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

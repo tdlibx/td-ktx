@@ -1,3 +1,5 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
@@ -10,17 +12,16 @@ group = 'com.github.tdlibx.td-ktx'
 
 android {
     namespace 'kotlinx.telegram'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         minSdk 21
-        targetSdk 34
+        targetSdk 36
     }
 
     buildTypes {
         release {
-            minifyEnabled = false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            consumerProguardFiles 'proguard-rules.txt'
         }
     }
 
@@ -40,7 +41,7 @@ android {
 
 dependencies {
     api 'com.github.tdlibx:td:1.8.56'
-    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.core:core-ktx:1.17.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
 }
@@ -49,7 +50,7 @@ repositories {
     mavenCentral()
 }
 
-tasks.register('dokkaMarkdown', org.jetbrains.dokka.gradle.DokkaTask) {
+tasks.register('dokkaMarkdown', DokkaTask) {
     outputFormat = 'gfm'
     outputDirectory = "$rootDir/wiki"
     dokkaSourceSets {
