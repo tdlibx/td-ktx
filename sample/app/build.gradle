@@ -96,7 +96,7 @@ dependencies {
     implementation 'androidx.compose.foundation:foundation-layout'
     implementation 'androidx.compose.material:material-icons-extended'
     implementation 'androidx.paging:paging-compose:3.3.6'
-    implementation 'androidx.compose.ui:ui-tooling'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
