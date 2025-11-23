@@ -61,7 +61,7 @@ private fun ThreadsList(threads: List<ThreadUiModel>) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(threads, key = { it.id }) { thread ->
+        items(threads, key = { "${thread.chatId}_${thread.id}" }) { thread ->
             ThreadItem(thread)
         }
     }
@@ -111,7 +111,7 @@ private fun ThreadItem(thread: ThreadUiModel) {
 @Composable
 private fun EmptyState() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "No active threads from the last week")
+        Text(text = "No active threads found in recent messages")
     }
 }
 

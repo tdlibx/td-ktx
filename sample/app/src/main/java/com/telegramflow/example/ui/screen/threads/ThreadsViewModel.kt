@@ -68,8 +68,6 @@ class ThreadsViewModel @Inject constructor(
         }
         Log.d(TAG, "Filtered group chats count: ${groups.size}")
 
-        val weekAgoInSeconds = (System.currentTimeMillis() / 1000) - SEVEN_DAYS_IN_SECONDS
-
         val deferredMessages = groups.map { chat ->
             async {
                 Log.d(TAG, "Fetching history for chat '${chat.title}' (${chat.id})")
@@ -98,8 +96,7 @@ class ThreadsViewModel @Inject constructor(
 
                     history.filter { message ->
                         val replyCount = message.interactionInfo?.replyInfo?.replyCount ?: 0
-                        val withinRange = message.date.toLong() >= weekAgoInSeconds
-                        val isThread = withinRange && replyCount > MIN_REPLY_COUNT
+                        val isThread = replyCount > MIN_REPLY_COUNT
                         if (isThread) {
                             Log.d(
                                 TAG,
@@ -119,8 +116,7 @@ class ThreadsViewModel @Inject constructor(
                     }
 
                     val lastMessage = history.last()
-                    val reachedWeekBoundary = lastMessage.date.toLong() < weekAgoInSeconds
-                    if (reachedWeekBoundary || history.size < HISTORY_LIMIT) {
+                    if (totalHistoryMessages >= HISTORY_LIMIT || history.size < HISTORY_LIMIT) {
                         break
                     }
                     fromMessageId = lastMessage.id
@@ -158,7 +154,6 @@ class ThreadsViewModel @Inject constructor(
     }
 
     companion object {
-        private const val SEVEN_DAYS_IN_SECONDS = 7 * 24 * 60 * 60
         private const val HISTORY_LIMIT = 100
         private const val CHAT_LIMIT = 100
         private const val MAX_HISTORY_PAGES = 5
