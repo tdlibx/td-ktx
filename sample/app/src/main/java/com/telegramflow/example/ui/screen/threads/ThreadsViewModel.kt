@@ -55,16 +55,16 @@ class ThreadsViewModel @Inject constructor(
     }
 
     private suspend fun fetchThreads(): List<ThreadUiModel> = withContext(Dispatchers.IO) {
+        val chatsResult = telegramFlow.getChats(chatList = null, limit = CHAT_LIMIT)
+        val chats = chatsResult.chatIds ?: longArrayOf()
+        Log.d(TAG, "Fetched chat ids count: ${chats.size}")
+
         runCatching {
-            telegramFlow.loadChats(chatList = null, limit = CHAT_LIMIT)
-            Log.d(TAG, "Requested chat load up to $CHAT_LIMIT items")
+            telegramFlow.loadChats(chatList = null, limit = chats.size.takeIf { it > 0 } ?: CHAT_LIMIT)
+            Log.d(TAG, "Requested chat load for ${chats.size} ids (fallback $CHAT_LIMIT)")
         }.onFailure { error ->
             Log.e(TAG, "Unable to load chats", error)
         }
-
-        val chats = telegramFlow.getChats(chatList = null, limit = CHAT_LIMIT).chatIds
-            ?: longArrayOf()
-        Log.d(TAG, "Fetched chat ids count: ${chats.size}")
         val groups = chats.toList().mapNotNull { chatId ->
             telegramFlow.getChat(chatId).takeIf { chat ->
                 when (val type = chat.type) {
