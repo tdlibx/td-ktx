@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'com.github.akrafts-gpt'
-version = '1.8.56-beta4'
+version = '1.8.56-beta5'
 
 android {
     namespace 'kotlinx.telegram'
@@ -52,6 +52,19 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.17.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = project.group
+                artifactId = 'td-ktx'
+                version = project.version
+            }
+        }
+    }
 }
 
 tasks.register('dokkaMarkdown', DokkaTask) {
