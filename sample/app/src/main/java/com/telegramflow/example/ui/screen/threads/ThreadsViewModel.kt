@@ -18,7 +18,6 @@ import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.getChat
 import kotlinx.telegram.coroutines.getChatHistory
 import kotlinx.telegram.coroutines.getChats
-import kotlinx.telegram.coroutines.loadChats
 import org.drinkless.tdlib.TdApi
 
 @HiltViewModel
@@ -58,13 +57,6 @@ class ThreadsViewModel @Inject constructor(
         val chatsResult = telegramFlow.getChats(chatList = null, limit = CHAT_LIMIT)
         val chats = chatsResult.chatIds ?: longArrayOf()
         Log.d(TAG, "Fetched chat ids count: ${chats.size}")
-
-        runCatching {
-            telegramFlow.loadChats(chatList = null, limit = chats.size.takeIf { it > 0 } ?: CHAT_LIMIT)
-            Log.d(TAG, "Requested chat load for ${chats.size} ids (fallback $CHAT_LIMIT)")
-        }.onFailure { error ->
-            Log.e(TAG, "Unable to load chats", error)
-        }
         val groups = chats.toList().mapNotNull { chatId ->
             telegramFlow.getChat(chatId).takeIf { chat ->
                 when (val type = chat.type) {
@@ -82,6 +74,7 @@ class ThreadsViewModel @Inject constructor(
             async {
                 Log.d(TAG, "Fetching history for chat '${chat.title}' (${chat.id})")
                 var fromMessageId = 0L
+                var offset = 0
                 var page = 0
                 var totalHistoryMessages = 0
                 val threadCandidates = mutableListOf<ThreadUiModel>()
@@ -90,7 +83,7 @@ class ThreadsViewModel @Inject constructor(
                     val history = telegramFlow.getChatHistory(
                         chatId = chat.id,
                         fromMessageId = fromMessageId,
-                        offset = 0,
+                        offset = offset,
                         limit = HISTORY_LIMIT,
                         onlyLocal = false
                     ).messages.orEmpty()
@@ -131,6 +124,7 @@ class ThreadsViewModel @Inject constructor(
                         break
                     }
                     fromMessageId = lastMessage.id
+                    offset = -1 // TDLib docs recommend -1 to start strictly before fromMessageId
                     page++
                 }
 
