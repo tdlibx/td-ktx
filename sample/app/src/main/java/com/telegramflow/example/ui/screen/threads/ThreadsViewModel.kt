@@ -18,7 +18,6 @@ import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.getChat
 import kotlinx.telegram.coroutines.getChatHistory
 import kotlinx.telegram.coroutines.getChats
-import kotlinx.telegram.coroutines.getMessageThreadHistory
 import org.drinkless.tdlib.TdApi
 
 @HiltViewModel
@@ -77,6 +76,8 @@ class ThreadsViewModel @Inject constructor(
                 var page = 0
                 val threadCandidates = mutableListOf<ThreadUiModel>()
                 val seenMessageIds = mutableSetOf<Long>()
+                val messagesById = mutableMapOf<Long, TdApi.Message>()
+                val repliesByParent = mutableMapOf<Long, MutableList<TdApi.Message>>()
 
                 while (page < MAX_HISTORY_PAGES && totalHistoryMessages < HISTORY_LIMIT) {
                     val history = telegramFlow.getChatHistory(
@@ -95,65 +96,12 @@ class ThreadsViewModel @Inject constructor(
 
                     if (history.isEmpty()) break
 
-                    history.filter { message ->
-                        val replyCount = message.interactionInfo?.replyInfo?.replyCount ?: 0
-                        val isThreadCandidate = replyCount > MIN_REPLY_COUNT
-                        if (isThreadCandidate) {
-                            Log.d(
-                                TAG,
-                                "Thread candidate in '${chat.title}': messageId=${message.id}, replies=$replyCount"
-                            )
-                        }
-                        isThreadCandidate
-                    }.forEach { message ->
+                    history.forEach { message ->
                         if (seenMessageIds.add(message.id)) {
-                            val threadHistory = runCatching {
-                                telegramFlow.getMessageThreadHistory(
-                                    chatId = chat.id,
-                                    messageId = message.id,
-                                    fromMessageId = 0,
-                                    offset = 0,
-                                    limit = THREAD_REPLY_LIMIT
-                                ).messages.orEmpty()
-                            }.onFailure {
-                                Log.w(
-                                    TAG,
-                                    "getMessageThreadHistory failed for messageId=${message.id} in '${chat.title}'",
-                                    it
-                                )
-                            }.getOrElse { emptyList() }
-
-                            val threadReplyCount = maxOf(
-                                message.interactionInfo?.replyInfo?.replyCount ?: 0,
-                                // +1 to include the root message if the API excludes it
-                                (threadHistory.size - 1).coerceAtLeast(0)
-                            )
-
-                            if (threadReplyCount > MIN_REPLY_COUNT) {
-                                Log.d(
-                                    TAG,
-                                    "Confirmed thread in '${chat.title}': messageId=${message.id}, replies=$threadReplyCount"
-                                )
-
-                                threadCandidates += ThreadUiModel(
-                                    id = message.id,
-                                    chatId = chat.id,
-                                    chatTitle = chat.title,
-                                    text = messageText(message),
-                                    replyCount = threadReplyCount,
-                                    date = message.date.toLong()
-                                )
-                            } else {
-                                Log.d(
-                                    TAG,
-                                    "Discarded candidate after thread fetch '${chat.title}': messageId=${message.id}, replies=$threadReplyCount"
-                                )
+                            messagesById[message.id] = message
+                            replyToMessageId(message)?.let { parentId ->
+                                repliesByParent.getOrPut(parentId) { mutableListOf() }.add(message)
                             }
-                        } else {
-                            Log.d(
-                                TAG,
-                                "Duplicate message skipped in '${chat.title}': messageId=${message.id}"
-                            )
                         }
                     }
 
@@ -161,6 +109,35 @@ class ThreadsViewModel @Inject constructor(
                     if (totalHistoryMessages >= HISTORY_LIMIT || history.size < HISTORY_LIMIT) break
                     fromMessageId = lastMessage.id
                     page++
+                }
+
+                val threadRoots = repliesByParent.keys.mapNotNull { messagesById[it] }
+                Log.d(
+                    TAG,
+                    "Collected ${messagesById.size} messages with ${threadRoots.size} potential roots in '${chat.title}'"
+                )
+
+                threadRoots.forEach { root ->
+                    val totalReplies = countReplies(root.id, repliesByParent)
+                    if (totalReplies > MIN_REPLY_COUNT) {
+                        threadCandidates += ThreadUiModel(
+                            id = root.id,
+                            chatId = chat.id,
+                            chatTitle = chat.title,
+                            text = messageText(root),
+                            replyCount = totalReplies,
+                            date = root.date.toLong()
+                        )
+                        Log.d(
+                            TAG,
+                            "Thread found in '${chat.title}': rootId=${root.id}, replies=$totalReplies"
+                        )
+                    } else {
+                        Log.d(
+                            TAG,
+                            "Skipped root ${root.id} in '${chat.title}' with replies=$totalReplies"
+                        )
+                    }
                 }
 
                 Log.d(
@@ -193,12 +170,26 @@ class ThreadsViewModel @Inject constructor(
         }
     }
 
+    private fun replyToMessageId(message: TdApi.Message): Long? {
+        return when (val reply = message.replyTo) {
+            is TdApi.MessageReplyToMessage -> reply.messageId
+            else -> null
+        }
+    }
+
+    private fun countReplies(
+        parentId: Long,
+        repliesByParent: Map<Long, List<TdApi.Message>>,
+    ): Int {
+        val replies = repliesByParent[parentId].orEmpty()
+        return replies.size + replies.sumOf { child -> countReplies(child.id, repliesByParent) }
+    }
+
     companion object {
         private const val HISTORY_LIMIT = 100
         private const val CHAT_LIMIT = 100
         private const val MAX_HISTORY_PAGES = 5
         private const val MIN_REPLY_COUNT = 2
-        private const val THREAD_REPLY_LIMIT = 100
         private const val TAG = "ThreadsViewModel"
     }
 }
