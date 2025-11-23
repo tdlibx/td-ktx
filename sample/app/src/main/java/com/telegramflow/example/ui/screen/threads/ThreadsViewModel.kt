@@ -73,13 +73,15 @@ class ThreadsViewModel @Inject constructor(
                 Log.d(TAG, "Fetching history for chat '${chat.title}' (${chat.id})")
                 var fromMessageId = 0L
                 var totalHistoryMessages = 0
+                var page = 0
                 val threadCandidates = mutableListOf<ThreadUiModel>()
+                val seenMessageIds = mutableSetOf<Long>()
 
-                for (page in 0 until MAX_HISTORY_PAGES) {
+                while (page < MAX_HISTORY_PAGES && totalHistoryMessages < HISTORY_LIMIT) {
                     val history = telegramFlow.getChatHistory(
                         chatId = chat.id,
                         fromMessageId = fromMessageId,
-                        offset = -1,
+                        offset = if (page == 0) 0 else -1,
                         limit = HISTORY_LIMIT,
                         onlyLocal = false
                     ).messages.orEmpty()
@@ -102,20 +104,28 @@ class ThreadsViewModel @Inject constructor(
                             )
                         }
                         isThread
-                    }.mapTo(threadCandidates) { message ->
-                        ThreadUiModel(
-                            id = message.id,
-                            chatId = chat.id,
-                            chatTitle = chat.title,
-                            text = messageText(message),
-                            replyCount = message.interactionInfo?.replyInfo?.replyCount ?: 0,
-                            date = message.date.toLong()
-                        )
+                    }.forEach { message ->
+                        if (seenMessageIds.add(message.id)) {
+                            threadCandidates += ThreadUiModel(
+                                id = message.id,
+                                chatId = chat.id,
+                                chatTitle = chat.title,
+                                text = messageText(message),
+                                replyCount = message.interactionInfo?.replyInfo?.replyCount ?: 0,
+                                date = message.date.toLong()
+                            )
+                        } else {
+                            Log.d(
+                                TAG,
+                                "Duplicate message skipped in '${chat.title}': messageId=${message.id}"
+                            )
+                        }
                     }
 
                     val lastMessage = history.last()
                     if (totalHistoryMessages >= HISTORY_LIMIT || history.size < HISTORY_LIMIT) break
                     fromMessageId = lastMessage.id
+                    page++
                 }
 
                 Log.d(
@@ -129,6 +139,7 @@ class ThreadsViewModel @Inject constructor(
 
         val results = deferredMessages.awaitAll()
             .flatten()
+            .distinctBy { it.chatId to it.id }
             .sortedByDescending { it.date }
 
         Log.d(TAG, "Total threads found: ${results.size}")
