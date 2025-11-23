@@ -18,6 +18,7 @@ import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.getChat
 import kotlinx.telegram.coroutines.getChatHistory
 import kotlinx.telegram.coroutines.getChats
+import kotlinx.telegram.coroutines.getMessageThread
 import org.drinkless.tdlib.TdApi
 
 @HiltViewModel
@@ -96,24 +97,50 @@ class ThreadsViewModel @Inject constructor(
 
                     history.filter { message ->
                         val replyCount = message.interactionInfo?.replyInfo?.replyCount ?: 0
-                        val isThread = replyCount > MIN_REPLY_COUNT
-                        if (isThread) {
+                        val isThreadCandidate = replyCount > MIN_REPLY_COUNT
+                        if (isThreadCandidate) {
                             Log.d(
                                 TAG,
                                 "Thread candidate in '${chat.title}': messageId=${message.id}, replies=$replyCount"
                             )
                         }
-                        isThread
+                        isThreadCandidate
                     }.forEach { message ->
                         if (seenMessageIds.add(message.id)) {
-                            threadCandidates += ThreadUiModel(
-                                id = message.id,
-                                chatId = chat.id,
-                                chatTitle = chat.title,
-                                text = messageText(message),
-                                replyCount = message.interactionInfo?.replyInfo?.replyCount ?: 0,
-                                date = message.date.toLong()
-                            )
+                            val threadInfo = runCatching {
+                                telegramFlow.getMessageThread(chat.id, message.id)
+                            }.onFailure {
+                                Log.w(
+                                    TAG,
+                                    "getMessageThread failed for messageId=${message.id} in '${chat.title}'",
+                                    it
+                                )
+                            }.getOrNull()
+
+                            val threadReplyCount = threadInfo?.replyInfo?.replyCount
+                                ?: message.interactionInfo?.replyInfo?.replyCount
+                                ?: 0
+
+                            if (threadReplyCount > MIN_REPLY_COUNT) {
+                                Log.d(
+                                    TAG,
+                                    "Confirmed thread in '${chat.title}': messageId=${message.id}, replies=$threadReplyCount"
+                                )
+
+                                threadCandidates += ThreadUiModel(
+                                    id = message.id,
+                                    chatId = chat.id,
+                                    chatTitle = chat.title,
+                                    text = messageText(message),
+                                    replyCount = threadReplyCount,
+                                    date = message.date.toLong()
+                                )
+                            } else {
+                                Log.d(
+                                    TAG,
+                                    "Discarded candidate after thread fetch '${chat.title}': messageId=${message.id}, replies=$threadReplyCount"
+                                )
+                            }
                         } else {
                             Log.d(
                                 TAG,
