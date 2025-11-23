@@ -18,7 +18,7 @@ import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.getChat
 import kotlinx.telegram.coroutines.getChatHistory
 import kotlinx.telegram.coroutines.getChats
-import kotlinx.telegram.coroutines.getMessageThread
+import kotlinx.telegram.coroutines.getMessageThreadHistory
 import org.drinkless.tdlib.TdApi
 
 @HiltViewModel
@@ -107,19 +107,27 @@ class ThreadsViewModel @Inject constructor(
                         isThreadCandidate
                     }.forEach { message ->
                         if (seenMessageIds.add(message.id)) {
-                            val threadInfo = runCatching {
-                                telegramFlow.getMessageThread(chat.id, message.id)
+                            val threadHistory = runCatching {
+                                telegramFlow.getMessageThreadHistory(
+                                    chatId = chat.id,
+                                    messageId = message.id,
+                                    fromMessageId = 0,
+                                    offset = 0,
+                                    limit = THREAD_REPLY_LIMIT
+                                ).messages.orEmpty()
                             }.onFailure {
                                 Log.w(
                                     TAG,
-                                    "getMessageThread failed for messageId=${message.id} in '${chat.title}'",
+                                    "getMessageThreadHistory failed for messageId=${message.id} in '${chat.title}'",
                                     it
                                 )
-                            }.getOrNull()
+                            }.getOrElse { emptyList() }
 
-                            val threadReplyCount = threadInfo?.replyInfo?.replyCount
-                                ?: message.interactionInfo?.replyInfo?.replyCount
-                                ?: 0
+                            val threadReplyCount = maxOf(
+                                message.interactionInfo?.replyInfo?.replyCount ?: 0,
+                                // +1 to include the root message if the API excludes it
+                                (threadHistory.size - 1).coerceAtLeast(0)
+                            )
 
                             if (threadReplyCount > MIN_REPLY_COUNT) {
                                 Log.d(
@@ -190,6 +198,7 @@ class ThreadsViewModel @Inject constructor(
         private const val CHAT_LIMIT = 100
         private const val MAX_HISTORY_PAGES = 5
         private const val MIN_REPLY_COUNT = 2
+        private const val THREAD_REPLY_LIMIT = 100
         private const val TAG = "ThreadsViewModel"
     }
 }
