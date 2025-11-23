@@ -1,7 +1,0 @@
-jdk:
-  - openjdk17
-install:
-  # We pass -P flags here.
-  # These are DUMMY values just to satisfy the 'sample/app' configuration check.
-  # Since we are only building ':libtd-ktx', the invalid keys won't actually break the app build.
-  - ./gradlew :libtd-ktx:assembleRelease :libtd-ktx:publishToMavenLocal -PtelegramAppId=12345 -PtelegramAppHash=dummy_hash_for_jitpack_build
