@@ -8,9 +8,8 @@ plugins {
     id 'maven-publish'
 }
 
-// Group matches your GitHub user
 group = 'com.github.akrafts-gpt'
-version = '1.8.56-beta1'
+version = '1.8.56-beta4'
 
 android {
     namespace 'kotlinx.telegram'

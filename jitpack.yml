@@ -1,0 +1,4 @@
+jdk:
+  - openjdk17
+install:
+  - ./gradlew :libtd-ktx:assembleRelease :libtd-ktx:publishToMavenLocal
