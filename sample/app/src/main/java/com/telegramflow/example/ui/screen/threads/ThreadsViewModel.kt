@@ -73,11 +73,10 @@ class ThreadsViewModel @Inject constructor(
                 Log.d(TAG, "Fetching history for chat '${chat.title}' (${chat.id})")
                 var fromMessageId = 0L
                 var offset = 0
-                var page = 0
                 var totalHistoryMessages = 0
                 val threadCandidates = mutableListOf<ThreadUiModel>()
 
-                while (page < MAX_HISTORY_PAGES) {
+                for (page in 0 until MAX_HISTORY_PAGES) {
                     val history = telegramFlow.getChatHistory(
                         chatId = chat.id,
                         fromMessageId = fromMessageId,
@@ -116,12 +115,9 @@ class ThreadsViewModel @Inject constructor(
                     }
 
                     val lastMessage = history.last()
-                    if (totalHistoryMessages >= HISTORY_LIMIT || history.size < HISTORY_LIMIT) {
-                        break
-                    }
+                    if (totalHistoryMessages >= HISTORY_LIMIT || history.size < HISTORY_LIMIT) break
                     fromMessageId = lastMessage.id
                     offset = -1 // TDLib docs recommend -1 to start strictly before fromMessageId
-                    page++
                 }
 
                 Log.d(

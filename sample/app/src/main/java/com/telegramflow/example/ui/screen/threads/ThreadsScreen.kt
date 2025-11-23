@@ -61,7 +61,7 @@ private fun ThreadsList(threads: List<ThreadUiModel>) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(threads, key = { "${thread.chatId}_${thread.id}" }) { thread ->
+        items(threads, key = { thread -> "${thread.chatId}_${thread.id}" }) { thread ->
             ThreadItem(thread)
         }
     }
