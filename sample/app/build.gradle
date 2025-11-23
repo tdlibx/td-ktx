@@ -114,7 +114,7 @@ dependencies {
 
     debugImplementation project(':libtd-ktx')
 
-    releaseImplementation 'com.github.akrafts-gpt:libtd-ktx:1.8.56-beta5'
+    releaseImplementation 'com.github.akrafts-gpt:td-ktx:1.8.56-beta5'
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.10.0'
