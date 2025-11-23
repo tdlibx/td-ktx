@@ -72,10 +72,6 @@ afterEvaluate {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 tasks.register('dokkaMarkdown', DokkaTask) {
     outputFormat = 'gfm'
     outputDirectory = "$rootDir/wiki"
