@@ -35,11 +35,10 @@ class ThreadsViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
-            val result = runCatching { fetchThreads() }
-
-            result.onSuccess { threads ->
+            try {
+                val threads = fetchThreads()
                 _uiState.value = ThreadsUiState(threads = threads, isLoading = false)
-            }.onFailure { throwable ->
+            } catch (throwable: Throwable) {
                 _uiState.update {
                     it.copy(
                         isLoading = false,
@@ -53,7 +52,7 @@ class ThreadsViewModel @Inject constructor(
     private suspend fun fetchThreads(): List<ThreadUiModel> = withContext(Dispatchers.IO) {
         val chats = telegramFlow.getChats(chatList = null, limit = CHAT_LIMIT).chatIds
             ?: longArrayOf()
-        val groups = chats.mapNotNull { chatId ->
+        val groups = chats.toList().mapNotNull { chatId ->
             telegramFlow.getChat(chatId).takeIf { chat ->
                 when (val type = chat.type) {
                     is TdApi.ChatTypeSupergroup -> !type.isChannel
