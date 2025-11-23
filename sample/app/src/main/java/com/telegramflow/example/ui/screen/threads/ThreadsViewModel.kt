@@ -118,7 +118,12 @@ class ThreadsViewModel @Inject constructor(
                 )
 
                 threadRoots.forEach { root ->
-                    val totalReplies = countReplies(root.id, repliesByParent)
+                    val flattenedReplies = collectReplies(
+                        parentId = root.id,
+                        repliesByParent = repliesByParent,
+                        depth = 1
+                    )
+                    val totalReplies = flattenedReplies.size
                     if (totalReplies > MIN_REPLY_COUNT) {
                         threadCandidates += ThreadUiModel(
                             id = root.id,
@@ -126,7 +131,8 @@ class ThreadsViewModel @Inject constructor(
                             chatTitle = chat.title,
                             text = messageText(root),
                             replyCount = totalReplies,
-                            date = root.date.toLong()
+                            date = root.date.toLong(),
+                            replies = flattenedReplies
                         )
                         Log.d(
                             TAG,
@@ -158,6 +164,30 @@ class ThreadsViewModel @Inject constructor(
         results
     }
 
+    private fun collectReplies(
+        parentId: Long,
+        repliesByParent: Map<Long, List<TdApi.Message>>,
+        depth: Int,
+    ): List<ThreadReplyUiModel> {
+        val replies = repliesByParent[parentId].orEmpty().sortedBy { it.date }
+        val replyItems = mutableListOf<ThreadReplyUiModel>()
+        replies.forEach { reply ->
+            replyItems += ThreadReplyUiModel(
+                id = reply.id,
+                chatId = reply.chatId,
+                text = messageText(reply),
+                depth = depth,
+                date = reply.date.toLong()
+            )
+            replyItems += collectReplies(
+                parentId = reply.id,
+                repliesByParent = repliesByParent,
+                depth = depth + 1
+            )
+        }
+        return replyItems
+    }
+
     private fun messageText(message: TdApi.Message): String {
         val content = message.content
         return when (content) {
@@ -177,14 +207,6 @@ class ThreadsViewModel @Inject constructor(
         }
     }
 
-    private fun countReplies(
-        parentId: Long,
-        repliesByParent: Map<Long, List<TdApi.Message>>,
-    ): Int {
-        val replies = repliesByParent[parentId].orEmpty()
-        return replies.size + replies.sumOf { child -> countReplies(child.id, repliesByParent) }
-    }
-
     companion object {
         private const val HISTORY_LIMIT = 100
         private const val CHAT_LIMIT = 100
@@ -200,6 +222,15 @@ data class ThreadUiModel(
     val chatTitle: String,
     val text: String,
     val replyCount: Int,
+    val date: Long,
+    val replies: List<ThreadReplyUiModel> = emptyList(),
+)
+
+data class ThreadReplyUiModel(
+    val id: Long,
+    val chatId: Long,
+    val text: String,
+    val depth: Int,
     val date: Long,
 )
 

@@ -88,23 +88,36 @@ private fun ThreadItem(thread: ThreadUiModel) {
                 fontWeight = FontWeight.Bold
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+            if (thread.replies.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Replies: ${thread.replyCount}",
+                    text = "Replies (${thread.replyCount})",
                     style = MaterialTheme.typography.labelLarge
                 )
-                Text(
-                    text = "in ${thread.chatTitle}",
-                    style = MaterialTheme.typography.labelLarge
-                )
+                Spacer(modifier = Modifier.height(4.dp))
+                RepliesList(thread.replies)
             }
         }
+    }
+}
+
+@Composable
+private fun RepliesList(replies: List<ThreadReplyUiModel>) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        replies.forEach { reply ->
+            ReplyItem(reply)
+        }
+    }
+}
+
+@Composable
+private fun ReplyItem(reply: ThreadReplyUiModel) {
+    val indent = (reply.depth * 12).dp
+    Column(modifier = Modifier.padding(start = indent)) {
+        Text(
+            text = reply.text,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
 
