@@ -18,6 +18,7 @@ import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.getChat
 import kotlinx.telegram.coroutines.getChatHistory
 import kotlinx.telegram.coroutines.getChats
+import kotlinx.telegram.coroutines.loadChats
 import org.drinkless.tdlib.TdApi
 
 @HiltViewModel
@@ -54,6 +55,13 @@ class ThreadsViewModel @Inject constructor(
     }
 
     private suspend fun fetchThreads(): List<ThreadUiModel> = withContext(Dispatchers.IO) {
+        runCatching {
+            telegramFlow.loadChats(chatList = null, limit = CHAT_LIMIT)
+            Log.d(TAG, "Requested chat load up to $CHAT_LIMIT items")
+        }.onFailure { error ->
+            Log.e(TAG, "Unable to load chats", error)
+        }
+
         val chats = telegramFlow.getChats(chatList = null, limit = CHAT_LIMIT).chatIds
             ?: longArrayOf()
         Log.d(TAG, "Fetched chat ids count: ${chats.size}")
@@ -73,38 +81,65 @@ class ThreadsViewModel @Inject constructor(
         val deferredMessages = groups.map { chat ->
             async {
                 Log.d(TAG, "Fetching history for chat '${chat.title}' (${chat.id})")
-                telegramFlow.getChatHistory(
-                    chatId = chat.id,
-                    fromMessageId = 0,
-                    offset = 0,
-                    limit = HISTORY_LIMIT,
-                    onlyLocal = false
-                ).messages.orEmpty().also { messages ->
+                var fromMessageId = 0L
+                var page = 0
+                var totalHistoryMessages = 0
+                val threadCandidates = mutableListOf<ThreadUiModel>()
+
+                while (page < MAX_HISTORY_PAGES) {
+                    val history = telegramFlow.getChatHistory(
+                        chatId = chat.id,
+                        fromMessageId = fromMessageId,
+                        offset = 0,
+                        limit = HISTORY_LIMIT,
+                        onlyLocal = false
+                    ).messages.orEmpty()
+
+                    totalHistoryMessages += history.size
                     Log.d(
                         TAG,
-                        "History for '${chat.title}' returned ${messages.size} messages"
+                        "History page=$page for '${chat.title}' size=${history.size} fromMessageId=$fromMessageId"
                     )
-                }.filter { message ->
-                    val replyCount = message.interactionInfo?.replyInfo?.replyCount ?: 0
-                    val withinRange = message.date.toLong() >= weekAgoInSeconds
-                    val isThread = withinRange && replyCount > MIN_REPLY_COUNT
-                    if (isThread) {
-                        Log.d(
-                            TAG,
-                            "Thread candidate in '${chat.title}': messageId=${message.id}, replies=$replyCount"
+
+                    if (history.isEmpty()) break
+
+                    history.filter { message ->
+                        val replyCount = message.interactionInfo?.replyInfo?.replyCount ?: 0
+                        val withinRange = message.date.toLong() >= weekAgoInSeconds
+                        val isThread = withinRange && replyCount > MIN_REPLY_COUNT
+                        if (isThread) {
+                            Log.d(
+                                TAG,
+                                "Thread candidate in '${chat.title}': messageId=${message.id}, replies=$replyCount"
+                            )
+                        }
+                        isThread
+                    }.mapTo(threadCandidates) { message ->
+                        ThreadUiModel(
+                            id = message.id,
+                            chatId = chat.id,
+                            chatTitle = chat.title,
+                            text = messageText(message),
+                            replyCount = message.interactionInfo?.replyInfo?.replyCount ?: 0,
+                            date = message.date.toLong()
                         )
                     }
-                    isThread
-                }.map { message ->
-                    ThreadUiModel(
-                        id = message.id,
-                        chatId = chat.id,
-                        chatTitle = chat.title,
-                        text = messageText(message),
-                        replyCount = message.interactionInfo?.replyInfo?.replyCount ?: 0,
-                        date = message.date.toLong()
-                    )
+
+                    val lastMessage = history.last()
+                    val reachedWeekBoundary = lastMessage.date.toLong() < weekAgoInSeconds
+                    if (reachedWeekBoundary || history.size < HISTORY_LIMIT) {
+                        break
+                    }
+                    fromMessageId = lastMessage.id
+                    page++
                 }
+
+                Log.d(
+                    TAG,
+                    "Finished '${chat.title}': scanned=$totalHistoryMessages, threads=${threadCandidates.size}"
+                )
+
+                threadCandidates
             }
         }
 
@@ -132,6 +167,7 @@ class ThreadsViewModel @Inject constructor(
         private const val SEVEN_DAYS_IN_SECONDS = 7 * 24 * 60 * 60
         private const val HISTORY_LIMIT = 100
         private const val CHAT_LIMIT = 100
+        private const val MAX_HISTORY_PAGES = 5
         private const val MIN_REPLY_COUNT = 2
         private const val TAG = "ThreadsViewModel"
     }

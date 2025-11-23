@@ -2,6 +2,7 @@ package com.telegramflow.example.ui.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Tab
@@ -26,7 +27,7 @@ fun MainScreen() {
     var selectedTab by remember { mutableStateOf(MainTab.UserOnline) }
     val tabs = MainTab.entries
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
         TabRow(selectedTabIndex = tabs.indexOf(selectedTab)) {
             tabs.forEach { tab ->
                 Tab(
