@@ -2,12 +2,12 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.9.24'
+        kotlin_version = '2.2.0'
         dokka_version = '1.9.20'
         compose_bom_version = '2024.06.00'
         compose_compiler_version = '1.5.14'
-        hilt_version = '2.51.1'
-        coroutines_version= '1.8.1'
+        hilt_version = '2.57.2'
+        coroutines_version= '1.10.2'
     }
 
     repositories {
@@ -15,13 +15,11 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.2'
+        classpath 'com.android.tools.build:gradle:8.13.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 

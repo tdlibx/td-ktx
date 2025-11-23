@@ -1,5 +1,7 @@
 # Telegram Flow for TDLib
 
+https://jitpack.io/v/akrafts-gpt/td-ktx.sv
+
 Telegram Flow is a Kotlin-first extension toolkit for [TDLib](https://github.com/tdlib/td) that turns callback-based Telegram API calls into coroutines and flows. It keeps your client code concise while exposing idiomatic Compose- and coroutine-friendly APIs.
 
 ## Features

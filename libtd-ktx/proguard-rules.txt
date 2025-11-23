@@ -1,0 +1,8 @@
+# libtd-ktx/proguard-rules.txt
+
+# The native C++ code searches for these classes by exact string name.
+# We must prevent R8 from renaming or removing them.
+-keep class org.drinkless.tdlib.** { *; }
+
+# Also keep the JNI interface if it exists in your package
+-keep class kotlinx.telegram.** { *; }
