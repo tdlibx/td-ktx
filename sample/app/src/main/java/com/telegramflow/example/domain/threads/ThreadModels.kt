@@ -1,4 +1,4 @@
-package com.telegramflow.example.data.threads
+package com.telegramflow.example.domain.threads
 
 /**
  * Thread models shared between repository and UI layers.

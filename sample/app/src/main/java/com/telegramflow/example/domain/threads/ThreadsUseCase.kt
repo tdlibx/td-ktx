@@ -1,54 +1,33 @@
-package com.telegramflow.example.data.repo
+package com.telegramflow.example.domain.threads
 
 import android.util.Log
-import com.telegramflow.example.data.threads.ThreadReplyUiModel
-import com.telegramflow.example.data.threads.ThreadUiModel
+import com.telegramflow.example.data.repo.TelegramRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
-import kotlinx.telegram.core.TelegramFlow
-import kotlinx.telegram.coroutines.downloadFile
-import kotlinx.telegram.coroutines.getChat
-import kotlinx.telegram.coroutines.getChatHistory
-import kotlinx.telegram.coroutines.getChats
-import kotlinx.telegram.coroutines.getUser
 import org.drinkless.tdlib.TdApi
 
 @Singleton
-class ThreadsRepository @Inject constructor(
-    private val telegramFlow: TelegramFlow,
+class ThreadsUseCase @Inject constructor(
+    private val telegramRepository: TelegramRepository,
 ) {
 
-    suspend fun fetchThreads(): List<ThreadUiModel> = withContext(Dispatchers.IO) {
-        val groups = fetchGroupChats()
-        Log.d(TAG, "Filtered group chats count: ${groups.size}")
-
-        val deferredMessages = groups.map { chat ->
-            async { fetchThreadsForChat(chat) }
-        }
-
-        deferredMessages.awaitAll()
-            .flatten()
-            .distinctBy { it.chatId to it.id }
-            .sortedByDescending { it.date }
-    }
-
     suspend fun fetchGroupChats(): List<TdApi.Chat> = withContext(Dispatchers.IO) {
-        val chatsResult = telegramFlow.getChats(chatList = null, limit = CHAT_LIMIT)
+        val chatsResult = telegramRepository.fetchChats(chatList = null, limit = CHAT_LIMIT)
         val chats = chatsResult.chatIds ?: longArrayOf()
         Log.d(TAG, "Fetched chat ids count: ${chats.size}")
 
         chats.toList().mapNotNull { chatId ->
-            telegramFlow.getChat(chatId).takeIf { chat ->
-                when (val type = chat.type) {
-                    is TdApi.ChatTypeSupergroup -> !type.isChannel
-                    is TdApi.ChatTypeBasicGroup -> true
-                    else -> false
+            runCatching { telegramRepository.fetchChat(chatId) }
+                .getOrNull()
+                ?.takeIf { chat ->
+                    when (val type = chat.type) {
+                        is TdApi.ChatTypeSupergroup -> !type.isChannel
+                        is TdApi.ChatTypeBasicGroup -> true
+                        else -> false
+                    }
                 }
-            }
         }
     }
 
@@ -66,18 +45,18 @@ class ThreadsRepository @Inject constructor(
         val filePaths = mutableMapOf<Int, String?>()
 
         while (page < MAX_HISTORY_PAGES && totalHistoryMessages < HISTORY_LIMIT) {
-            val history = telegramFlow.getChatHistory(
+            val history = telegramRepository.fetchChatHistory(
                 chatId = chat.id,
                 fromMessageId = fromMessageId,
                 offset = 0,
                 limit = HISTORY_LIMIT,
-                onlyLocal = false
+                onlyLocal = false,
             ).messages.orEmpty()
 
             totalHistoryMessages += history.size
             Log.d(
                 TAG,
-                "History page=$page for '${chat.title}' size=${history.size} fromMessageId=$fromMessageId"
+                "History page=$page for '${chat.title}' size=${history.size} fromMessageId=$fromMessageId",
             )
 
             if (history.isEmpty()) break
@@ -102,7 +81,7 @@ class ThreadsRepository @Inject constructor(
             .mapNotNull { messagesById[it] }
         Log.d(
             TAG,
-            "Collected ${messagesById.size} messages with ${threadRoots.size} potential roots in '${chat.title}'"
+            "Collected ${messagesById.size} messages with ${threadRoots.size} potential roots in '${chat.title}'",
         )
 
         threadRoots.forEach { root ->
@@ -112,7 +91,7 @@ class ThreadsRepository @Inject constructor(
                 depth = 1,
                 userNames = userNames,
                 chatNames = chatNames,
-                filePaths = filePaths
+                filePaths = filePaths,
             )
             val totalReplies = flattenedReplies.size
             if (totalReplies > MIN_REPLY_COUNT) {
@@ -125,23 +104,23 @@ class ThreadsRepository @Inject constructor(
                     photoPath = resolvePhotoPath(root, filePaths),
                     replyCount = totalReplies,
                     date = root.date.toLong(),
-                    replies = flattenedReplies
+                    replies = flattenedReplies,
                 )
                 Log.d(
                     TAG,
-                    "Thread found in '${chat.title}': rootId=${root.id}, replies=$totalReplies"
+                    "Thread found in '${chat.title}': rootId=${root.id}, replies=$totalReplies",
                 )
             } else {
                 Log.d(
                     TAG,
-                    "Skipped root ${root.id} in '${chat.title}' with replies=$totalReplies"
+                    "Skipped root ${root.id} in '${chat.title}' with replies=$totalReplies",
                 )
             }
         }
 
         Log.d(
             TAG,
-            "Finished '${chat.title}': scanned=$totalHistoryMessages, threads=${threadCandidates.size}"
+            "Finished '${chat.title}': scanned=$totalHistoryMessages, threads=${threadCandidates.size}",
         )
 
         return threadCandidates
@@ -165,7 +144,7 @@ class ThreadsRepository @Inject constructor(
                 text = messageText(reply),
                 photoPath = resolvePhotoPath(reply, filePaths),
                 depth = depth,
-                date = reply.date.toLong()
+                date = reply.date.toLong(),
             )
             replyItems += collectReplies(
                 parentId = reply.id,
@@ -173,7 +152,7 @@ class ThreadsRepository @Inject constructor(
                 depth = depth + 1,
                 userNames = userNames,
                 chatNames = chatNames,
-                filePaths = filePaths
+                filePaths = filePaths,
             )
         }
         return replyItems
@@ -197,12 +176,12 @@ class ThreadsRepository @Inject constructor(
             ?.takeIf { it.isNotBlank() }
         if (completedLocalPath != null) return completedLocalPath
 
-        val downloaded = telegramFlow.downloadFile(
+        val downloaded = telegramRepository.downloadFile(
             fileId = file.id,
             priority = 1,
             offset = 0,
             limit = 0,
-            synchronous = true
+            synchronous = true,
         )
 
         return downloaded.local?.takeIf { it.isDownloadingCompleted }?.path
@@ -218,7 +197,7 @@ class ThreadsRepository @Inject constructor(
             is TdApi.MessageSenderUser -> {
                 val userId = sender.userId
                 userNames.getOrPut(userId) {
-                    runCatching { telegramFlow.getUser(userId) }
+                    runCatching { telegramRepository.fetchUser(userId) }
                         .getOrNull()
                         ?.let { user ->
                             listOfNotNull(user.firstName, user.lastName)
@@ -233,7 +212,7 @@ class ThreadsRepository @Inject constructor(
             is TdApi.MessageSenderChat -> {
                 val senderChatId = sender.chatId
                 chatNames.getOrPut(senderChatId) {
-                    runCatching { telegramFlow.getChat(senderChatId) }
+                    runCatching { telegramRepository.fetchChat(senderChatId) }
                         .getOrNull()
                         ?.title
                         ?.takeIf { it.isNotBlank() }
@@ -268,6 +247,6 @@ class ThreadsRepository @Inject constructor(
         private const val CHAT_LIMIT = 100
         private const val MAX_HISTORY_PAGES = 5
         private const val MIN_REPLY_COUNT = 2
-        private const val TAG = "ThreadsRepository"
+        private const val TAG = "ThreadsUseCase"
     }
 }
