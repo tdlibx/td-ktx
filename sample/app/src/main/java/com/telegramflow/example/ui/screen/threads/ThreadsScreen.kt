@@ -48,6 +48,7 @@ import com.telegramflow.example.domain.threads.THREAD_URL_TAG
 import com.telegramflow.example.domain.threads.ThreadReplyUiModel
 import com.telegramflow.example.domain.threads.ThreadUiModel
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -334,18 +335,23 @@ private fun ReactionsRow(reactions: List<ReactionUiModel>) {
 }
 
 private val threadDayFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d")
+private val threadDayYearFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy")
 
 private fun formatThreadDateRange(startSeconds: Long, endSeconds: Long): String {
     val zone = ZoneId.systemDefault()
     val start = Instant.ofEpochSecond(minOf(startSeconds, endSeconds)).atZone(zone).toLocalDate()
     val end = Instant.ofEpochSecond(maxOf(startSeconds, endSeconds)).atZone(zone).toLocalDate()
+    val currentYear = LocalDate.now(zone).year
+    val includeYear = start.year != currentYear || end.year != currentYear
+    val startFormatter = if (includeYear) threadDayYearFormatter else threadDayFormatter
+    val endFormatter = if (includeYear && start.year != end.year) threadDayYearFormatter else startFormatter
 
     if (start == end) {
-        return threadDayFormatter.format(start)
+        return startFormatter.format(start)
     }
 
-    val startLabel = threadDayFormatter.format(start)
-    val endLabel = threadDayFormatter.format(end)
+    val startLabel = startFormatter.format(start)
+    val endLabel = endFormatter.format(end)
     return "$startLabel – $endLabel"
 }
 

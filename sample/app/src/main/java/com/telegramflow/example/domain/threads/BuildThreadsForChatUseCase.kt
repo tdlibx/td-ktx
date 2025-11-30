@@ -91,13 +91,14 @@ class BuildThreadsForChatUseCase @Inject constructor(
             val totalReplies = countReplies(root.id, repliesByParent)
 
             if (totalReplies > MIN_REPLY_COUNT) {
+                val rootText = messageText(root)
                 emit(
                     ThreadUiModel(
                         id = root.id,
                         chatId = chat.id,
                         chatTitle = chat.title,
                         senderName = resolveSenderName(root, userNames, chatNames),
-                        text = messageText(root),
+                        text = rootText,
                         richText = null,
                         reactions = mapReactions(root),
                         replyCount = totalReplies,
@@ -119,24 +120,32 @@ class BuildThreadsForChatUseCase @Inject constructor(
                     downloadMedia = true,
                     mentionNames = mentionNames,
                 )
-                emit(
+
+                val enrichedRoot = coroutineScope {
+                    val richTextDeferred = async { enrichMessageText(rootText, mentionNames) }
+                    val reactionsDeferred = async { fetchReactions(root, preferCached = false) }
+                    val photoDeferred = async { resolvePhotoPath(root, filePaths) }
+                    val avatarDeferred = async { resolveChatAvatar(chat, filePaths) }
+
                     ThreadUiModel(
                         id = root.id,
                         chatId = chat.id,
                         chatTitle = chat.title,
-                        chatAvatarPath = resolveChatAvatar(chat, filePaths),
+                        chatAvatarPath = avatarDeferred.await(),
                         senderName = resolveSenderName(root, userNames, chatNames),
-                        text = messageText(root),
-                        richText = enrichMessageText(messageText(root), mentionNames),
-                        photoPath = resolvePhotoPath(root, filePaths),
-                        reactions = loadReactionCounts(root),
+                        text = rootText,
+                        richText = richTextDeferred.await(),
+                        photoPath = photoDeferred.await(),
+                        reactions = reactionsDeferred.await(),
                         replyCount = totalReplies,
                         firstMessageDate = root.date.toLong(),
                         lastMessageDate = lastMessageDate(root, flattenedReplies),
                         replies = flattenedReplies,
                         isComplete = true,
-                    ),
-                )
+                    )
+                }
+
+                emit(enrichedRoot)
                 Log.d(
                     TAG,
                     "Thread found in '${chat.title}': rootId=${root.id}, replies=$totalReplies",
@@ -195,7 +204,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
         replies.take(if (shallow) PREVIEW_REPLY_LIMIT else replies.size).forEach { reply ->
             val text = messageText(reply)
             val reactionsDeferred = async {
-                if (shallow) mapReactions(reply) else loadReactionCounts(reply)
+                fetchReactions(reply, preferCached = shallow)
             }
             val richTextDeferred = async {
                 if (shallow) null else enrichMessageText(text, mentionNames)
@@ -262,17 +271,24 @@ class BuildThreadsForChatUseCase @Inject constructor(
             ?.takeIf { it.isNotBlank() }
     }
 
-    private suspend fun loadReactionCounts(message: TdApi.Message): List<ReactionUiModel> {
+    private suspend fun fetchReactions(
+        message: TdApi.Message,
+        preferCached: Boolean,
+    ): List<ReactionUiModel> {
         val cached = mapReactions(message)
         if (cached.isNotEmpty()) return cached
+        if (preferCached) return emptyList()
 
         val refreshed = runCatching {
             telegramRepository.fetchMessage(message.chatId, message.id)
         }.getOrNull()
+        val refreshedMapped = refreshed?.let { mapReactions(it) }.orEmpty()
+        if (refreshedMapped.isNotEmpty()) return refreshedMapped
 
-        val mapped = refreshed?.let { mapReactions(it) }.orEmpty()
-        if (mapped.isNotEmpty()) return mapped
+        return loadAddedReactionCounts(message)
+    }
 
+    private suspend fun loadAddedReactionCounts(message: TdApi.Message): List<ReactionUiModel> {
         val countsByLabel = mutableMapOf<String, Int>()
         var offset = ""
         do {
