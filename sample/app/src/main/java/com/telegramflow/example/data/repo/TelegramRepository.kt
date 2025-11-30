@@ -14,6 +14,7 @@ import kotlinx.telegram.coroutines.downloadFile
 import kotlinx.telegram.coroutines.getChat
 import kotlinx.telegram.coroutines.getChatHistory
 import kotlinx.telegram.coroutines.getChats
+import kotlinx.telegram.coroutines.getMessage
 import kotlinx.telegram.coroutines.getUser
 import kotlinx.telegram.coroutines.searchPublicChat
 import kotlinx.telegram.coroutines.setAuthenticationPhoneNumber
@@ -66,6 +67,10 @@ class TelegramRepository @Inject constructor(override val api: TelegramFlow) : U
 
     suspend fun fetchChat(chatId: Long): TdApi.Chat {
         return api.getChat(chatId)
+    }
+
+    suspend fun fetchMessage(chatId: Long, messageId: Long): TdApi.Message {
+        return api.getMessage(chatId = chatId, messageId = messageId)
     }
 
     suspend fun fetchChatHistory(

@@ -126,7 +126,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                         text = messageText(root),
                         richText = enrichMessageText(messageText(root), mentionNames),
                         photoPath = resolvePhotoPath(root, filePaths),
-                        reactions = mapReactions(root),
+                        reactions = loadReactionCounts(root),
                         replyCount = totalReplies,
                         date = root.date.toLong(),
                         replies = flattenedReplies,
@@ -181,7 +181,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                 text = text,
                 richText = if (shallow) null else enrichMessageText(text, mentionNames),
                 photoPath = if (downloadMedia) resolvePhotoPath(reply, filePaths) else null,
-                reactions = mapReactions(reply),
+                reactions = if (shallow) mapReactions(reply) else loadReactionCounts(reply),
                 depth = depth,
                 date = reply.date.toLong(),
             )
@@ -230,6 +230,17 @@ class BuildThreadsForChatUseCase @Inject constructor(
 
         return downloaded.local?.takeIf { it.isDownloadingCompleted }?.path
             ?.takeIf { it.isNotBlank() }
+    }
+
+    private suspend fun loadReactionCounts(message: TdApi.Message): List<ReactionUiModel> {
+        val cached = mapReactions(message)
+        if (cached.isNotEmpty()) return cached
+
+        val refreshed = runCatching {
+            telegramRepository.fetchMessage(message.chatId, message.id)
+        }.getOrNull()
+
+        return refreshed?.let { mapReactions(it) }.orEmpty()
     }
 
     private suspend fun resolveChatAvatar(
