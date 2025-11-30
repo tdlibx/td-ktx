@@ -1,6 +1,6 @@
 [versions]
 activity-compose = "1.12.0"
-agp = "8.1.0"
+agp = "8.13.1"
 coil-compose = "2.7.0"
 compose-bom = "2024.06.00"
 compose-compiler = "1.5.14"
