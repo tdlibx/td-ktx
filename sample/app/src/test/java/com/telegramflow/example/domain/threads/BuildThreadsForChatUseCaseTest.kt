@@ -1,6 +1,7 @@
 package com.telegramflow.example.domain.threads
 
 import com.telegramflow.example.data.repo.TelegramRepository
+import io.mockk.any
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -35,13 +36,10 @@ class BuildThreadsForChatUseCaseTest {
         val firstPage = messagesMock(root, reply1, reply2)
         val emptyPage = messagesMock()
         coEvery {
-            repository.fetchChatHistory(chatId = 10L, fromMessageId = 0L, offset = 0, limit = 100, onlyLocal = false)
-        } returns firstPage
-        coEvery {
-            repository.fetchChatHistory(chatId = 10L, fromMessageId = 3L, offset = 0, limit = 100, onlyLocal = false)
-        } returns emptyPage
+            repository.fetchChatHistory(chatId = 10L, fromMessageId = any(), offset = 0, limit = 100, onlyLocal = false)
+        } returnsMany listOf(firstPage, emptyPage)
 
-        coEvery { repository.fetchUser(any()) } returns userMock("Resolved")
+        coEvery { repository.fetchUser(any<Long>()) } returns userMock("Resolved")
 
         val threads = useCase(chat)
 
@@ -67,13 +65,10 @@ class BuildThreadsForChatUseCaseTest {
         val firstPage = messagesMock(root, child, nestedRootCandidate)
         val emptyPage = messagesMock()
         coEvery {
-            repository.fetchChatHistory(chatId = 20L, fromMessageId = 0L, offset = 0, limit = 100, onlyLocal = false)
-        } returns firstPage
-        coEvery {
-            repository.fetchChatHistory(chatId = 20L, fromMessageId = 7L, offset = 0, limit = 100, onlyLocal = false)
-        } returns emptyPage
+            repository.fetchChatHistory(chatId = 20L, fromMessageId = any(), offset = 0, limit = 100, onlyLocal = false)
+        } returnsMany listOf(firstPage, emptyPage)
 
-        coEvery { repository.fetchUser(any()) } returns userMock("Resolved")
+        coEvery { repository.fetchUser(any<Long>()) } returns userMock("Resolved")
 
         val threads = useCase(chat)
 
