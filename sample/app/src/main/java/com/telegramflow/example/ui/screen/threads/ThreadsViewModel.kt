@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.telegramflow.example.domain.threads.BuildThreadsForChatUseCase
 import com.telegramflow.example.domain.threads.FetchGroupChatsUseCase
 import com.telegramflow.example.domain.threads.ThreadUiModel
-import com.telegramflow.example.domain.files.DownloadFileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +20,6 @@ import kotlinx.coroutines.launch
 class ThreadsViewModel @Inject constructor(
     private val fetchGroupChats: FetchGroupChatsUseCase,
     private val buildThreadsForChat: BuildThreadsForChatUseCase,
-    private val downloadFile: DownloadFileUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<ThreadsUiState> = MutableStateFlow(ThreadsUiState())
@@ -55,7 +53,6 @@ class ThreadsViewModel @Inject constructor(
                                     .sortedByDescending { it.date }
                                 state.copy(threads = merged)
                             }
-                            enqueueMediaDownloads(chatThreads)
                         }
                     } catch (throwable: Throwable) {
                         Log.e(TAG, "Failed to load a chat's threads", throwable)
@@ -83,85 +80,6 @@ class ThreadsViewModel @Inject constructor(
 
     companion object {
         private const val TAG = "ThreadsViewModel"
-    }
-
-    private val inFlightDownloads = mutableSetOf<Int>()
-
-    private fun enqueueMediaDownloads(threads: List<ThreadUiModel>) {
-        threads.forEach { thread ->
-            enqueueDownload(
-                fileId = thread.chatAvatarFileId,
-                chatId = thread.chatId,
-                messageId = null,
-                isAvatar = true
-            )
-
-            enqueueDownload(
-                fileId = thread.photoFileId,
-                chatId = thread.chatId,
-                messageId = thread.id,
-                isAvatar = false
-            )
-
-            thread.replies.forEach { reply ->
-                enqueueDownload(
-                    fileId = reply.photoFileId,
-                    chatId = reply.chatId,
-                    messageId = reply.id,
-                    isAvatar = false
-                )
-            }
-        }
-    }
-
-    private fun enqueueDownload(fileId: Int?, chatId: Long, messageId: Long?, isAvatar: Boolean) {
-        if (fileId == null) return
-        if (!inFlightDownloads.add(fileId)) return
-
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching { downloadFile(fileId) }
-                .onFailure { Log.e(TAG, "Failed to download media $fileId", it) }
-                .getOrNull()
-                ?.let { path ->
-                    updateMediaPath(chatId = chatId, messageId = messageId, path = path, isAvatar = isAvatar)
-                }
-
-            inFlightDownloads.remove(fileId)
-        }
-    }
-
-    private fun updateMediaPath(chatId: Long, messageId: Long?, path: String, isAvatar: Boolean) {
-        _uiState.update { state ->
-            val updatedThreads = state.threads.map { thread ->
-                var current = thread
-
-                if (isAvatar && thread.chatId == chatId && thread.chatAvatarPath == null) {
-                    current = current.copy(chatAvatarPath = path)
-                }
-
-                if (!isAvatar && messageId != null) {
-                    if (thread.id == messageId && thread.photoPath == null) {
-                        current = current.copy(photoPath = path)
-                    }
-
-                    val updatedReplies = current.replies.map { reply ->
-                        if (reply.id == messageId && reply.photoPath == null) {
-                            reply.copy(photoPath = path)
-                        } else {
-                            reply
-                        }
-                    }
-
-                    if (updatedReplies !== current.replies) {
-                        current = current.copy(replies = updatedReplies)
-                    }
-                }
-
-                current
-            }
-
-            state.copy(threads = updatedThreads)
-        }
     }
 }
 
