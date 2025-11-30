@@ -111,7 +111,7 @@ class ThreadsViewModel @Inject constructor(
             val history = telegramFlow.getChatHistory(
                 chatId = chat.id,
                 fromMessageId = fromMessageId,
-                offset = if (page == 0) 0 else -1,
+                offset = 0,
                 limit = HISTORY_LIMIT,
                 onlyLocal = false
             ).messages.orEmpty()
@@ -134,7 +134,6 @@ class ThreadsViewModel @Inject constructor(
             }
 
             val lastMessage = history.last()
-            if (totalHistoryMessages >= HISTORY_LIMIT || history.size < HISTORY_LIMIT) break
             fromMessageId = lastMessage.id
             page++
         }
