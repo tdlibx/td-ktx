@@ -12,6 +12,8 @@ import com.telegramflow.example.domain.threads.ReactionUiModel
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -99,7 +101,8 @@ class BuildThreadsForChatUseCase @Inject constructor(
                         richText = null,
                         reactions = mapReactions(root),
                         replyCount = totalReplies,
-                        date = root.date.toLong(),
+                        firstMessageDate = root.date.toLong(),
+                        lastMessageDate = previewLastDate(root, previewReplies),
                         replies = previewReplies.take(PREVIEW_REPLY_LIMIT),
                         isComplete = false,
                     ),
@@ -128,7 +131,8 @@ class BuildThreadsForChatUseCase @Inject constructor(
                         photoPath = resolvePhotoPath(root, filePaths),
                         reactions = loadReactionCounts(root),
                         replyCount = totalReplies,
-                        date = root.date.toLong(),
+                        firstMessageDate = root.date.toLong(),
+                        lastMessageDate = lastMessageDate(root, flattenedReplies),
                         replies = flattenedReplies,
                         isComplete = true,
                     ),
@@ -159,6 +163,22 @@ class BuildThreadsForChatUseCase @Inject constructor(
         return replies.size + replies.sumOf { reply -> countReplies(reply.id, repliesByParent) }
     }
 
+    private fun previewLastDate(
+        root: TdApi.Message,
+        previewReplies: List<ThreadReplyUiModel>,
+    ): Long {
+        val latestReplyDate = previewReplies.maxOfOrNull { it.date } ?: root.date.toLong()
+        return maxOf(latestReplyDate, root.date.toLong())
+    }
+
+    private fun lastMessageDate(
+        root: TdApi.Message,
+        replies: List<ThreadReplyUiModel>,
+    ): Long {
+        val latestReplyDate = replies.maxOfOrNull { it.date } ?: root.date.toLong()
+        return maxOf(latestReplyDate, root.date.toLong())
+    }
+
     private suspend fun collectReplies(
         parentId: Long,
         repliesByParent: Map<Long, List<TdApi.Message>>,
@@ -169,19 +189,29 @@ class BuildThreadsForChatUseCase @Inject constructor(
         shallow: Boolean,
         downloadMedia: Boolean,
         mentionNames: MutableMap<String, String>,
-    ): List<ThreadReplyUiModel> {
+    ): List<ThreadReplyUiModel> = coroutineScope {
         val replies = repliesByParent[parentId].orEmpty().sortedBy { it.date }
         val replyItems = mutableListOf<ThreadReplyUiModel>()
         replies.take(if (shallow) PREVIEW_REPLY_LIMIT else replies.size).forEach { reply ->
             val text = messageText(reply)
+            val reactionsDeferred = async {
+                if (shallow) mapReactions(reply) else loadReactionCounts(reply)
+            }
+            val richTextDeferred = async {
+                if (shallow) null else enrichMessageText(text, mentionNames)
+            }
+            val photoDeferred = async {
+                if (downloadMedia) resolvePhotoPath(reply, filePaths) else null
+            }
+
             replyItems += ThreadReplyUiModel(
                 id = reply.id,
                 chatId = reply.chatId,
                 senderName = resolveSenderName(reply, userNames, chatNames),
                 text = text,
-                richText = if (shallow) null else enrichMessageText(text, mentionNames),
-                photoPath = if (downloadMedia) resolvePhotoPath(reply, filePaths) else null,
-                reactions = if (shallow) mapReactions(reply) else loadReactionCounts(reply),
+                richText = richTextDeferred.await(),
+                photoPath = photoDeferred.await(),
+                reactions = reactionsDeferred.await(),
                 depth = depth,
                 date = reply.date.toLong(),
             )
@@ -199,7 +229,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                 )
             }
         }
-        return replyItems
+        replyItems
     }
 
     private suspend fun resolvePhotoPath(
@@ -240,7 +270,29 @@ class BuildThreadsForChatUseCase @Inject constructor(
             telegramRepository.fetchMessage(message.chatId, message.id)
         }.getOrNull()
 
-        return refreshed?.let { mapReactions(it) }.orEmpty()
+        val mapped = refreshed?.let { mapReactions(it) }.orEmpty()
+        if (mapped.isNotEmpty()) return mapped
+
+        val countsByLabel = mutableMapOf<String, Int>()
+        var offset = ""
+        do {
+            val page = runCatching {
+                telegramRepository.fetchMessageAddedReactions(
+                    chatId = message.chatId,
+                    messageId = message.id,
+                    offset = offset,
+                    limit = ADDED_REACTION_PAGE_SIZE,
+                )
+            }.getOrNull()
+            val added = page?.reactions.orEmpty()
+            added.forEach { reaction ->
+                val label = reactionLabel(reaction.type) ?: return@forEach
+                countsByLabel[label] = countsByLabel.getOrDefault(label, 0) + 1
+            }
+            offset = page?.nextOffset.orEmpty()
+        } while (offset.isNotEmpty())
+
+        return countsByLabel.entries.map { (label, count) -> ReactionUiModel(label, count) }
     }
 
     private suspend fun resolveChatAvatar(
@@ -413,6 +465,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
         private const val MIN_REPLY_COUNT = 2
         private const val PREVIEW_REPLY_LIMIT = 3
         private val mentionRegex = "@[A-Za-z0-9_]{3,}".toRegex()
+        private const val ADDED_REACTION_PAGE_SIZE = 100
         private const val TAG = "BuildThreadsForChatUseCase"
     }
 }

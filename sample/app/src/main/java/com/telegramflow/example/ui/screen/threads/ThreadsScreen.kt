@@ -47,6 +47,9 @@ import com.telegramflow.example.domain.threads.ReactionUiModel
 import com.telegramflow.example.domain.threads.THREAD_URL_TAG
 import com.telegramflow.example.domain.threads.ThreadReplyUiModel
 import com.telegramflow.example.domain.threads.ThreadUiModel
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun ThreadsScreen(
@@ -123,6 +126,18 @@ private fun ThreadItem(thread: ThreadUiModel) {
                     )
                     Text(
                         text = "${thread.replyCount} replies",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                Spacer(modifier = Modifier.size(8.dp))
+
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = formatThreadDateRange(thread.firstMessageDate, thread.lastMessageDate),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
@@ -316,6 +331,22 @@ private fun ReactionsRow(reactions: List<ReactionUiModel>) {
             ReactionChip(reaction)
         }
     }
+}
+
+private val threadDayFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d")
+
+private fun formatThreadDateRange(startSeconds: Long, endSeconds: Long): String {
+    val zone = ZoneId.systemDefault()
+    val start = Instant.ofEpochSecond(minOf(startSeconds, endSeconds)).atZone(zone).toLocalDate()
+    val end = Instant.ofEpochSecond(maxOf(startSeconds, endSeconds)).atZone(zone).toLocalDate()
+
+    if (start == end) {
+        return threadDayFormatter.format(start)
+    }
+
+    val startLabel = threadDayFormatter.format(start)
+    val endLabel = threadDayFormatter.format(end)
+    return "$startLabel – $endLabel"
 }
 
 @Composable

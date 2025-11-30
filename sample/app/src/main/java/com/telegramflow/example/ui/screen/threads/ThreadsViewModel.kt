@@ -48,7 +48,7 @@ class ThreadsViewModel @Inject constructor(
                                     val filtered = state.threads
                                         .filterNot { it.chatId == thread.chatId && it.id == thread.id }
                                     val merged = (filtered + thread)
-                                        .sortedByDescending { it.date }
+                                        .sortedByDescending { it.lastMessageDate }
                                     state.copy(threads = merged)
                                 }
                             }

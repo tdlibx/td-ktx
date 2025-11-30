@@ -73,6 +73,22 @@ class TelegramRepository @Inject constructor(override val api: TelegramFlow) : U
         return api.getMessage(chatId = chatId, messageId = messageId)
     }
 
+    suspend fun fetchMessageAddedReactions(
+        chatId: Long,
+        messageId: Long,
+        reactionType: TdApi.ReactionType? = null,
+        offset: String = "",
+        limit: Int = 100,
+    ): TdApi.AddedReactions {
+        return api.getMessageAddedReactions(
+            chatId = chatId,
+            messageId = messageId,
+            reactionType = reactionType,
+            offset = offset,
+            limit = limit,
+        )
+    }
+
     suspend fun fetchChatHistory(
         chatId: Long,
         fromMessageId: Long,

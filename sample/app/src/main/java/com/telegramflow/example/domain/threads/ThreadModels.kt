@@ -16,7 +16,8 @@ data class ThreadUiModel(
     val photoPath: String? = null,
     val reactions: List<ReactionUiModel> = emptyList(),
     val replyCount: Int,
-    val date: Long,
+    val firstMessageDate: Long,
+    val lastMessageDate: Long,
     val replies: List<ThreadReplyUiModel> = emptyList(),
     val isComplete: Boolean = true,
 )
