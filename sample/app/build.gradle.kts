@@ -1,3 +1,5 @@
+import org.gradle.api.GradleException
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -7,67 +9,66 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
-def readTelegramCredential(String propertyKey, String envKey) {
-    def propertyValue = project.findProperty(propertyKey)?.toString()?.trim()
-    if (propertyValue) {
+fun readTelegramCredential(propertyKey: String, envKey: String): String {
+    val propertyValue = findProperty(propertyKey)?.toString()?.trim()
+    if (!propertyValue.isNullOrEmpty()) {
         return propertyValue
     }
 
-    def envValue = System.getenv(envKey)?.toString()?.trim()
-    if (envValue) {
+    val envValue = System.getenv(envKey)?.toString()?.trim()
+    if (!envValue.isNullOrEmpty()) {
         return envValue
     }
 
-    throw new GradleException("Missing Telegram credential. Provide '$propertyKey' Gradle property or '$envKey' environment variable.")
+    throw GradleException("Missing Telegram credential. Provide '$propertyKey' Gradle property or '$envKey' environment variable.")
 }
 
 android {
-    namespace 'com.telegramflow.example'
-    compileSdk 36
+    namespace = "com.telegramflow.example"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId "com.telegramflow.example"
-        minSdk 24
-        targetSdk 36
-        versionCode 20240621
-        versionName "0.1.0"
+        applicationId = "com.telegramflow.example"
+        minSdk = 24
+        targetSdk = 36
+        versionCode = 20240621
+        versionName = "0.1.0"
 
-        def telegramAppId = readTelegramCredential("telegramAppId", "TELEGRAM_APP_ID").toInteger()
-        def telegramAppHash = readTelegramCredential("telegramAppHash", "TELEGRAM_APP_HASH")
+        val telegramAppId = readTelegramCredential("telegramAppId", "TELEGRAM_APP_ID").toInt()
+        val telegramAppHash = readTelegramCredential("telegramAppHash", "TELEGRAM_APP_HASH")
 
-        buildConfigField "int", "TELEGRAM_APP_ID", telegramAppId.toString()
-        buildConfigField "String", "TELEGRAM_APP_HASH", "\"${telegramAppHash}\""
+        buildConfigField("int", "TELEGRAM_APP_ID", telegramAppId.toString())
+        buildConfigField("String", "TELEGRAM_APP_HASH", "\"$telegramAppHash\"")
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
-            useSupportLibrary true
+            useSupportLibrary = true
         }
-
     }
 
     buildTypes {
         release {
-            minifyEnabled = true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig = signingConfigs.debug
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
         }
         debug {
-            debuggable = true
+            isDebuggable = true
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = "17"
     }
     buildFeatures {
-        compose true
-        buildConfig true
+        compose = true
+        buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion libs.versions.compose.compiler.get()
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     packaging {
         resources {
@@ -77,8 +78,8 @@ android {
 }
 
 dependencies {
-    implementation platform(libs.androidx.compose.bom)
-    androidTestImplementation platform(libs.androidx.compose.bom)
+    implementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
 
     implementation(libs.androidx.constraintlayout.compose)
 
@@ -112,7 +113,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
-    debugImplementation project(':libtd-ktx')
+    debugImplementation(project(":libtd-ktx"))
 
     releaseImplementation(libs.td.ktx)
 
