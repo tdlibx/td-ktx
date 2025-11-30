@@ -107,17 +107,17 @@ private fun ThreadItem(thread: ThreadUiModel) {
     ) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                AvatarPlaceholder(name = thread.senderName)
+                ChatAvatar(avatarPath = thread.chatAvatarPath, fallbackName = thread.chatTitle)
                 Spacer(modifier = Modifier.size(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = thread.senderName.ifBlank { "Unknown" },
+                        text = thread.chatTitle,
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "in ${thread.chatTitle}",
+                        text = "${thread.replyCount} replies",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
@@ -245,20 +245,31 @@ private fun ReactionChip(reaction: ReactionUiModel) {
 }
 
 @Composable
-private fun AvatarPlaceholder(name: String) {
-    val initials = name.trim().takeIf { it.isNotEmpty() }?.firstOrNull()?.uppercaseChar() ?: 'U'
-    Box(
-        modifier = Modifier
-            .size(44.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.primaryContainer),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = initials.toString(),
-            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+private fun ChatAvatar(avatarPath: String?, fallbackName: String) {
+    val initials = fallbackName.trim().takeIf { it.isNotEmpty() }?.firstOrNull()?.uppercaseChar() ?: 'U'
+    if (avatarPath != null) {
+        AsyncImage(
+            model = avatarPath,
+            contentDescription = "Chat avatar",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(44.dp)
+                .clip(CircleShape)
         )
+    } else {
+        Box(
+            modifier = Modifier
+                .size(44.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primaryContainer),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = initials.toString(),
+                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
     }
 }
 

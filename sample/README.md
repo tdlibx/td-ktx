@@ -12,5 +12,6 @@ This sample demonstrates how to build a tabbed Telegram client UI using the td-k
 7. Telegram API access is centralized in a repository, with dedicated use cases for fetching group chats and building threads per chat.
 8. Message reactions are surfaced alongside each message in a thread when available.
 9. Threads tab UI mirrors modern X/Threads-style cards with avatar placeholders, chat context, reply connectors, and pill reactions.
+10. Group chat avatars are fetched and shown on thread cards while sender names remain within message content to avoid duplication.
 
 Update this log whenever new business-level functionality is added to the sample.

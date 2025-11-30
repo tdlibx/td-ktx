@@ -25,6 +25,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
         val userNames = mutableMapOf<Long, String>()
         val chatNames = mutableMapOf<Long, String>()
         val filePaths = mutableMapOf<Int, String?>()
+        val chatAvatarPath = resolveChatAvatar(chat, filePaths)
 
         while (page < MAX_HISTORY_PAGES && totalHistoryMessages < HISTORY_LIMIT) {
             val history = telegramRepository.fetchChatHistory(
@@ -81,6 +82,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                     id = root.id,
                     chatId = chat.id,
                     chatTitle = chat.title,
+                    chatAvatarPath = chatAvatarPath,
                     senderName = resolveSenderName(root, userNames, chatNames),
                     text = messageText(root),
                     photoPath = resolvePhotoPath(root, filePaths),
@@ -170,6 +172,25 @@ class BuildThreadsForChatUseCase @Inject constructor(
 
         return downloaded.local?.takeIf { it.isDownloadingCompleted }?.path
             ?.takeIf { it.isNotBlank() }
+    }
+
+    private suspend fun resolveChatAvatar(
+        chat: TdApi.Chat,
+        filePaths: MutableMap<Int, String?>,
+    ): String? {
+        val file = chat.photo?.small ?: return null
+        return filePaths.getOrPut(file.id) {
+            runCatching {
+                telegramRepository.downloadFile(
+                    fileId = file.id,
+                    priority = 1,
+                    offset = 0L,
+                    limit = 0L,
+                    synchronous = true,
+                ).local?.takeIf { it.isDownloadingCompleted }?.path
+                    ?.takeIf { it.isNotBlank() }
+            }.getOrNull()
+        }
     }
 
     private fun mapReactions(message: TdApi.Message): List<ReactionUiModel> {

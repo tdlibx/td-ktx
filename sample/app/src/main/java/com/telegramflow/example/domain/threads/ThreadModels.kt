@@ -7,6 +7,7 @@ data class ThreadUiModel(
     val id: Long,
     val chatId: Long,
     val chatTitle: String,
+    val chatAvatarPath: String? = null,
     val senderName: String,
     val text: String,
     val photoPath: String? = null,
