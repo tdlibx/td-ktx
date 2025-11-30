@@ -143,7 +143,10 @@ class ThreadsViewModel @Inject constructor(
             page++
         }
 
-        val threadRoots = repliesByParent.keys.mapNotNull { messagesById[it] }
+        val repliedMessageIds = repliesByParent.values.flatten().map { it.id }.toSet()
+        val threadRoots = repliesByParent.keys
+            .filterNot { it in repliedMessageIds }
+            .mapNotNull { messagesById[it] }
         Log.d(
             TAG,
             "Collected ${messagesById.size} messages with ${threadRoots.size} potential roots in '${chat.title}'"
