@@ -9,12 +9,13 @@ import com.telegramflow.example.domain.threads.ThreadUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.flow.collect
 
 @HiltViewModel
 class ThreadsViewModel @Inject constructor(
@@ -38,27 +39,27 @@ class ThreadsViewModel @Inject constructor(
                 val groups = fetchGroupChats()
                 Log.d(TAG, "Filtered group chats count: ${groups.size}")
 
-                val deferredMessages = groups.map { chat ->
-                    async(Dispatchers.IO) { buildThreadsForChat(chat) }
-                }
-
                 var firstError: Throwable? = null
-                deferredMessages.forEach { deferred ->
-                    try {
-                        val chatThreads = deferred.await()
-                        if (chatThreads.isNotEmpty()) {
-                            _uiState.update { state ->
-                                val merged = (state.threads + chatThreads)
-                                    .distinctBy { it.chatId to it.id }
-                                    .sortedByDescending { it.date }
-                                state.copy(threads = merged)
+                val jobs = groups.map { chat ->
+                    viewModelScope.launch(Dispatchers.IO) {
+                        try {
+                            buildThreadsForChat(chat).collect { thread ->
+                                _uiState.update { state ->
+                                    val filtered = state.threads
+                                        .filterNot { it.chatId == thread.chatId && it.id == thread.id }
+                                    val merged = (filtered + thread)
+                                        .sortedByDescending { it.date }
+                                    state.copy(threads = merged)
+                                }
                             }
+                        } catch (throwable: Throwable) {
+                            Log.e(TAG, "Failed to load a chat's threads", throwable)
+                            if (firstError == null) firstError = throwable
                         }
-                    } catch (throwable: Throwable) {
-                        Log.e(TAG, "Failed to load a chat's threads", throwable)
-                        if (firstError == null) firstError = throwable
                     }
                 }
+
+                jobs.joinAll()
 
                 _uiState.update {
                     it.copy(

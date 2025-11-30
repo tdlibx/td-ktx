@@ -6,26 +6,26 @@ import com.telegramflow.example.domain.threads.ReactionUiModel
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import org.drinkless.tdlib.TdApi
 
 @Singleton
 class BuildThreadsForChatUseCase @Inject constructor(
     private val telegramRepository: TelegramRepository,
 ) {
-    suspend operator fun invoke(chat: TdApi.Chat): List<ThreadUiModel> = withContext(Dispatchers.IO) {
+    operator fun invoke(chat: TdApi.Chat): Flow<ThreadUiModel> = flow {
         Log.d(TAG, "Fetching history for chat '${chat.title}' (${chat.id})")
         var fromMessageId = 0L
         var totalHistoryMessages = 0
         var page = 0
-        val threadCandidates = mutableListOf<ThreadUiModel>()
         val seenMessageIds = mutableSetOf<Long>()
         val messagesById = mutableMapOf<Long, TdApi.Message>()
         val repliesByParent = mutableMapOf<Long, MutableList<TdApi.Message>>()
         val userNames = mutableMapOf<Long, String>()
         val chatNames = mutableMapOf<Long, String>()
         val filePaths = mutableMapOf<Int, String?>()
-        val chatAvatarPath = resolveChatAvatar(chat, filePaths)
 
         while (page < MAX_HISTORY_PAGES && totalHistoryMessages < HISTORY_LIMIT) {
             val history = telegramRepository.fetchChatHistory(
@@ -68,28 +68,57 @@ class BuildThreadsForChatUseCase @Inject constructor(
         )
 
         threadRoots.forEach { root ->
-            val flattenedReplies = collectReplies(
+            val previewReplies = collectReplies(
                 parentId = root.id,
                 repliesByParent = repliesByParent,
                 depth = 1,
                 userNames = userNames,
                 chatNames = chatNames,
                 filePaths = filePaths,
+                shallow = true,
+                downloadMedia = false,
             )
-            val totalReplies = flattenedReplies.size
+            val totalReplies = countReplies(root.id, repliesByParent)
+
             if (totalReplies > MIN_REPLY_COUNT) {
-                threadCandidates += ThreadUiModel(
-                    id = root.id,
-                    chatId = chat.id,
-                    chatTitle = chat.title,
-                    chatAvatarPath = chatAvatarPath,
-                    senderName = resolveSenderName(root, userNames, chatNames),
-                    text = messageText(root),
-                    photoPath = resolvePhotoPath(root, filePaths),
-                    reactions = mapReactions(root),
-                    replyCount = totalReplies,
-                    date = root.date.toLong(),
-                    replies = flattenedReplies,
+                emit(
+                    ThreadUiModel(
+                        id = root.id,
+                        chatId = chat.id,
+                        chatTitle = chat.title,
+                        senderName = resolveSenderName(root, userNames, chatNames),
+                        text = messageText(root),
+                        reactions = mapReactions(root),
+                        replyCount = totalReplies,
+                        date = root.date.toLong(),
+                        replies = previewReplies.take(PREVIEW_REPLY_LIMIT),
+                    ),
+                )
+
+                val flattenedReplies = collectReplies(
+                    parentId = root.id,
+                    repliesByParent = repliesByParent,
+                    depth = 1,
+                    userNames = userNames,
+                    chatNames = chatNames,
+                    filePaths = filePaths,
+                    shallow = false,
+                    downloadMedia = true,
+                )
+                emit(
+                    ThreadUiModel(
+                        id = root.id,
+                        chatId = chat.id,
+                        chatTitle = chat.title,
+                        chatAvatarPath = resolveChatAvatar(chat, filePaths),
+                        senderName = resolveSenderName(root, userNames, chatNames),
+                        text = messageText(root),
+                        photoPath = resolvePhotoPath(root, filePaths),
+                        reactions = mapReactions(root),
+                        replyCount = totalReplies,
+                        date = root.date.toLong(),
+                        replies = flattenedReplies,
+                    ),
                 )
                 Log.d(
                     TAG,
@@ -105,10 +134,16 @@ class BuildThreadsForChatUseCase @Inject constructor(
 
         Log.d(
             TAG,
-            "Finished '${chat.title}': scanned=$totalHistoryMessages, threads=${threadCandidates.size}",
+            "Finished '${chat.title}': scanned=$totalHistoryMessages, threads=${threadRoots.size}",
         )
+    }.flowOn(Dispatchers.IO)
 
-        threadCandidates
+    private fun countReplies(
+        parentId: Long,
+        repliesByParent: Map<Long, List<TdApi.Message>>,
+    ): Int {
+        val replies = repliesByParent[parentId].orEmpty()
+        return replies.size + replies.sumOf { reply -> countReplies(reply.id, repliesByParent) }
     }
 
     private suspend fun collectReplies(
@@ -118,28 +153,34 @@ class BuildThreadsForChatUseCase @Inject constructor(
         userNames: MutableMap<Long, String>,
         chatNames: MutableMap<Long, String>,
         filePaths: MutableMap<Int, String?>,
+        shallow: Boolean,
+        downloadMedia: Boolean,
     ): List<ThreadReplyUiModel> {
         val replies = repliesByParent[parentId].orEmpty().sortedBy { it.date }
         val replyItems = mutableListOf<ThreadReplyUiModel>()
-        replies.forEach { reply ->
+        replies.take(if (shallow) PREVIEW_REPLY_LIMIT else replies.size).forEach { reply ->
             replyItems += ThreadReplyUiModel(
                 id = reply.id,
                 chatId = reply.chatId,
                 senderName = resolveSenderName(reply, userNames, chatNames),
                 text = messageText(reply),
-                photoPath = resolvePhotoPath(reply, filePaths),
+                photoPath = if (downloadMedia) resolvePhotoPath(reply, filePaths) else null,
                 reactions = mapReactions(reply),
                 depth = depth,
                 date = reply.date.toLong(),
             )
-            replyItems += collectReplies(
-                parentId = reply.id,
-                repliesByParent = repliesByParent,
-                depth = depth + 1,
-                userNames = userNames,
-                chatNames = chatNames,
-                filePaths = filePaths,
-            )
+            if (!shallow) {
+                replyItems += collectReplies(
+                    parentId = reply.id,
+                    repliesByParent = repliesByParent,
+                    depth = depth + 1,
+                    userNames = userNames,
+                    chatNames = chatNames,
+                    filePaths = filePaths,
+                    shallow = false,
+                    downloadMedia = downloadMedia,
+                )
+            }
         }
         return replyItems
     }
@@ -267,6 +308,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
         private const val HISTORY_LIMIT = 100
         private const val MAX_HISTORY_PAGES = 5
         private const val MIN_REPLY_COUNT = 2
+        private const val PREVIEW_REPLY_LIMIT = 3
         private const val TAG = "BuildThreadsForChatUseCase"
     }
 }
