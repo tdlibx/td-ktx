@@ -20,6 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -147,6 +148,22 @@ private fun ThreadItem(thread: ThreadUiModel) {
                 reactions = thread.reactions,
                 style = MaterialTheme.typography.bodyLarge
             )
+
+            if (!thread.isComplete) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    LinearProgressIndicator(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "Loading details…",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
 
             if (thread.replies.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
