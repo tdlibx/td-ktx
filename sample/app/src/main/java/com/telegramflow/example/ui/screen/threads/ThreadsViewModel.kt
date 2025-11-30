@@ -34,13 +34,41 @@ class ThreadsViewModel @Inject constructor(
 
     fun loadThreads() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            _uiState.update { it.copy(isLoading = true, error = null, threads = emptyList()) }
             Log.d(TAG, "Starting to load threads")
 
             try {
-                val threads = fetchThreads()
-                Log.d(TAG, "Threads loaded successfully: ${threads.size} items")
-                _uiState.value = ThreadsUiState(threads = threads, isLoading = false)
+                val groups = fetchGroupChats()
+                Log.d(TAG, "Filtered group chats count: ${groups.size}")
+
+                val deferredMessages = groups.map { chat ->
+                    async(Dispatchers.IO) { fetchThreadsForChat(chat) }
+                }
+
+                var firstError: Throwable? = null
+                deferredMessages.forEach { deferred ->
+                    try {
+                        val chatThreads = deferred.await()
+                        if (chatThreads.isNotEmpty()) {
+                            _uiState.update { state ->
+                                val merged = (state.threads + chatThreads)
+                                    .distinctBy { it.chatId to it.id }
+                                    .sortedByDescending { it.date }
+                                state.copy(threads = merged)
+                            }
+                        }
+                    } catch (throwable: Throwable) {
+                        Log.e(TAG, "Failed to load a chat's threads", throwable)
+                        if (firstError == null) firstError = throwable
+                    }
+                }
+
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = firstError?.message
+                    )
+                }
             } catch (throwable: Throwable) {
                 Log.e(TAG, "Failed to load threads", throwable)
                 _uiState.update {
@@ -53,11 +81,12 @@ class ThreadsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchThreads(): List<ThreadUiModel> = withContext(Dispatchers.IO) {
+    private suspend fun fetchGroupChats(): List<TdApi.Chat> = withContext(Dispatchers.IO) {
         val chatsResult = telegramFlow.getChats(chatList = null, limit = CHAT_LIMIT)
         val chats = chatsResult.chatIds ?: longArrayOf()
         Log.d(TAG, "Fetched chat ids count: ${chats.size}")
-        val groups = chats.toList().mapNotNull { chatId ->
+
+        chats.toList().mapNotNull { chatId ->
             telegramFlow.getChat(chatId).takeIf { chat ->
                 when (val type = chat.type) {
                     is TdApi.ChatTypeSupergroup -> !type.isChannel
@@ -66,102 +95,91 @@ class ThreadsViewModel @Inject constructor(
                 }
             }
         }
-        Log.d(TAG, "Filtered group chats count: ${groups.size}")
+    }
 
-        val deferredMessages = groups.map { chat ->
-            async {
-                Log.d(TAG, "Fetching history for chat '${chat.title}' (${chat.id})")
-                var fromMessageId = 0L
-                var totalHistoryMessages = 0
-                var page = 0
-                val threadCandidates = mutableListOf<ThreadUiModel>()
-                val seenMessageIds = mutableSetOf<Long>()
-                val messagesById = mutableMapOf<Long, TdApi.Message>()
-                val repliesByParent = mutableMapOf<Long, MutableList<TdApi.Message>>()
+    private suspend fun fetchThreadsForChat(chat: TdApi.Chat): List<ThreadUiModel> {
+        Log.d(TAG, "Fetching history for chat '${chat.title}' (${chat.id})")
+        var fromMessageId = 0L
+        var totalHistoryMessages = 0
+        var page = 0
+        val threadCandidates = mutableListOf<ThreadUiModel>()
+        val seenMessageIds = mutableSetOf<Long>()
+        val messagesById = mutableMapOf<Long, TdApi.Message>()
+        val repliesByParent = mutableMapOf<Long, MutableList<TdApi.Message>>()
 
-                while (page < MAX_HISTORY_PAGES && totalHistoryMessages < HISTORY_LIMIT) {
-                    val history = telegramFlow.getChatHistory(
-                        chatId = chat.id,
-                        fromMessageId = fromMessageId,
-                        offset = if (page == 0) 0 else -1,
-                        limit = HISTORY_LIMIT,
-                        onlyLocal = false
-                    ).messages.orEmpty()
+        while (page < MAX_HISTORY_PAGES && totalHistoryMessages < HISTORY_LIMIT) {
+            val history = telegramFlow.getChatHistory(
+                chatId = chat.id,
+                fromMessageId = fromMessageId,
+                offset = if (page == 0) 0 else -1,
+                limit = HISTORY_LIMIT,
+                onlyLocal = false
+            ).messages.orEmpty()
 
-                    totalHistoryMessages += history.size
-                    Log.d(
-                        TAG,
-                        "History page=$page for '${chat.title}' size=${history.size} fromMessageId=$fromMessageId"
-                    )
+            totalHistoryMessages += history.size
+            Log.d(
+                TAG,
+                "History page=$page for '${chat.title}' size=${history.size} fromMessageId=$fromMessageId"
+            )
 
-                    if (history.isEmpty()) break
+            if (history.isEmpty()) break
 
-                    history.forEach { message ->
-                        if (seenMessageIds.add(message.id)) {
-                            messagesById[message.id] = message
-                            replyToMessageId(message)?.let { parentId ->
-                                repliesByParent.getOrPut(parentId) { mutableListOf() }.add(message)
-                            }
-                        }
-                    }
-
-                    val lastMessage = history.last()
-                    if (totalHistoryMessages >= HISTORY_LIMIT || history.size < HISTORY_LIMIT) break
-                    fromMessageId = lastMessage.id
-                    page++
-                }
-
-                val threadRoots = repliesByParent.keys.mapNotNull { messagesById[it] }
-                Log.d(
-                    TAG,
-                    "Collected ${messagesById.size} messages with ${threadRoots.size} potential roots in '${chat.title}'"
-                )
-
-                threadRoots.forEach { root ->
-                    val flattenedReplies = collectReplies(
-                        parentId = root.id,
-                        repliesByParent = repliesByParent,
-                        depth = 1
-                    )
-                    val totalReplies = flattenedReplies.size
-                    if (totalReplies > MIN_REPLY_COUNT) {
-                        threadCandidates += ThreadUiModel(
-                            id = root.id,
-                            chatId = chat.id,
-                            chatTitle = chat.title,
-                            text = messageText(root),
-                            replyCount = totalReplies,
-                            date = root.date.toLong(),
-                            replies = flattenedReplies
-                        )
-                        Log.d(
-                            TAG,
-                            "Thread found in '${chat.title}': rootId=${root.id}, replies=$totalReplies"
-                        )
-                    } else {
-                        Log.d(
-                            TAG,
-                            "Skipped root ${root.id} in '${chat.title}' with replies=$totalReplies"
-                        )
+            history.forEach { message ->
+                if (seenMessageIds.add(message.id)) {
+                    messagesById[message.id] = message
+                    replyToMessageId(message)?.let { parentId ->
+                        repliesByParent.getOrPut(parentId) { mutableListOf() }.add(message)
                     }
                 }
+            }
 
+            val lastMessage = history.last()
+            if (totalHistoryMessages >= HISTORY_LIMIT || history.size < HISTORY_LIMIT) break
+            fromMessageId = lastMessage.id
+            page++
+        }
+
+        val threadRoots = repliesByParent.keys.mapNotNull { messagesById[it] }
+        Log.d(
+            TAG,
+            "Collected ${messagesById.size} messages with ${threadRoots.size} potential roots in '${chat.title}'"
+        )
+
+        threadRoots.forEach { root ->
+            val flattenedReplies = collectReplies(
+                parentId = root.id,
+                repliesByParent = repliesByParent,
+                depth = 1
+            )
+            val totalReplies = flattenedReplies.size
+            if (totalReplies > MIN_REPLY_COUNT) {
+                threadCandidates += ThreadUiModel(
+                    id = root.id,
+                    chatId = chat.id,
+                    chatTitle = chat.title,
+                    text = messageText(root),
+                    replyCount = totalReplies,
+                    date = root.date.toLong(),
+                    replies = flattenedReplies
+                )
                 Log.d(
                     TAG,
-                    "Finished '${chat.title}': scanned=$totalHistoryMessages, threads=${threadCandidates.size}"
+                    "Thread found in '${chat.title}': rootId=${root.id}, replies=$totalReplies"
                 )
-
-                threadCandidates
+            } else {
+                Log.d(
+                    TAG,
+                    "Skipped root ${root.id} in '${chat.title}' with replies=$totalReplies"
+                )
             }
         }
 
-        val results = deferredMessages.awaitAll()
-            .flatten()
-            .distinctBy { it.chatId to it.id }
-            .sortedByDescending { it.date }
+        Log.d(
+            TAG,
+            "Finished '${chat.title}': scanned=$totalHistoryMessages, threads=${threadCandidates.size}"
+        )
 
-        Log.d(TAG, "Total threads found: ${results.size}")
-        results
+        return threadCandidates
     }
 
     private fun collectReplies(

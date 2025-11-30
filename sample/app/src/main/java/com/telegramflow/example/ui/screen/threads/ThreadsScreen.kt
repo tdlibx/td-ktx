@@ -33,6 +33,10 @@ fun ThreadsScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     when {
+        uiState.threads.isNotEmpty() -> {
+            ThreadsList(threads = uiState.threads, isLoading = uiState.isLoading)
+        }
+
         uiState.isLoading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
@@ -43,18 +47,14 @@ fun ThreadsScreen(
             ErrorState(message = uiState.error.orEmpty(), onRetry = viewModel::loadThreads)
         }
 
-        uiState.threads.isEmpty() -> {
-            EmptyState()
-        }
-
         else -> {
-            ThreadsList(threads = uiState.threads)
+            EmptyState()
         }
     }
 }
 
 @Composable
-private fun ThreadsList(threads: List<ThreadUiModel>) {
+private fun ThreadsList(threads: List<ThreadUiModel>, isLoading: Boolean) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -63,6 +63,19 @@ private fun ThreadsList(threads: List<ThreadUiModel>) {
     ) {
         items(threads, key = { thread -> "${thread.chatId}_${thread.id}" }) { thread ->
             ThreadItem(thread)
+        }
+
+        if (isLoading) {
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
         }
     }
 }
