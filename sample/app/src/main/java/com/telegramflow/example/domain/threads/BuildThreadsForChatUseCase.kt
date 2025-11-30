@@ -175,7 +175,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
     private fun mapReactions(message: TdApi.Message): List<ReactionUiModel> {
         val reactionCounts = message.interactionInfo?.reactions?.reactions.orEmpty()
         return reactionCounts.mapNotNull { reactionCount ->
-            val label = reactionLabel(reactionCount.reaction) ?: return@mapNotNull null
+            val label = reactionLabel(reactionCount.type) ?: return@mapNotNull null
             ReactionUiModel(label = label, count = reactionCount.totalCount)
         }
     }
