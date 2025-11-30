@@ -30,6 +30,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.telegramflow.example.data.threads.ThreadReplyUiModel
+import com.telegramflow.example.data.threads.ThreadUiModel
 
 @Composable
 fun ThreadsScreen(
