@@ -36,10 +36,16 @@ class BuildThreadsForChatUseCaseTest {
         val firstPage = messagesMock(root, reply1, reply2)
         val emptyPage = messagesMock()
         coEvery {
-            repository.fetchChatHistory(chatId = 10L, fromMessageId = any(), offset = 0, limit = 100, onlyLocal = false)
+            repository.fetchChatHistory(
+                chatId = 10L,
+                fromMessageId = any(),
+                offset = any(),
+                limit = any(),
+                onlyLocal = any(),
+            )
         } returnsMany listOf(firstPage, emptyPage)
 
-        coEvery { repository.fetchUser(any<Long>()) } returns userMock("Resolved")
+        coEvery { repository.fetchUser(any()) } returns userMock("Resolved")
 
         val threads = useCase(chat)
 
@@ -65,10 +71,16 @@ class BuildThreadsForChatUseCaseTest {
         val firstPage = messagesMock(root, child, nestedRootCandidate)
         val emptyPage = messagesMock()
         coEvery {
-            repository.fetchChatHistory(chatId = 20L, fromMessageId = any(), offset = 0, limit = 100, onlyLocal = false)
+            repository.fetchChatHistory(
+                chatId = 20L,
+                fromMessageId = any(),
+                offset = any(),
+                limit = any(),
+                onlyLocal = any(),
+            )
         } returnsMany listOf(firstPage, emptyPage)
 
-        coEvery { repository.fetchUser(any<Long>()) } returns userMock("Resolved")
+        coEvery { repository.fetchUser(any()) } returns userMock("Resolved")
 
         val threads = useCase(chat)
 
