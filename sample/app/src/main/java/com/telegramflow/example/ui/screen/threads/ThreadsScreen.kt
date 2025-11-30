@@ -22,7 +22,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -95,10 +98,10 @@ private fun ThreadItem(thread: ThreadUiModel) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
+            MessageLine(
+                name = thread.senderName,
                 text = thread.text,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.bodyLarge
             )
 
             if (thread.replies.isNotEmpty()) {
@@ -127,11 +130,26 @@ private fun RepliesList(replies: List<ThreadReplyUiModel>) {
 private fun ReplyItem(reply: ThreadReplyUiModel) {
     val indent = (reply.depth * 12).dp
     Column(modifier = Modifier.padding(start = indent)) {
-        Text(
+        MessageLine(
+            name = reply.senderName,
             text = reply.text,
             style = MaterialTheme.typography.bodyMedium
         )
     }
+}
+
+@Composable
+private fun MessageLine(name: String, text: String, style: androidx.compose.ui.text.TextStyle) {
+    Text(
+        text = buildAnnotatedString {
+            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                append(name.ifBlank { "Unknown" })
+                append(": ")
+            }
+            append(text)
+        },
+        style = style
+    )
 }
 
 @Composable

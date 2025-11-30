@@ -18,6 +18,7 @@ import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.getChat
 import kotlinx.telegram.coroutines.getChatHistory
 import kotlinx.telegram.coroutines.getChats
+import kotlinx.telegram.coroutines.getUser
 import org.drinkless.tdlib.TdApi
 
 @HiltViewModel
@@ -106,6 +107,8 @@ class ThreadsViewModel @Inject constructor(
         val seenMessageIds = mutableSetOf<Long>()
         val messagesById = mutableMapOf<Long, TdApi.Message>()
         val repliesByParent = mutableMapOf<Long, MutableList<TdApi.Message>>()
+        val userNames = mutableMapOf<Long, String>()
+        val chatNames = mutableMapOf<Long, String>()
 
         while (page < MAX_HISTORY_PAGES && totalHistoryMessages < HISTORY_LIMIT) {
             val history = telegramFlow.getChatHistory(
@@ -148,7 +151,9 @@ class ThreadsViewModel @Inject constructor(
             val flattenedReplies = collectReplies(
                 parentId = root.id,
                 repliesByParent = repliesByParent,
-                depth = 1
+                depth = 1,
+                userNames = userNames,
+                chatNames = chatNames
             )
             val totalReplies = flattenedReplies.size
             if (totalReplies > MIN_REPLY_COUNT) {
@@ -156,6 +161,7 @@ class ThreadsViewModel @Inject constructor(
                     id = root.id,
                     chatId = chat.id,
                     chatTitle = chat.title,
+                    senderName = resolveSenderName(root, userNames, chatNames),
                     text = messageText(root),
                     replyCount = totalReplies,
                     date = root.date.toLong(),
@@ -181,10 +187,12 @@ class ThreadsViewModel @Inject constructor(
         return threadCandidates
     }
 
-    private fun collectReplies(
+    private suspend fun collectReplies(
         parentId: Long,
         repliesByParent: Map<Long, List<TdApi.Message>>,
         depth: Int,
+        userNames: MutableMap<Long, String>,
+        chatNames: MutableMap<Long, String>,
     ): List<ThreadReplyUiModel> {
         val replies = repliesByParent[parentId].orEmpty().sortedBy { it.date }
         val replyItems = mutableListOf<ThreadReplyUiModel>()
@@ -192,6 +200,7 @@ class ThreadsViewModel @Inject constructor(
             replyItems += ThreadReplyUiModel(
                 id = reply.id,
                 chatId = reply.chatId,
+                senderName = resolveSenderName(reply, userNames, chatNames),
                 text = messageText(reply),
                 depth = depth,
                 date = reply.date.toLong()
@@ -199,10 +208,47 @@ class ThreadsViewModel @Inject constructor(
             replyItems += collectReplies(
                 parentId = reply.id,
                 repliesByParent = repliesByParent,
-                depth = depth + 1
+                depth = depth + 1,
+                userNames = userNames,
+                chatNames = chatNames
             )
         }
         return replyItems
+    }
+
+    private suspend fun resolveSenderName(
+        message: TdApi.Message,
+        userNames: MutableMap<Long, String>,
+        chatNames: MutableMap<Long, String>,
+    ): String {
+        return when (val sender = message.senderId) {
+            is TdApi.MessageSenderUser -> {
+                val userId = sender.userId
+                userNames.getOrPut(userId) {
+                    runCatching { telegramFlow.getUser(userId) }
+                        .getOrNull()
+                        ?.let { user ->
+                            listOfNotNull(user.firstName, user.lastName)
+                                .filter { it.isNotBlank() }
+                                .joinToString(" ")
+                                .ifBlank { user.usernames?.activeUsernames?.firstOrNull().orEmpty() }
+                        }
+                        ?.takeIf { it.isNotBlank() }
+                        ?: "Unknown"
+                }
+            }
+            is TdApi.MessageSenderChat -> {
+                val senderChatId = sender.chatId
+                chatNames.getOrPut(senderChatId) {
+                    runCatching { telegramFlow.getChat(senderChatId) }
+                        .getOrNull()
+                        ?.title
+                        ?.takeIf { it.isNotBlank() }
+                        ?: "Unknown"
+                }
+            }
+            else -> "Unknown"
+        }
     }
 
     private fun messageText(message: TdApi.Message): String {
@@ -237,6 +283,7 @@ data class ThreadUiModel(
     val id: Long,
     val chatId: Long,
     val chatTitle: String,
+    val senderName: String,
     val text: String,
     val replyCount: Int,
     val date: Long,
@@ -246,6 +293,7 @@ data class ThreadUiModel(
 data class ThreadReplyUiModel(
     val id: Long,
     val chatId: Long,
+    val senderName: String,
     val text: String,
     val depth: Int,
     val date: Long,
