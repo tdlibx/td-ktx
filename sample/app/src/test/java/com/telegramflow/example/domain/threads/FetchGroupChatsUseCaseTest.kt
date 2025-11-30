@@ -2,6 +2,7 @@ package com.telegramflow.example.domain.threads
 
 import com.telegramflow.example.data.repo.TelegramRepository
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -23,12 +24,20 @@ class FetchGroupChatsUseCaseTest {
     @Test
     fun `returns only non-channel group chats`() = runTest {
         val chatIds = longArrayOf(1L, 2L, 3L, 4L)
-        coEvery { repository.fetchChats(chatList = null, limit = any()) } returns TdApi.Chats(chatIds)
+        val chatsResponse = mockk<TdApi.Chats> {
+            every { totalCount } returns chatIds.size
+            every { chatIds } returns chatIds
+        }
+        coEvery { repository.fetchChats(chatList = null, limit = any()) } returns chatsResponse
 
-        coEvery { repository.fetchChat(1L) } returns chat(title = "Group", type = TdApi.ChatTypeBasicGroup(1))
-        coEvery { repository.fetchChat(2L) } returns chat(title = "Supergroup", type = TdApi.ChatTypeSupergroup(2, false, 0))
-        coEvery { repository.fetchChat(3L) } returns chat(title = "Channel", type = TdApi.ChatTypeSupergroup(3, true, 0))
-        coEvery { repository.fetchChat(4L) } returns chat(title = "Private", type = TdApi.ChatTypePrivate())
+        coEvery { repository.fetchChat(1L) } returns chatMock(title = "Group", type = mockk<TdApi.ChatTypeBasicGroup>())
+        coEvery { repository.fetchChat(2L) } returns chatMock(title = "Supergroup", type = mockk<TdApi.ChatTypeSupergroup> {
+            every { isChannel } returns false
+        })
+        coEvery { repository.fetchChat(3L) } returns chatMock(title = "Channel", type = mockk<TdApi.ChatTypeSupergroup> {
+            every { isChannel } returns true
+        })
+        coEvery { repository.fetchChat(4L) } returns chatMock(title = "Private", type = mockk<TdApi.ChatTypePrivate>())
 
         val result = useCase()
 
@@ -36,30 +45,10 @@ class FetchGroupChatsUseCaseTest {
         assertTrue(result.all { it.title == "Group" || it.title == "Supergroup" })
     }
 
-    private fun chat(title: String, type: TdApi.ChatType): TdApi.Chat {
-        return TdApi.Chat(
-            0,
-            type,
-            title,
-            null,
-            0,
-            0,
-            null,
-            null,
-            null,
-            null,
-            false,
-            false,
-            false,
-            false,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        )
+    private fun chatMock(title: String, type: TdApi.ChatType): TdApi.Chat {
+        return mockk(relaxed = true) {
+            every { this@mockk.title } returns title
+            every { this@mockk.type } returns type
+        }
     }
 }

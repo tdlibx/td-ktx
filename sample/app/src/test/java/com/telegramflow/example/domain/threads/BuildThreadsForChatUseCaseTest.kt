@@ -2,6 +2,8 @@ package com.telegramflow.example.domain.threads
 
 import com.telegramflow.example.data.repo.TelegramRepository
 import io.mockk.coEvery
+import io.mockk.any
+import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -21,209 +23,101 @@ class BuildThreadsForChatUseCaseTest {
     }
 
     @Test
-    fun `builds rooted thread with nested replies and sender names`() = runTest {
-        val chat = chat(id = 99, title = "Test Group")
+    fun `builds rooted threads without duplicating reply-only messages`() = runTest {
+        val chat = mockk<TdApi.Chat> {
+            every { id } returns 10L
+            every { title } returns "Group"
+        }
 
-        val root = message(
-            id = 1,
-            chatId = chat.id,
-            senderId = TdApi.MessageSenderUser(10),
-            text = "Root",
-        )
-        val reply = message(
-            id = 2,
-            chatId = chat.id,
-            senderId = TdApi.MessageSenderUser(11),
-            text = "Reply",
-            replyTo = TdApi.MessageReplyToMessage(chat.id, root.id),
-        )
-        val nested = message(
-            id = 3,
-            chatId = chat.id,
-            senderId = TdApi.MessageSenderUser(12),
-            text = "Nested",
-            replyTo = TdApi.MessageReplyToMessage(chat.id, reply.id),
-        )
+        val root = messageMock(id = 1L, chatId = 10L, senderName = "Alice")
+        val reply1 = messageMock(id = 2L, chatId = 10L, senderName = "Bob", replyTo = 1L)
+        val reply2 = messageMock(id = 3L, chatId = 10L, senderName = "Carol", replyTo = 1L)
 
+        val firstPage = messagesMock(root, reply1, reply2)
+        val emptyPage = messagesMock()
         coEvery {
-            repository.fetchChatHistory(chat.id, any(), offset = 0, limit = any(), onlyLocal = any())
-        } returns TdApi.Messages(arrayOf(root, reply, nested)) andThen TdApi.Messages(emptyArray())
+            repository.fetchChatHistory(chatId = 10L, fromMessageId = 0L, offset = 0, limit = any(), onlyLocal = false)
+        } returns firstPage
+        coEvery {
+            repository.fetchChatHistory(chatId = 10L, fromMessageId = 3L, offset = 0, limit = any(), onlyLocal = false)
+        } returns emptyPage
 
-        coEvery { repository.fetchUser(10) } returns user("Alice")
-        coEvery { repository.fetchUser(11) } returns user("Bob")
-        coEvery { repository.fetchUser(12) } returns user("Carol")
+        coEvery { repository.fetchUser(any()) } returns userMock("Resolved")
 
         val threads = useCase(chat)
 
         assertEquals(1, threads.size)
         val thread = threads.first()
-        assertEquals("Alice", thread.senderName)
+        assertEquals(root.id, thread.id)
+        assertEquals(2, thread.replyCount)
         assertEquals(2, thread.replies.size)
-        assertTrue(thread.replies.any { it.senderName == "Bob" && it.text == "Reply" })
-        assertTrue(thread.replies.any { it.senderName == "Carol" && it.text == "Nested" })
+        assertTrue(thread.replies.none { it.id == thread.id })
     }
 
     @Test
-    fun `resolves photo path through repository`() = runTest {
-        val chat = chat(id = 42, title = "Photos")
-        val photoFile = TdApi.File(5, 0, null, 0, 0, 0, null, null, null, TdApi.LocalFile("/tmp/photo.jpg", true, true, true, 0))
-        val photo = TdApi.MessagePhoto(
-            TdApi.Photo(arrayOf(TdApi.PhotoSize("orig", photoFile, photoFile, 0, 0, 0)), 0, 0),
-            TdApi.FormattedText("Photo text", emptyArray()),
-            false,
-            false,
-            0,
-            null,
-        )
+    fun `skips roots that appear as replies`() = runTest {
+        val chat = mockk<TdApi.Chat> {
+            every { id } returns 20L
+            every { title } returns "Group"
+        }
 
-        val root = message(
-            id = 1,
-            chatId = chat.id,
-            senderId = TdApi.MessageSenderUser(10),
-            text = "Photo",
-            content = photo,
-        )
-        val reply = message(
-            id = 2,
-            chatId = chat.id,
-            senderId = TdApi.MessageSenderUser(11),
-            text = "Reply",
-            replyTo = TdApi.MessageReplyToMessage(chat.id, root.id),
-        )
+        val root = messageMock(id = 5L, chatId = 20L, senderName = "Root")
+        val child = messageMock(id = 6L, chatId = 20L, senderName = "Child", replyTo = 5L)
+        val nestedRootCandidate = messageMock(id = 7L, chatId = 20L, senderName = "Nested", replyTo = 6L)
 
+        val firstPage = messagesMock(root, child, nestedRootCandidate)
+        val emptyPage = messagesMock()
         coEvery {
-            repository.fetchChatHistory(chat.id, any(), offset = 0, limit = any(), onlyLocal = any())
-        } returns TdApi.Messages(arrayOf(root, reply)) andThen TdApi.Messages(emptyArray())
+            repository.fetchChatHistory(chatId = 20L, fromMessageId = 0L, offset = 0, limit = any(), onlyLocal = false)
+        } returns firstPage
+        coEvery {
+            repository.fetchChatHistory(chatId = 20L, fromMessageId = 7L, offset = 0, limit = any(), onlyLocal = false)
+        } returns emptyPage
 
-        val downloaded = TdApi.File(5, 0, null, 0, 0, 0, null, null, null, TdApi.LocalFile("/tmp/photo.jpg", true, true, true, 0))
-        coEvery { repository.downloadFile(fileId = photoFile.id, priority = any(), offset = any(), limit = any(), synchronous = any()) } returns downloaded
-
-        coEvery { repository.fetchUser(any()) } returns user("Alice")
+        coEvery { repository.fetchUser(any()) } returns userMock("Resolved")
 
         val threads = useCase(chat)
 
         assertEquals(1, threads.size)
-        assertEquals("/tmp/photo.jpg", threads.first().photoPath)
+        val thread = threads.first()
+        assertEquals(root.id, thread.id)
+        assertEquals(2, thread.replyCount)
     }
 
-    private fun chat(id: Long, title: String): TdApi.Chat {
-        return TdApi.Chat(
-            id,
-            TdApi.ChatTypeBasicGroup(1),
-            title,
-            null,
-            0,
-            0,
-            null,
-            null,
-            null,
-            null,
-            false,
-            false,
-            false,
-            false,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        )
-    }
-
-    private fun user(name: String): TdApi.User {
-        return TdApi.User(
-            0,
-            0,
-            name,
-            "",
-            "",
-            null,
-            null,
-            null,
-            false,
-            false,
-            "",
-            null,
-            0,
-            null,
-            null,
-            null,
-            false,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            false,
-            false,
-            false,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-        )
-    }
-
-    private fun message(
+    private fun messageMock(
         id: Long,
         chatId: Long,
-        senderId: TdApi.MessageSender,
-        text: String,
-        replyTo: TdApi.MessageReplyToMessage? = null,
-        content: TdApi.MessageContent = TdApi.MessageText(TdApi.FormattedText(text, emptyArray())),
+        senderName: String,
+        replyTo: Long? = null,
     ): TdApi.Message {
-        return TdApi.Message(
-            id,
-            chatId,
-            senderId,
-            0,
-            0,
-            0,
-            false,
-            0,
-            0,
-            null,
-            replyTo,
-            false,
-            null,
-            null,
-            content,
-            0,
-            0,
-            null,
-            null,
-            null,
-            false,
-            false,
-            null,
-            0,
-            0,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            false,
-            null,
-            null
-        )
+        val replyToMessage = replyTo?.let { parentId ->
+            mockk<TdApi.MessageReplyToMessage> {
+                every { messageId } returns parentId
+            } as TdApi.MessageReplyTo
+        }
+        return mockk(relaxed = true) {
+            every { this@mockk.id } returns id
+            every { this@mockk.chatId } returns chatId
+            every { this@mockk.date } returns id.toInt()
+            every { senderId } returns mockk<TdApi.MessageSenderUser> { every { userId } returns id }
+            every { this@mockk.replyTo } returns replyToMessage
+            every { content } returns mockk<TdApi.MessageText> {
+                every { text } returns TdApi.FormattedText("$senderName body", null)
+            }
+        }
+    }
+
+    private fun messagesMock(vararg messages: TdApi.Message): TdApi.Messages {
+        return mockk(relaxed = true) {
+            every { this@mockk.messages } returns messages
+        }
+    }
+
+    private fun userMock(name: String): TdApi.User {
+        return mockk(relaxed = true) {
+            every { firstName } returns name
+            every { lastName } returns ""
+            every { usernames } returns null
+        }
     }
 }
