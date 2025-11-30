@@ -90,8 +90,8 @@ class TelegramRepository @Inject constructor(override val api: TelegramFlow) : U
     suspend fun downloadFile(
         fileId: Int,
         priority: Int = 1,
-        offset: Int = 0,
-        limit: Int = 0,
+        offset: Long = 0,
+        limit: Long = 0,
         synchronous: Boolean = true,
     ): TdApi.File {
         return api.downloadFile(

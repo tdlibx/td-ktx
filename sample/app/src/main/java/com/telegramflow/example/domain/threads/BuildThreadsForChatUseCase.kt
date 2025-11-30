@@ -160,8 +160,8 @@ class BuildThreadsForChatUseCase @Inject constructor(
         val downloaded = telegramRepository.downloadFile(
             fileId = file.id,
             priority = 1,
-            offset = 0,
-            limit = 0,
+            offset = 0L,
+            limit = 0L,
             synchronous = true,
         )
 
