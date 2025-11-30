@@ -2,6 +2,7 @@ package com.telegramflow.example.domain.threads
 
 import android.util.Log
 import com.telegramflow.example.data.repo.TelegramRepository
+import com.telegramflow.example.domain.threads.ReactionUiModel
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
@@ -83,6 +84,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                     senderName = resolveSenderName(root, userNames, chatNames),
                     text = messageText(root),
                     photoPath = resolvePhotoPath(root, filePaths),
+                    reactions = mapReactions(root),
                     replyCount = totalReplies,
                     date = root.date.toLong(),
                     replies = flattenedReplies,
@@ -124,6 +126,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                 senderName = resolveSenderName(reply, userNames, chatNames),
                 text = messageText(reply),
                 photoPath = resolvePhotoPath(reply, filePaths),
+                reactions = mapReactions(reply),
                 depth = depth,
                 date = reply.date.toLong(),
             )
@@ -167,6 +170,22 @@ class BuildThreadsForChatUseCase @Inject constructor(
 
         return downloaded.local?.takeIf { it.isDownloadingCompleted }?.path
             ?.takeIf { it.isNotBlank() }
+    }
+
+    private fun mapReactions(message: TdApi.Message): List<ReactionUiModel> {
+        val reactionCounts = message.interactionInfo?.reactions?.reactions.orEmpty()
+        return reactionCounts.mapNotNull { reactionCount ->
+            val label = reactionLabel(reactionCount.reaction) ?: return@mapNotNull null
+            ReactionUiModel(label = label, count = reactionCount.totalCount)
+        }
+    }
+
+    private fun reactionLabel(reaction: TdApi.ReactionType): String? {
+        return when (reaction) {
+            is TdApi.ReactionTypeEmoji -> reaction.emoji
+            is TdApi.ReactionTypeCustomEmoji -> "Custom"
+            else -> null
+        }
     }
 
     private suspend fun resolveSenderName(

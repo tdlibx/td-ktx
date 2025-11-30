@@ -10,6 +10,7 @@ data class ThreadUiModel(
     val senderName: String,
     val text: String,
     val photoPath: String? = null,
+    val reactions: List<ReactionUiModel> = emptyList(),
     val replyCount: Int,
     val date: Long,
     val replies: List<ThreadReplyUiModel> = emptyList(),
@@ -21,6 +22,12 @@ data class ThreadReplyUiModel(
     val senderName: String,
     val text: String,
     val photoPath: String? = null,
+    val reactions: List<ReactionUiModel> = emptyList(),
     val depth: Int,
     val date: Long,
+)
+
+data class ReactionUiModel(
+    val label: String,
+    val count: Int,
 )

@@ -10,5 +10,6 @@ This sample demonstrates how to build a tabbed Telegram client UI using the td-k
 5. Photos attached to messages are rendered alongside text when available.
 6. Reply-only messages are not shown as separate thread roots; each root appears once with its full reply tree.
 7. Telegram API access is centralized in a repository, with dedicated use cases for fetching group chats and building threads per chat.
+8. Message reactions are surfaced alongside each message in a thread when available.
 
 Update this log whenever new business-level functionality is added to the sample.

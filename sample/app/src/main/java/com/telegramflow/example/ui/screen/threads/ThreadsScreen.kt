@@ -3,6 +3,7 @@ package com.telegramflow.example.ui.screen.threads
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.telegramflow.example.domain.threads.ReactionUiModel
 import com.telegramflow.example.domain.threads.ThreadReplyUiModel
 import com.telegramflow.example.domain.threads.ThreadUiModel
 
@@ -106,6 +108,7 @@ private fun ThreadItem(thread: ThreadUiModel) {
                 name = thread.senderName,
                 text = thread.text,
                 photoPath = thread.photoPath,
+                reactions = thread.reactions,
                 style = MaterialTheme.typography.bodyLarge
             )
 
@@ -139,6 +142,7 @@ private fun ReplyItem(reply: ThreadReplyUiModel) {
             name = reply.senderName,
             text = reply.text,
             photoPath = reply.photoPath,
+            reactions = reply.reactions,
             style = MaterialTheme.typography.bodyMedium
         )
     }
@@ -149,6 +153,7 @@ private fun ThreadMessage(
     name: String,
     text: String,
     photoPath: String?,
+    reactions: List<ReactionUiModel>,
     style: androidx.compose.ui.text.TextStyle,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -174,7 +179,25 @@ private fun ThreadMessage(
                     .padding(top = 4.dp)
             )
         }
+
+        if (reactions.isNotEmpty()) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                reactions.forEach { reaction ->
+                    ReactionChip(reaction)
+                }
+            }
+        }
     }
+}
+
+@Composable
+private fun ReactionChip(reaction: ReactionUiModel) {
+    Text(
+        text = "${reaction.label} ${reaction.count}",
+        style = MaterialTheme.typography.labelSmall,
+        modifier = Modifier
+            .padding(end = 4.dp)
+    )
 }
 
 @Composable
