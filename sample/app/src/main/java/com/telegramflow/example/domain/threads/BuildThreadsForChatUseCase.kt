@@ -195,6 +195,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                     filePaths = filePaths,
                     shallow = false,
                     downloadMedia = downloadMedia,
+                    mentionNames = mentionNames,
                 )
             }
         }
