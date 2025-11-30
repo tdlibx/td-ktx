@@ -13,6 +13,6 @@ This sample demonstrates how to build a tabbed Telegram client UI using the td-k
 8. Message reactions are surfaced alongside each message in a thread when available.
 9. Threads tab UI mirrors modern X/Threads-style cards with avatar placeholders, chat context, reply connectors, and pill reactions.
 10. Group chat avatars are fetched and shown on thread cards while sender names remain within message content to avoid duplication.
-11. Thread media is fetched alongside threads so reactions and content are shown together, with placeholders only when no media is available.
+11. Thread media downloads now happen in the background so threads render immediately with placeholders until images arrive.
 
 Update this log whenever new business-level functionality is added to the sample.
