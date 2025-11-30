@@ -1,6 +1,6 @@
 [versions]
 activity-compose = "1.12.0"
-agp = "8.6.1"
+agp = "8.1.0"
 coil-compose = "2.7.0"
 compose-bom = "2024.06.00"
 compose-compiler = "1.5.14"
@@ -58,10 +58,10 @@ td-ktx = { module = "com.github.akrafts-gpt:td-ktx", version.ref = "tdktx" }
 tdlib = { module = "com.github.tdlibx:td", version.ref = "tdlib" }
 
 [plugins]
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-hilt = { id = "dagger.hilt.android.plugin", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
