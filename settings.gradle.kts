@@ -5,12 +5,13 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+        maven(url = "https://jitpack.io")
     }
 }
 
@@ -20,7 +21,7 @@ include(":libtd-ktx")
 
 // This prevents the build from crashing due to missing secrets in the sample app,
 // because JitPack servers set the 'JITPACK' environment variable to 'true'.
-if (System.getenv('JITPACK') != 'true') {
+if (System.getenv("JITPACK") != "true") {
     include(":sample:app")
     project(":sample:app").projectDir = file("sample/app")
 }
