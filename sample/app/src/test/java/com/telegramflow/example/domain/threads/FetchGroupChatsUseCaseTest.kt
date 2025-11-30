@@ -28,7 +28,7 @@ class FetchGroupChatsUseCaseTest {
             every { totalCount } returns chatIds.size
             every { chatIds } returns chatIds
         }
-        coEvery { repository.fetchChats(chatList = null, limit = any()) } returns chatsResponse
+        coEvery { repository.fetchChats(chatList = null, limit = 100) } returns chatsResponse
 
         coEvery { repository.fetchChat(1L) } returns chatMock(title = "Group", type = mockk<TdApi.ChatTypeBasicGroup>())
         coEvery { repository.fetchChat(2L) } returns chatMock(title = "Supergroup", type = mockk<TdApi.ChatTypeSupergroup> {
