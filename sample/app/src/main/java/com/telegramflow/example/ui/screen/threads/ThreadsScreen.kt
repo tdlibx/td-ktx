@@ -259,13 +259,7 @@ private fun ThreadMessage(
             )
         }
 
-        if (reactions.isNotEmpty()) {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                reactions.forEach { reaction ->
-                    ReactionChip(reaction)
-                }
-            }
-        }
+        ReactionsRow(reactions)
     }
 }
 
@@ -309,6 +303,17 @@ private fun ChatAvatar(avatarPath: String?, fallbackName: String) {
                 style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
+        }
+    }
+}
+
+@Composable
+private fun ReactionsRow(reactions: List<ReactionUiModel>) {
+    if (reactions.isEmpty()) return
+
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        reactions.forEach { reaction ->
+            ReactionChip(reaction)
         }
     }
 }
