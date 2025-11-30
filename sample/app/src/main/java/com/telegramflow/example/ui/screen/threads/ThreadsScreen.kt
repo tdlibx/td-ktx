@@ -31,6 +31,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +41,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import androidx.compose.foundation.text.ClickableText
 import com.telegramflow.example.domain.threads.ReactionUiModel
+import com.telegramflow.example.domain.threads.THREAD_URL_TAG
 import com.telegramflow.example.domain.threads.ThreadReplyUiModel
 import com.telegramflow.example.domain.threads.ThreadUiModel
 
@@ -138,6 +142,7 @@ private fun ThreadItem(thread: ThreadUiModel) {
             ThreadMessage(
                 name = thread.senderName,
                 text = thread.text,
+                richText = thread.richText,
                 photoPath = thread.photoPath,
                 reactions = thread.reactions,
                 style = MaterialTheme.typography.bodyLarge
@@ -185,6 +190,7 @@ private fun ReplyItem(reply: ThreadReplyUiModel) {
             ThreadMessage(
                 name = reply.senderName,
                 text = reply.text,
+                richText = reply.richText,
                 photoPath = reply.photoPath,
                 reactions = reply.reactions,
                 style = MaterialTheme.typography.bodyMedium
@@ -197,20 +203,30 @@ private fun ReplyItem(reply: ThreadReplyUiModel) {
 private fun ThreadMessage(
     name: String,
     text: String,
+    richText: AnnotatedString?,
     photoPath: String?,
     reactions: List<ReactionUiModel>,
     style: androidx.compose.ui.text.TextStyle,
 ) {
+    val uriHandler = LocalUriHandler.current
+    val messageText = richText ?: AnnotatedString(text)
+    val combined = buildAnnotatedString {
+        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+            append(name.ifBlank { "Unknown" })
+            append(": ")
+        }
+        append(messageText)
+    }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
-            text = buildAnnotatedString {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append(name.ifBlank { "Unknown" })
-                    append(": ")
-                }
-                append(text)
-            },
-            style = style
+        ClickableText(
+            text = combined,
+            style = style,
+            onClick = { offset ->
+                combined.getStringAnnotations(THREAD_URL_TAG, offset, offset)
+                    .firstOrNull()?.let { annotation ->
+                        runCatching { uriHandler.openUri(annotation.item) }
+                    }
+            }
         )
 
         if (photoPath != null) {

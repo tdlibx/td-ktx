@@ -1,6 +1,12 @@
 package com.telegramflow.example.domain.threads
 
 import android.util.Log
+import android.util.Patterns
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import com.telegramflow.example.data.repo.TelegramRepository
 import com.telegramflow.example.domain.threads.ReactionUiModel
 import javax.inject.Inject
@@ -25,6 +31,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
         val repliesByParent = mutableMapOf<Long, MutableList<TdApi.Message>>()
         val userNames = mutableMapOf<Long, String>()
         val chatNames = mutableMapOf<Long, String>()
+        val mentionNames = mutableMapOf<String, String>()
         val filePaths = mutableMapOf<Int, String?>()
 
         while (page < MAX_HISTORY_PAGES && totalHistoryMessages < HISTORY_LIMIT) {
@@ -77,6 +84,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                 filePaths = filePaths,
                 shallow = true,
                 downloadMedia = false,
+                mentionNames = mentionNames,
             )
             val totalReplies = countReplies(root.id, repliesByParent)
 
@@ -88,6 +96,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                         chatTitle = chat.title,
                         senderName = resolveSenderName(root, userNames, chatNames),
                         text = messageText(root),
+                        richText = null,
                         reactions = mapReactions(root),
                         replyCount = totalReplies,
                         date = root.date.toLong(),
@@ -105,6 +114,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                     filePaths = filePaths,
                     shallow = false,
                     downloadMedia = true,
+                    mentionNames = mentionNames,
                 )
                 emit(
                     ThreadUiModel(
@@ -114,6 +124,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                         chatAvatarPath = resolveChatAvatar(chat, filePaths),
                         senderName = resolveSenderName(root, userNames, chatNames),
                         text = messageText(root),
+                        richText = enrichMessageText(messageText(root), mentionNames),
                         photoPath = resolvePhotoPath(root, filePaths),
                         reactions = mapReactions(root),
                         replyCount = totalReplies,
@@ -157,15 +168,18 @@ class BuildThreadsForChatUseCase @Inject constructor(
         filePaths: MutableMap<Int, String?>,
         shallow: Boolean,
         downloadMedia: Boolean,
+        mentionNames: MutableMap<String, String>,
     ): List<ThreadReplyUiModel> {
         val replies = repliesByParent[parentId].orEmpty().sortedBy { it.date }
         val replyItems = mutableListOf<ThreadReplyUiModel>()
         replies.take(if (shallow) PREVIEW_REPLY_LIMIT else replies.size).forEach { reply ->
+            val text = messageText(reply)
             replyItems += ThreadReplyUiModel(
                 id = reply.id,
                 chatId = reply.chatId,
                 senderName = resolveSenderName(reply, userNames, chatNames),
-                text = messageText(reply),
+                text = text,
+                richText = if (shallow) null else enrichMessageText(text, mentionNames),
                 photoPath = if (downloadMedia) resolvePhotoPath(reply, filePaths) else null,
                 reactions = mapReactions(reply),
                 depth = depth,
@@ -252,6 +266,76 @@ class BuildThreadsForChatUseCase @Inject constructor(
         }
     }
 
+    private suspend fun enrichMessageText(
+        text: String,
+        mentionNames: MutableMap<String, String>,
+    ): AnnotatedString {
+        if (text.isBlank()) return AnnotatedString("")
+
+        val matches = findTextMatches(text)
+        if (matches.isEmpty()) return AnnotatedString(text)
+
+        val builder = buildAnnotatedString {
+            var cursor = 0
+            matches.forEach { match ->
+                if (cursor < match.start) append(text.substring(cursor, match.start))
+                when (match) {
+                    is TextMatch.Mention -> {
+                        val display = resolveMentionName(match.username, mentionNames) ?: "@${match.username}"
+                        pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+                        append(display)
+                        pop()
+                    }
+                    is TextMatch.Link -> {
+                        pushStringAnnotation(tag = THREAD_URL_TAG, annotation = match.url)
+                        pushStyle(SpanStyle(textDecoration = TextDecoration.Underline))
+                        append(match.url)
+                        pop()
+                        pop()
+                    }
+                }
+                cursor = match.end
+            }
+            if (cursor < text.length) append(text.substring(cursor))
+        }
+
+        return builder
+    }
+
+    private suspend fun resolveMentionName(
+        username: String,
+        mentionNames: MutableMap<String, String>,
+    ): String? {
+        val normalized = username.lowercase()
+        return mentionNames.getOrPut(normalized) {
+            runCatching {
+                telegramRepository.fetchUserByUsername(username)
+                    ?.let { user ->
+                        listOfNotNull(user.firstName, user.lastName)
+                            .filter { it.isNotBlank() }
+                            .joinToString(" ")
+                            .ifBlank { user.usernames?.activeUsernames?.firstOrNull().orEmpty() }
+                    }
+                    ?.takeIf { it.isNotBlank() }
+                    ?: "@${username}"
+            }.getOrDefault("@${username}")
+        }
+    }
+
+    private fun findTextMatches(text: String): List<TextMatch> {
+        val results = mutableListOf<TextMatch>()
+        mentionRegex.findAll(text).forEach { match ->
+            val username = match.value.removePrefix("@")
+            results += TextMatch.Mention(start = match.range.first, end = match.range.last + 1, username = username)
+        }
+        val matcher = Patterns.WEB_URL.matcher(text)
+        while (matcher.find()) {
+            val url = matcher.group() ?: continue
+            results += TextMatch.Link(start = matcher.start(), end = matcher.end(), url = url)
+        }
+        return results.sortedBy { it.start }
+    }
+
     private suspend fun resolveSenderName(
         message: TdApi.Message,
         userNames: MutableMap<Long, String>,
@@ -306,11 +390,17 @@ class BuildThreadsForChatUseCase @Inject constructor(
         }
     }
 
+    private sealed class TextMatch(open val start: Int, open val end: Int) {
+        data class Mention(override val start: Int, override val end: Int, val username: String) : TextMatch(start, end)
+        data class Link(override val start: Int, override val end: Int, val url: String) : TextMatch(start, end)
+    }
+
     companion object {
         private const val HISTORY_LIMIT = 100
         private const val MAX_HISTORY_PAGES = 5
         private const val MIN_REPLY_COUNT = 2
         private const val PREVIEW_REPLY_LIMIT = 3
+        private val mentionRegex = "@[A-Za-z0-9_]{3,}".toRegex()
         private const val TAG = "BuildThreadsForChatUseCase"
     }
 }

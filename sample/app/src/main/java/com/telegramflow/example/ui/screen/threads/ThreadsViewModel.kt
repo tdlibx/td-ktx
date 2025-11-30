@@ -8,15 +8,14 @@ import com.telegramflow.example.domain.threads.FetchGroupChatsUseCase
 import com.telegramflow.example.domain.threads.ThreadUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.flow.collect
 
 @HiltViewModel
 class ThreadsViewModel @Inject constructor(
@@ -45,7 +44,6 @@ class ThreadsViewModel @Inject constructor(
                     viewModelScope.launch(Dispatchers.IO) {
                         try {
                             buildThreadsForChat(chat).collect { thread ->
-                                simulateRenderingDelay()
                                 _uiState.update { state ->
                                     val filtered = state.threads
                                         .filterNot { it.chatId == thread.chatId && it.id == thread.id }
@@ -79,11 +77,6 @@ class ThreadsViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private suspend fun simulateRenderingDelay() {
-        // TODO: Remove artificial delay after refactoring incremental thread loading
-        delay(350)
     }
 
     companion object {
