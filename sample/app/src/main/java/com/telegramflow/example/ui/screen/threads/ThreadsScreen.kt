@@ -22,12 +22,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 
 @Composable
 fun ThreadsScreen(
@@ -98,9 +100,10 @@ private fun ThreadItem(thread: ThreadUiModel) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            MessageLine(
+            ThreadMessage(
                 name = thread.senderName,
                 text = thread.text,
+                photoPath = thread.photoPath,
                 style = MaterialTheme.typography.bodyLarge
             )
 
@@ -130,26 +133,46 @@ private fun RepliesList(replies: List<ThreadReplyUiModel>) {
 private fun ReplyItem(reply: ThreadReplyUiModel) {
     val indent = (reply.depth * 12).dp
     Column(modifier = Modifier.padding(start = indent)) {
-        MessageLine(
+        ThreadMessage(
             name = reply.senderName,
             text = reply.text,
+            photoPath = reply.photoPath,
             style = MaterialTheme.typography.bodyMedium
         )
     }
 }
 
 @Composable
-private fun MessageLine(name: String, text: String, style: androidx.compose.ui.text.TextStyle) {
-    Text(
-        text = buildAnnotatedString {
-            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                append(name.ifBlank { "Unknown" })
-                append(": ")
-            }
-            append(text)
-        },
-        style = style
-    )
+private fun ThreadMessage(
+    name: String,
+    text: String,
+    photoPath: String?,
+    style: androidx.compose.ui.text.TextStyle,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append(name.ifBlank { "Unknown" })
+                    append(": ")
+                }
+                append(text)
+            },
+            style = style
+        )
+
+        if (photoPath != null) {
+            AsyncImage(
+                model = photoPath,
+                contentDescription = "Photo",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
+                    .padding(top = 4.dp)
+            )
+        }
+    }
 }
 
 @Composable

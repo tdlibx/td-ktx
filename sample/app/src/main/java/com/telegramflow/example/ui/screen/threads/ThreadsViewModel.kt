@@ -19,6 +19,7 @@ import kotlinx.telegram.coroutines.getChat
 import kotlinx.telegram.coroutines.getChatHistory
 import kotlinx.telegram.coroutines.getChats
 import kotlinx.telegram.coroutines.getUser
+import kotlinx.telegram.coroutines.downloadFile
 import org.drinkless.tdlib.TdApi
 
 @HiltViewModel
@@ -109,6 +110,7 @@ class ThreadsViewModel @Inject constructor(
         val repliesByParent = mutableMapOf<Long, MutableList<TdApi.Message>>()
         val userNames = mutableMapOf<Long, String>()
         val chatNames = mutableMapOf<Long, String>()
+        val filePaths = mutableMapOf<Int, String?>()
 
         while (page < MAX_HISTORY_PAGES && totalHistoryMessages < HISTORY_LIMIT) {
             val history = telegramFlow.getChatHistory(
@@ -153,7 +155,8 @@ class ThreadsViewModel @Inject constructor(
                 repliesByParent = repliesByParent,
                 depth = 1,
                 userNames = userNames,
-                chatNames = chatNames
+                chatNames = chatNames,
+                filePaths = filePaths
             )
             val totalReplies = flattenedReplies.size
             if (totalReplies > MIN_REPLY_COUNT) {
@@ -163,6 +166,7 @@ class ThreadsViewModel @Inject constructor(
                     chatTitle = chat.title,
                     senderName = resolveSenderName(root, userNames, chatNames),
                     text = messageText(root),
+                    photoPath = resolvePhotoPath(root, filePaths),
                     replyCount = totalReplies,
                     date = root.date.toLong(),
                     replies = flattenedReplies
@@ -193,6 +197,7 @@ class ThreadsViewModel @Inject constructor(
         depth: Int,
         userNames: MutableMap<Long, String>,
         chatNames: MutableMap<Long, String>,
+        filePaths: MutableMap<Int, String?>,
     ): List<ThreadReplyUiModel> {
         val replies = repliesByParent[parentId].orEmpty().sortedBy { it.date }
         val replyItems = mutableListOf<ThreadReplyUiModel>()
@@ -202,6 +207,7 @@ class ThreadsViewModel @Inject constructor(
                 chatId = reply.chatId,
                 senderName = resolveSenderName(reply, userNames, chatNames),
                 text = messageText(reply),
+                photoPath = resolvePhotoPath(reply, filePaths),
                 depth = depth,
                 date = reply.date.toLong()
             )
@@ -210,10 +216,41 @@ class ThreadsViewModel @Inject constructor(
                 repliesByParent = repliesByParent,
                 depth = depth + 1,
                 userNames = userNames,
-                chatNames = chatNames
+                chatNames = chatNames,
+                filePaths = filePaths
             )
         }
         return replyItems
+    }
+
+    private suspend fun resolvePhotoPath(
+        message: TdApi.Message,
+        filePaths: MutableMap<Int, String?>,
+    ): String? {
+        val content = message.content as? TdApi.MessagePhoto ?: return null
+        val bestSize = content.photo?.sizes?.maxByOrNull { it.photo?.expectedSize ?: 0L }
+        val file = bestSize?.photo ?: return null
+
+        return filePaths.getOrPut(file.id) {
+            runCatching { downloadPhoto(file) }.getOrNull()
+        }
+    }
+
+    private suspend fun downloadPhoto(file: TdApi.File): String? {
+        val completedLocalPath = file.local?.takeIf { it.isDownloadingCompleted }?.path
+            ?.takeIf { it.isNotBlank() }
+        if (completedLocalPath != null) return completedLocalPath
+
+        val downloaded = telegramFlow.downloadFile(
+            fileId = file.id,
+            priority = 1,
+            offset = 0,
+            limit = 0,
+            synchronous = true
+        )
+
+        return downloaded.local?.takeIf { it.isDownloadingCompleted }?.path
+            ?.takeIf { it.isNotBlank() }
     }
 
     private suspend fun resolveSenderName(
@@ -285,6 +322,7 @@ data class ThreadUiModel(
     val chatTitle: String,
     val senderName: String,
     val text: String,
+    val photoPath: String? = null,
     val replyCount: Int,
     val date: Long,
     val replies: List<ThreadReplyUiModel> = emptyList(),
@@ -295,6 +333,7 @@ data class ThreadReplyUiModel(
     val chatId: Long,
     val senderName: String,
     val text: String,
+    val photoPath: String? = null,
     val depth: Int,
     val date: Long,
 )
