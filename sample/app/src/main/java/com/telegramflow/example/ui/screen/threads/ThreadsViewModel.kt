@@ -3,8 +3,9 @@ package com.telegramflow.example.ui.screen.threads
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.telegramflow.example.domain.threads.BuildThreadsForChatUseCase
+import com.telegramflow.example.domain.threads.FetchGroupChatsUseCase
 import com.telegramflow.example.domain.threads.ThreadUiModel
-import com.telegramflow.example.domain.threads.ThreadsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ThreadsViewModel @Inject constructor(
-    private val threadsUseCase: ThreadsUseCase,
+    private val fetchGroupChats: FetchGroupChatsUseCase,
+    private val buildThreadsForChat: BuildThreadsForChatUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<ThreadsUiState> = MutableStateFlow(ThreadsUiState())
@@ -33,11 +35,11 @@ class ThreadsViewModel @Inject constructor(
             Log.d(TAG, "Starting to load threads")
 
             try {
-                val groups = threadsUseCase.fetchGroupChats()
+                val groups = fetchGroupChats()
                 Log.d(TAG, "Filtered group chats count: ${groups.size}")
 
                 val deferredMessages = groups.map { chat ->
-                    async(Dispatchers.IO) { threadsUseCase.fetchThreadsForChat(chat) }
+                    async(Dispatchers.IO) { buildThreadsForChat(chat) }
                 }
 
                 var firstError: Throwable? = null

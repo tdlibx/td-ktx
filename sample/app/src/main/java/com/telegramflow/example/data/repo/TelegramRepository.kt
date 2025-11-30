@@ -56,7 +56,7 @@ class TelegramRepository @Inject constructor(override val api: TelegramFlow) : U
     }
 
     val userOnlineFlow: Flow<TdApi.User> = api.userStatusFlow().map { status ->
-        api.getUser(status.userId)
+        api.getUser(status.userId.toLong())
     }
 
     suspend fun fetchChats(chatList: TdApi.ChatList? = null, limit: Int): TdApi.Chats {
@@ -83,7 +83,7 @@ class TelegramRepository @Inject constructor(override val api: TelegramFlow) : U
         )
     }
 
-    suspend fun fetchUser(userId: Int): TdApi.User {
+    suspend fun fetchUser(userId: Long): TdApi.User {
         return api.getUser(userId)
     }
 
