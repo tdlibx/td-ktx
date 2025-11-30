@@ -15,6 +15,7 @@ data class ThreadUiModel(
     val replyCount: Int,
     val date: Long,
     val replies: List<ThreadReplyUiModel> = emptyList(),
+    val isComplete: Boolean = true,
 )
 
 data class ThreadReplyUiModel(

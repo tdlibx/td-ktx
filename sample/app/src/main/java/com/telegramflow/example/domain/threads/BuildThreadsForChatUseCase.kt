@@ -92,6 +92,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                         replyCount = totalReplies,
                         date = root.date.toLong(),
                         replies = previewReplies.take(PREVIEW_REPLY_LIMIT),
+                        isComplete = false,
                     ),
                 )
 
@@ -118,6 +119,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                         replyCount = totalReplies,
                         date = root.date.toLong(),
                         replies = flattenedReplies,
+                        isComplete = true,
                     ),
                 )
                 Log.d(

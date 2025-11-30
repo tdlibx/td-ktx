@@ -124,6 +124,13 @@ private fun ThreadItem(thread: ThreadUiModel) {
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+
+                if (!thread.isComplete) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(22.dp),
+                        strokeWidth = 2.dp,
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
