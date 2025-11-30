@@ -1,10 +1,10 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.plugin.parcelize'
-    id 'org.jetbrains.dokka'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.dokka)
     id 'maven-publish'
 }
 
@@ -48,10 +48,10 @@ android {
 }
 
 dependencies {
-    api 'com.github.tdlibx:td:1.8.56'
-    implementation 'androidx.core:core-ktx:1.17.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    api(libs.tdlib)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlinx.coroutines.core)
 }
 
 afterEvaluate {
