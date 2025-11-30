@@ -10,6 +10,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.checkAuthenticationCode
 import kotlinx.telegram.coroutines.checkAuthenticationPassword
+import kotlinx.telegram.coroutines.downloadFile
+import kotlinx.telegram.coroutines.getChat
+import kotlinx.telegram.coroutines.getChatHistory
+import kotlinx.telegram.coroutines.getChats
 import kotlinx.telegram.coroutines.getUser
 import kotlinx.telegram.coroutines.setAuthenticationPhoneNumber
 import kotlinx.telegram.coroutines.setTdlibParameters
@@ -52,7 +56,51 @@ class TelegramRepository @Inject constructor(override val api: TelegramFlow) : U
     }
 
     val userOnlineFlow: Flow<TdApi.User> = api.userStatusFlow().map { status ->
-        api.getUser(status.userId)
+        api.getUser(status.userId.toLong())
+    }
+
+    suspend fun fetchChats(chatList: TdApi.ChatList? = null, limit: Int): TdApi.Chats {
+        return api.getChats(chatList = chatList, limit = limit)
+    }
+
+    suspend fun fetchChat(chatId: Long): TdApi.Chat {
+        return api.getChat(chatId)
+    }
+
+    suspend fun fetchChatHistory(
+        chatId: Long,
+        fromMessageId: Long,
+        offset: Int,
+        limit: Int,
+        onlyLocal: Boolean,
+    ): TdApi.Messages {
+        return api.getChatHistory(
+            chatId = chatId,
+            fromMessageId = fromMessageId,
+            offset = offset,
+            limit = limit,
+            onlyLocal = onlyLocal,
+        )
+    }
+
+    suspend fun fetchUser(userId: Long): TdApi.User {
+        return api.getUser(userId)
+    }
+
+    suspend fun downloadFile(
+        fileId: Int,
+        priority: Int = 1,
+        offset: Long = 0,
+        limit: Long = 0,
+        synchronous: Boolean = true,
+    ): TdApi.File {
+        return api.downloadFile(
+            fileId = fileId,
+            priority = priority,
+            offset = offset,
+            limit = limit,
+            synchronous = synchronous,
+        )
     }
 
     private suspend fun checkRequiredParams(state: TdApi.AuthorizationState?) {

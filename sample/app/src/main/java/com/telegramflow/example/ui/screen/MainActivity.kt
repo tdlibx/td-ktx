@@ -16,8 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.telegramflow.example.ui.screen.MainScreen
 import com.telegramflow.example.ui.screen.enterPhone.LoginScreen
-import com.telegramflow.example.ui.screen.users.UsersScreen
 import com.telegramflow.example.ui.theme.TelegramFlowComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         NavHost(navController = navController, startDestination = LoginRoute) {
             composable<UsersRoute> {
-                UsersScreen()
+                MainScreen()
             }
 
             composable<LoginRoute> {
