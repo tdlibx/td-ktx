@@ -1,6 +1,8 @@
-import java.net.URL
+import java.net.URI
 import org.gradle.api.publish.maven.MavenPublication
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 plugins {
     alias(libs.plugins.android.library)
@@ -19,7 +21,6 @@ android {
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 36
     }
 
     buildTypes {
@@ -34,8 +35,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    extensions.configure<KotlinAndroidProjectExtension>("kotlin") {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
     }
 
     lint {
@@ -69,13 +72,16 @@ afterEvaluate {
     }
 }
 
-tasks.register<DokkaTask>("dokkaMarkdown") {
-    outputFormat.set("gfm")
+tasks.named<DokkaTask>("dokkaGfm") {
     outputDirectory.set(file("$rootDir/wiki"))
     dokkaSourceSets.named("main") {
         includes.from("src/main/java/kotlinx/telegram/index.md")
         externalDocumentationLink {
-            url.set(URL("https://tdlibx.github.io/td/docs/"))
+            url.set(URI("https://tdlibx.github.io/td/docs/").toURL())
         }
     }
+}
+
+tasks.register("dokkaMarkdown") {
+    dependsOn(tasks.named("dokkaGfm"))
 }
