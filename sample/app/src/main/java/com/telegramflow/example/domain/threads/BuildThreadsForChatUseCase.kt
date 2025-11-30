@@ -25,7 +25,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
         val userNames = mutableMapOf<Long, String>()
         val chatNames = mutableMapOf<Long, String>()
         val filePaths = mutableMapOf<Int, String?>()
-        val chatAvatarInfo = resolveChatAvatar(chat, filePaths)
+        val chatAvatarPath = resolveChatAvatar(chat, filePaths)
 
         while (page < MAX_HISTORY_PAGES && totalHistoryMessages < HISTORY_LIMIT) {
             val history = telegramRepository.fetchChatHistory(
@@ -68,7 +68,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
         )
 
         threadRoots.forEach { root ->
-            val rootPhotoInfo = resolvePhotoInfo(root, filePaths)
+            val rootPhotoPath = resolvePhotoInfo(root, filePaths)
             val flattenedReplies = collectReplies(
                 parentId = root.id,
                 repliesByParent = repliesByParent,
@@ -83,12 +83,10 @@ class BuildThreadsForChatUseCase @Inject constructor(
                     id = root.id,
                     chatId = chat.id,
                     chatTitle = chat.title,
-                    chatAvatarPath = chatAvatarInfo?.path,
-                    chatAvatarFileId = chatAvatarInfo?.fileId,
+                    chatAvatarPath = chatAvatarPath,
                     senderName = resolveSenderName(root, userNames, chatNames),
                     text = messageText(root),
-                    photoPath = rootPhotoInfo?.path,
-                    photoFileId = rootPhotoInfo?.fileId,
+                    photoPath = rootPhotoPath,
                     reactions = mapReactions(root),
                     replyCount = totalReplies,
                     date = root.date.toLong(),
@@ -125,14 +123,13 @@ class BuildThreadsForChatUseCase @Inject constructor(
         val replies = repliesByParent[parentId].orEmpty().sortedBy { it.date }
         val replyItems = mutableListOf<ThreadReplyUiModel>()
         replies.forEach { reply ->
-            val replyPhotoInfo = resolvePhotoInfo(reply, filePaths)
+            val replyPhotoPath = resolvePhotoInfo(reply, filePaths)
             replyItems += ThreadReplyUiModel(
                 id = reply.id,
                 chatId = reply.chatId,
                 senderName = resolveSenderName(reply, userNames, chatNames),
                 text = messageText(reply),
-                photoPath = replyPhotoInfo?.path,
-                photoFileId = replyPhotoInfo?.fileId,
+                photoPath = replyPhotoPath,
                 reactions = mapReactions(reply),
                 depth = depth,
                 date = reply.date.toLong(),
@@ -149,30 +146,36 @@ class BuildThreadsForChatUseCase @Inject constructor(
         return replyItems
     }
 
-    private fun resolvePhotoInfo(
+    private suspend fun resolvePhotoInfo(
         message: TdApi.Message,
         filePaths: MutableMap<Int, String?>,
-    ): MediaInfo? {
+    ): String? {
         val content = message.content as? TdApi.MessagePhoto ?: return null
         val bestSize = content.photo?.sizes?.maxByOrNull { it.photo?.expectedSize ?: 0L }
         val file = bestSize?.photo ?: return null
 
         val localPath = filePaths.getOrPut(file.id) {
             file.local?.takeIf { it.isDownloadingCompleted }?.path?.takeIf { it.isNotBlank() }
+                ?: runCatching { telegramRepository.downloadFile(file.id).local?.path }
+                    .getOrNull()
+                    ?.takeIf { it.isNotBlank() }
         }
 
-        return MediaInfo(path = localPath, fileId = file.id)
+        return localPath
     }
 
-    private fun resolveChatAvatar(
+    private suspend fun resolveChatAvatar(
         chat: TdApi.Chat,
         filePaths: MutableMap<Int, String?>,
-    ): MediaInfo? {
+    ): String? {
         val file = chat.photo?.small ?: return null
         val localPath = filePaths.getOrPut(file.id) {
             file.local?.takeIf { it.isDownloadingCompleted }?.path?.takeIf { it.isNotBlank() }
+                ?: runCatching { telegramRepository.downloadFile(file.id).local?.path }
+                    .getOrNull()
+                    ?.takeIf { it.isNotBlank() }
         }
-        return MediaInfo(path = localPath, fileId = file.id)
+        return localPath
     }
 
     private fun mapReactions(message: TdApi.Message): List<ReactionUiModel> {
@@ -252,5 +255,4 @@ class BuildThreadsForChatUseCase @Inject constructor(
         private const val TAG = "BuildThreadsForChatUseCase"
     }
 
-    private data class MediaInfo(val path: String?, val fileId: Int?)
 }
