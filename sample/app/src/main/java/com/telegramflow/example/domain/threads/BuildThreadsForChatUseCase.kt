@@ -341,13 +341,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
         }
         if (mappedAggregated.isNotEmpty()) return mappedAggregated
 
-        val recentCounts = mutableMapOf<String, Int>()
-        reactions.recentReactions.orEmpty().forEach { reaction ->
-            val label = reactionLabel(reaction.type) ?: return@forEach
-            recentCounts[label] = recentCounts.getOrDefault(label, 0) + 1
-        }
-
-        return recentCounts.entries.map { (label, count) -> ReactionUiModel(label, count) }
+        return emptyList()
     }
 
     private fun reactionLabel(reaction: TdApi.ReactionType): String? {
