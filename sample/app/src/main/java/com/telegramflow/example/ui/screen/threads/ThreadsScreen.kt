@@ -5,13 +5,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -20,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -31,6 +36,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -40,8 +47,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.telegramflow.example.domain.threads.ReactionUiModel
+import com.telegramflow.example.domain.threads.THREAD_URL_TAG
 import com.telegramflow.example.domain.threads.ThreadReplyUiModel
 import com.telegramflow.example.domain.threads.ThreadUiModel
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun ThreadsScreen(
@@ -124,6 +136,25 @@ private fun ThreadItem(thread: ThreadUiModel) {
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+
+                Spacer(modifier = Modifier.size(8.dp))
+
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = formatThreadDateRange(thread.firstMessageDate, thread.lastMessageDate),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                if (!thread.isComplete) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(22.dp),
+                        strokeWidth = 2.dp,
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -131,10 +162,27 @@ private fun ThreadItem(thread: ThreadUiModel) {
             ThreadMessage(
                 name = thread.senderName,
                 text = thread.text,
+                richText = thread.richText,
                 photoPath = thread.photoPath,
                 reactions = thread.reactions,
                 style = MaterialTheme.typography.bodyLarge
             )
+
+            if (!thread.isComplete) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    LinearProgressIndicator(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "Loading details…",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
 
             if (thread.replies.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
@@ -164,20 +212,23 @@ private fun RepliesList(replies: List<ThreadReplyUiModel>) {
 @Composable
 private fun ReplyItem(reply: ThreadReplyUiModel) {
     val indent = (reply.depth * 14).dp
-    Row(modifier = Modifier.padding(start = indent)) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.height(4.dp))
-            Box(
-                modifier = Modifier
-                    .size(width = 2.dp, height = 20.dp)
-                    .background(MaterialTheme.colorScheme.outlineVariant)
-            )
-        }
-        Spacer(modifier = Modifier.size(12.dp))
+    Row(
+        modifier = Modifier
+            .padding(start = indent)
+            .height(IntrinsicSize.Min)
+    ) {
+        Box(
+            modifier = Modifier
+                .width(2.dp)
+                .fillMaxHeight()
+                .background(MaterialTheme.colorScheme.outlineVariant)
+        )
+        Spacer(modifier = Modifier.width(12.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             ThreadMessage(
                 name = reply.senderName,
                 text = reply.text,
+                richText = reply.richText,
                 photoPath = reply.photoPath,
                 reactions = reply.reactions,
                 style = MaterialTheme.typography.bodyMedium
@@ -190,20 +241,30 @@ private fun ReplyItem(reply: ThreadReplyUiModel) {
 private fun ThreadMessage(
     name: String,
     text: String,
+    richText: AnnotatedString?,
     photoPath: String?,
     reactions: List<ReactionUiModel>,
     style: androidx.compose.ui.text.TextStyle,
 ) {
+    val uriHandler = LocalUriHandler.current
+    val messageText = richText ?: AnnotatedString(text)
+    val combined = buildAnnotatedString {
+        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+            append(name.ifBlank { "Unknown" })
+            append(": ")
+        }
+        append(messageText)
+    }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
-            text = buildAnnotatedString {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append(name.ifBlank { "Unknown" })
-                    append(": ")
-                }
-                append(text)
-            },
-            style = style
+        ClickableText(
+            text = combined,
+            style = style,
+            onClick = { offset ->
+                combined.getStringAnnotations(THREAD_URL_TAG, offset, offset)
+                    .firstOrNull()?.let { annotation ->
+                        runCatching { uriHandler.openUri(annotation.item) }
+                    }
+            }
         )
 
         if (photoPath != null) {
@@ -219,13 +280,7 @@ private fun ThreadMessage(
             )
         }
 
-        if (reactions.isNotEmpty()) {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                reactions.forEach { reaction ->
-                    ReactionChip(reaction)
-                }
-            }
-        }
+        ReactionsRow(reactions)
     }
 }
 
@@ -271,6 +326,48 @@ private fun ChatAvatar(avatarPath: String?, fallbackName: String) {
             )
         }
     }
+}
+
+@Composable
+private fun ReactionsRow(reactions: List<ReactionUiModel>) {
+    if (reactions.isEmpty()) return
+
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        reactions.forEach { reaction ->
+            ReactionChip(reaction)
+        }
+    }
+}
+
+private val threadDayFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d")
+private val threadDayYearFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy")
+
+private fun formatThreadDateRange(startSeconds: Long, endSeconds: Long): String {
+    val zone = ZoneId.systemDefault()
+    val start = Instant.ofEpochSecond(minOf(startSeconds, endSeconds)).atZone(zone).toLocalDate()
+    val end = Instant.ofEpochSecond(maxOf(startSeconds, endSeconds)).atZone(zone).toLocalDate()
+    val currentYear = LocalDate.now(zone).year
+    val sameYear = start.year == end.year
+    val sameMonth = sameYear && start.month == end.month
+    val includeYear = !sameYear || start.year != currentYear
+
+    if (start == end) {
+        return if (includeYear) threadDayYearFormatter.format(start) else threadDayFormatter.format(start)
+    }
+
+    if (sameYear && sameMonth) {
+        val dayRange = "${threadDayFormatter.format(start)} – ${end.dayOfMonth}"
+        return if (includeYear) "$dayRange, ${start.year}" else dayRange
+    }
+
+    if (sameYear) {
+        val base = "${threadDayFormatter.format(start)} – ${threadDayFormatter.format(end)}"
+        return if (includeYear) "$base, ${start.year}" else base
+    }
+
+    val startLabel = threadDayYearFormatter.format(start)
+    val endLabel = threadDayYearFormatter.format(end)
+    return "$startLabel – $endLabel"
 }
 
 @Composable

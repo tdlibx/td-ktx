@@ -1,31 +1,40 @@
 package com.telegramflow.example.domain.threads
 
 import android.util.Log
+import android.util.Patterns
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import com.telegramflow.example.data.repo.TelegramRepository
 import com.telegramflow.example.domain.threads.ReactionUiModel
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import org.drinkless.tdlib.TdApi
 
 @Singleton
 class BuildThreadsForChatUseCase @Inject constructor(
     private val telegramRepository: TelegramRepository,
 ) {
-    suspend operator fun invoke(chat: TdApi.Chat): List<ThreadUiModel> = withContext(Dispatchers.IO) {
+    operator fun invoke(chat: TdApi.Chat): Flow<ThreadUiModel> = flow {
         Log.d(TAG, "Fetching history for chat '${chat.title}' (${chat.id})")
         var fromMessageId = 0L
         var totalHistoryMessages = 0
         var page = 0
-        val threadCandidates = mutableListOf<ThreadUiModel>()
         val seenMessageIds = mutableSetOf<Long>()
         val messagesById = mutableMapOf<Long, TdApi.Message>()
         val repliesByParent = mutableMapOf<Long, MutableList<TdApi.Message>>()
         val userNames = mutableMapOf<Long, String>()
         val chatNames = mutableMapOf<Long, String>()
+        val mentionNames = mutableMapOf<String, String>()
         val filePaths = mutableMapOf<Int, String?>()
-        val chatAvatarPath = resolveChatAvatar(chat, filePaths)
 
         while (page < MAX_HISTORY_PAGES && totalHistoryMessages < HISTORY_LIMIT) {
             val history = telegramRepository.fetchChatHistory(
@@ -68,29 +77,67 @@ class BuildThreadsForChatUseCase @Inject constructor(
         )
 
         threadRoots.forEach { root ->
-            val flattenedReplies = collectReplies(
+            val previewReplies = collectReplies(
                 parentId = root.id,
                 repliesByParent = repliesByParent,
                 depth = 1,
                 userNames = userNames,
                 chatNames = chatNames,
                 filePaths = filePaths,
+                shallow = true,
+                downloadMedia = false,
+                mentionNames = mentionNames,
             )
-            val totalReplies = flattenedReplies.size
+            val totalReplies = countReplies(root.id, repliesByParent)
+
             if (totalReplies > MIN_REPLY_COUNT) {
-                threadCandidates += ThreadUiModel(
+                val rootText = messageText(root)
+                val previewModel = ThreadUiModel(
                     id = root.id,
                     chatId = chat.id,
                     chatTitle = chat.title,
-                    chatAvatarPath = chatAvatarPath,
                     senderName = resolveSenderName(root, userNames, chatNames),
-                    text = messageText(root),
-                    photoPath = resolvePhotoPath(root, filePaths),
+                    text = rootText,
+                    richText = null,
                     reactions = mapReactions(root),
                     replyCount = totalReplies,
-                    date = root.date.toLong(),
-                    replies = flattenedReplies,
+                    firstMessageDate = root.date.toLong(),
+                    lastMessageDate = previewLastDate(root, previewReplies),
+                    replies = previewReplies.take(PREVIEW_REPLY_LIMIT),
+                    isComplete = false,
                 )
+                emit(previewModel)
+
+                val flattenedReplies = collectReplies(
+                    parentId = root.id,
+                    repliesByParent = repliesByParent,
+                    depth = 1,
+                    userNames = userNames,
+                    chatNames = chatNames,
+                    filePaths = filePaths,
+                    shallow = false,
+                    downloadMedia = true,
+                    mentionNames = mentionNames,
+                )
+
+                val enrichedRoot = coroutineScope {
+                    val richTextDeferred = async { enrichMessageText(rootText, mentionNames) }
+                    val reactionsDeferred = async { fetchReactions(root, preferCached = false) }
+                    val photoDeferred = async { resolvePhotoPath(root, filePaths) }
+                    val avatarDeferred = async { resolveChatAvatar(chat, filePaths) }
+
+                    previewModel.copy(
+                        chatAvatarPath = avatarDeferred.await(),
+                        richText = richTextDeferred.await(),
+                        photoPath = photoDeferred.await(),
+                        reactions = reactionsDeferred.await(),
+                        lastMessageDate = lastMessageDate(root, flattenedReplies),
+                        replies = flattenedReplies,
+                        isComplete = true,
+                    )
+                }
+
+                emit(enrichedRoot)
                 Log.d(
                     TAG,
                     "Thread found in '${chat.title}': rootId=${root.id}, replies=$totalReplies",
@@ -105,10 +152,32 @@ class BuildThreadsForChatUseCase @Inject constructor(
 
         Log.d(
             TAG,
-            "Finished '${chat.title}': scanned=$totalHistoryMessages, threads=${threadCandidates.size}",
+            "Finished '${chat.title}': scanned=$totalHistoryMessages, threads=${threadRoots.size}",
         )
+    }.flowOn(Dispatchers.IO)
 
-        threadCandidates
+    private fun countReplies(
+        parentId: Long,
+        repliesByParent: Map<Long, List<TdApi.Message>>,
+    ): Int {
+        val replies = repliesByParent[parentId].orEmpty()
+        return replies.size + replies.sumOf { reply -> countReplies(reply.id, repliesByParent) }
+    }
+
+    private fun previewLastDate(
+        root: TdApi.Message,
+        previewReplies: List<ThreadReplyUiModel>,
+    ): Long {
+        val latestReplyDate = previewReplies.maxOfOrNull { it.date } ?: root.date.toLong()
+        return maxOf(latestReplyDate, root.date.toLong())
+    }
+
+    private fun lastMessageDate(
+        root: TdApi.Message,
+        replies: List<ThreadReplyUiModel>,
+    ): Long {
+        val latestReplyDate = replies.maxOfOrNull { it.date } ?: root.date.toLong()
+        return maxOf(latestReplyDate, root.date.toLong())
     }
 
     private suspend fun collectReplies(
@@ -118,30 +187,50 @@ class BuildThreadsForChatUseCase @Inject constructor(
         userNames: MutableMap<Long, String>,
         chatNames: MutableMap<Long, String>,
         filePaths: MutableMap<Int, String?>,
-    ): List<ThreadReplyUiModel> {
+        shallow: Boolean,
+        downloadMedia: Boolean,
+        mentionNames: MutableMap<String, String>,
+    ): List<ThreadReplyUiModel> = coroutineScope {
         val replies = repliesByParent[parentId].orEmpty().sortedBy { it.date }
         val replyItems = mutableListOf<ThreadReplyUiModel>()
-        replies.forEach { reply ->
+        replies.take(if (shallow) PREVIEW_REPLY_LIMIT else replies.size).forEach { reply ->
+            val text = messageText(reply)
+            val reactionsDeferred = async {
+                fetchReactions(reply, preferCached = shallow)
+            }
+            val richTextDeferred = async {
+                if (shallow) null else enrichMessageText(text, mentionNames)
+            }
+            val photoDeferred = async {
+                if (downloadMedia) resolvePhotoPath(reply, filePaths) else null
+            }
+
             replyItems += ThreadReplyUiModel(
                 id = reply.id,
                 chatId = reply.chatId,
                 senderName = resolveSenderName(reply, userNames, chatNames),
-                text = messageText(reply),
-                photoPath = resolvePhotoPath(reply, filePaths),
-                reactions = mapReactions(reply),
+                text = text,
+                richText = richTextDeferred.await(),
+                photoPath = photoDeferred.await(),
+                reactions = reactionsDeferred.await(),
                 depth = depth,
                 date = reply.date.toLong(),
             )
-            replyItems += collectReplies(
-                parentId = reply.id,
-                repliesByParent = repliesByParent,
-                depth = depth + 1,
-                userNames = userNames,
-                chatNames = chatNames,
-                filePaths = filePaths,
-            )
+            if (!shallow) {
+                replyItems += collectReplies(
+                    parentId = reply.id,
+                    repliesByParent = repliesByParent,
+                    depth = depth + 1,
+                    userNames = userNames,
+                    chatNames = chatNames,
+                    filePaths = filePaths,
+                    shallow = false,
+                    downloadMedia = downloadMedia,
+                    mentionNames = mentionNames,
+                )
+            }
         }
-        return replyItems
+        replyItems
     }
 
     private suspend fun resolvePhotoPath(
@@ -174,6 +263,46 @@ class BuildThreadsForChatUseCase @Inject constructor(
             ?.takeIf { it.isNotBlank() }
     }
 
+    private suspend fun fetchReactions(
+        message: TdApi.Message,
+        preferCached: Boolean,
+    ): List<ReactionUiModel> {
+        val cached = mapReactions(message)
+        if (cached.isNotEmpty()) return cached
+        if (preferCached) return emptyList()
+
+        val refreshed = runCatching {
+            telegramRepository.fetchMessage(message.chatId, message.id)
+        }.getOrNull()
+        val refreshedMapped = refreshed?.let { mapReactions(it) }.orEmpty()
+        if (refreshedMapped.isNotEmpty()) return refreshedMapped
+
+        return loadAddedReactionCounts(message)
+    }
+
+    private suspend fun loadAddedReactionCounts(message: TdApi.Message): List<ReactionUiModel> {
+        val countsByLabel = mutableMapOf<String, Int>()
+        var offset = ""
+        do {
+            val page = runCatching {
+                telegramRepository.fetchMessageAddedReactions(
+                    chatId = message.chatId,
+                    messageId = message.id,
+                    offset = offset,
+                    limit = ADDED_REACTION_PAGE_SIZE,
+                )
+            }.getOrNull()
+            val added = page?.reactions.orEmpty()
+            added.forEach { reaction ->
+                val label = reactionLabel(reaction.type) ?: return@forEach
+                countsByLabel[label] = countsByLabel.getOrDefault(label, 0) + 1
+            }
+            offset = page?.nextOffset.orEmpty()
+        } while (offset.isNotEmpty())
+
+        return countsByLabel.entries.map { (label, count) -> ReactionUiModel(label, count) }
+    }
+
     private suspend fun resolveChatAvatar(
         chat: TdApi.Chat,
         filePaths: MutableMap<Int, String?>,
@@ -194,11 +323,17 @@ class BuildThreadsForChatUseCase @Inject constructor(
     }
 
     private fun mapReactions(message: TdApi.Message): List<ReactionUiModel> {
-        val reactionCounts = message.interactionInfo?.reactions?.reactions.orEmpty()
-        return reactionCounts.mapNotNull { reactionCount ->
+        val interaction = message.interactionInfo ?: return emptyList()
+        val reactions = interaction.reactions ?: return emptyList()
+
+        val aggregated = reactions.reactions.orEmpty()
+        val mappedAggregated = aggregated.mapNotNull { reactionCount ->
             val label = reactionLabel(reactionCount.type) ?: return@mapNotNull null
             ReactionUiModel(label = label, count = reactionCount.totalCount)
         }
+        if (mappedAggregated.isNotEmpty()) return mappedAggregated
+
+        return emptyList()
     }
 
     private fun reactionLabel(reaction: TdApi.ReactionType): String? {
@@ -207,6 +342,76 @@ class BuildThreadsForChatUseCase @Inject constructor(
             is TdApi.ReactionTypeCustomEmoji -> "Custom"
             else -> null
         }
+    }
+
+    private suspend fun enrichMessageText(
+        text: String,
+        mentionNames: MutableMap<String, String>,
+    ): AnnotatedString {
+        if (text.isBlank()) return AnnotatedString("")
+
+        val matches = findTextMatches(text)
+        if (matches.isEmpty()) return AnnotatedString(text)
+
+        val builder = buildAnnotatedString {
+            var cursor = 0
+            matches.forEach { match ->
+                if (cursor < match.start) append(text.substring(cursor, match.start))
+                when (match) {
+                    is TextMatch.Mention -> {
+                        val display = resolveMentionName(match.username, mentionNames) ?: "@${match.username}"
+                        pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+                        append(display)
+                        pop()
+                    }
+                    is TextMatch.Link -> {
+                        pushStringAnnotation(tag = THREAD_URL_TAG, annotation = match.url)
+                        pushStyle(SpanStyle(textDecoration = TextDecoration.Underline))
+                        append(match.url)
+                        pop()
+                        pop()
+                    }
+                }
+                cursor = match.end
+            }
+            if (cursor < text.length) append(text.substring(cursor))
+        }
+
+        return builder
+    }
+
+    private suspend fun resolveMentionName(
+        username: String,
+        mentionNames: MutableMap<String, String>,
+    ): String? {
+        val normalized = username.lowercase()
+        return mentionNames.getOrPut(normalized) {
+            runCatching {
+                telegramRepository.fetchUserByUsername(username)
+                    ?.let { user ->
+                        listOfNotNull(user.firstName, user.lastName)
+                            .filter { it.isNotBlank() }
+                            .joinToString(" ")
+                            .ifBlank { user.usernames?.activeUsernames?.firstOrNull().orEmpty() }
+                    }
+                    ?.takeIf { it.isNotBlank() }
+                    ?: "@${username}"
+            }.getOrDefault("@${username}")
+        }
+    }
+
+    private fun findTextMatches(text: String): List<TextMatch> {
+        val results = mutableListOf<TextMatch>()
+        mentionRegex.findAll(text).forEach { match ->
+            val username = match.value.removePrefix("@")
+            results += TextMatch.Mention(start = match.range.first, end = match.range.last + 1, username = username)
+        }
+        val matcher = Patterns.WEB_URL.matcher(text)
+        while (matcher.find()) {
+            val url = matcher.group() ?: continue
+            results += TextMatch.Link(start = matcher.start(), end = matcher.end(), url = url)
+        }
+        return results.sortedBy { it.start }
     }
 
     private suspend fun resolveSenderName(
@@ -263,10 +468,18 @@ class BuildThreadsForChatUseCase @Inject constructor(
         }
     }
 
+    private sealed class TextMatch(open val start: Int, open val end: Int) {
+        data class Mention(override val start: Int, override val end: Int, val username: String) : TextMatch(start, end)
+        data class Link(override val start: Int, override val end: Int, val url: String) : TextMatch(start, end)
+    }
+
     companion object {
         private const val HISTORY_LIMIT = 100
         private const val MAX_HISTORY_PAGES = 5
         private const val MIN_REPLY_COUNT = 2
+        private const val PREVIEW_REPLY_LIMIT = 3
+        private val mentionRegex = "@[A-Za-z0-9_]{3,}".toRegex()
+        private const val ADDED_REACTION_PAGE_SIZE = 100
         private const val TAG = "BuildThreadsForChatUseCase"
     }
 }

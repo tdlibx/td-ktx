@@ -1,5 +1,7 @@
 package com.telegramflow.example.domain.threads
 
+import androidx.compose.ui.text.AnnotatedString
+
 /**
  * Thread models shared between repository and UI layers.
  */
@@ -10,11 +12,14 @@ data class ThreadUiModel(
     val chatAvatarPath: String? = null,
     val senderName: String,
     val text: String,
+    val richText: AnnotatedString? = null,
     val photoPath: String? = null,
     val reactions: List<ReactionUiModel> = emptyList(),
     val replyCount: Int,
-    val date: Long,
+    val firstMessageDate: Long,
+    val lastMessageDate: Long,
     val replies: List<ThreadReplyUiModel> = emptyList(),
+    val isComplete: Boolean = true,
 )
 
 data class ThreadReplyUiModel(
@@ -22,6 +27,7 @@ data class ThreadReplyUiModel(
     val chatId: Long,
     val senderName: String,
     val text: String,
+    val richText: AnnotatedString? = null,
     val photoPath: String? = null,
     val reactions: List<ReactionUiModel> = emptyList(),
     val depth: Int,
@@ -32,3 +38,5 @@ data class ReactionUiModel(
     val label: String,
     val count: Int,
 )
+
+const val THREAD_URL_TAG = "URL"
