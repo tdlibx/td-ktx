@@ -342,16 +342,26 @@ private fun formatThreadDateRange(startSeconds: Long, endSeconds: Long): String 
     val start = Instant.ofEpochSecond(minOf(startSeconds, endSeconds)).atZone(zone).toLocalDate()
     val end = Instant.ofEpochSecond(maxOf(startSeconds, endSeconds)).atZone(zone).toLocalDate()
     val currentYear = LocalDate.now(zone).year
-    val includeYear = start.year != currentYear || end.year != currentYear
-    val startFormatter = if (includeYear) threadDayYearFormatter else threadDayFormatter
-    val endFormatter = if (includeYear && start.year != end.year) threadDayYearFormatter else startFormatter
+    val sameYear = start.year == end.year
+    val sameMonth = sameYear && start.month == end.month
+    val includeYear = !sameYear || start.year != currentYear
 
     if (start == end) {
-        return startFormatter.format(start)
+        return if (includeYear) threadDayYearFormatter.format(start) else threadDayFormatter.format(start)
     }
 
-    val startLabel = startFormatter.format(start)
-    val endLabel = endFormatter.format(end)
+    if (sameYear && sameMonth) {
+        val dayRange = "${threadDayFormatter.format(start)} – ${end.dayOfMonth}"
+        return if (includeYear) "$dayRange, ${start.year}" else dayRange
+    }
+
+    if (sameYear) {
+        val base = "${threadDayFormatter.format(start)} – ${threadDayFormatter.format(end)}"
+        return if (includeYear) "$base, ${start.year}" else base
+    }
+
+    val startLabel = threadDayYearFormatter.format(start)
+    val endLabel = threadDayYearFormatter.format(end)
     return "$startLabel – $endLabel"
 }
 
