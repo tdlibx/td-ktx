@@ -15,6 +15,7 @@ import kotlinx.telegram.coroutines.getChat
 import kotlinx.telegram.coroutines.getChatHistory
 import kotlinx.telegram.coroutines.getChats
 import kotlinx.telegram.coroutines.getMessage
+import kotlinx.telegram.coroutines.getMessageAddedReactions
 import kotlinx.telegram.coroutines.getUser
 import kotlinx.telegram.coroutines.searchPublicChat
 import kotlinx.telegram.coroutines.setAuthenticationPhoneNumber
