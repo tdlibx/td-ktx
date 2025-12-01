@@ -332,8 +332,9 @@ class BuildThreadsForChatUseCase @Inject constructor(
 
     private fun mapReactions(message: TdApi.Message): List<ReactionUiModel> {
         val interaction = message.interactionInfo ?: return emptyList()
+        val reactions = interaction.reactions ?: return emptyList()
 
-        val aggregated = interaction.reactions?.reactions.orEmpty()
+        val aggregated = reactions.reactions.orEmpty()
         val mappedAggregated = aggregated.mapNotNull { reactionCount ->
             val label = reactionLabel(reactionCount.type) ?: return@mapNotNull null
             ReactionUiModel(label = label, count = reactionCount.totalCount)
@@ -341,7 +342,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
         if (mappedAggregated.isNotEmpty()) return mappedAggregated
 
         val recentCounts = mutableMapOf<String, Int>()
-        interaction.recentReactions.orEmpty().forEach { reaction ->
+        reactions.recentReactions.orEmpty().forEach { reaction ->
             val label = reactionLabel(reaction.type) ?: return@forEach
             recentCounts[label] = recentCounts.getOrDefault(label, 0) + 1
         }
