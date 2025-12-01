@@ -5,13 +5,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -42,7 +46,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import androidx.compose.foundation.text.ClickableText
 import com.telegramflow.example.domain.threads.ReactionUiModel
 import com.telegramflow.example.domain.threads.THREAD_URL_TAG
 import com.telegramflow.example.domain.threads.ThreadReplyUiModel
@@ -209,16 +212,18 @@ private fun RepliesList(replies: List<ThreadReplyUiModel>) {
 @Composable
 private fun ReplyItem(reply: ThreadReplyUiModel) {
     val indent = (reply.depth * 14).dp
-    Row(modifier = Modifier.padding(start = indent)) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.height(4.dp))
-            Box(
-                modifier = Modifier
-                    .size(width = 2.dp, height = 20.dp)
-                    .background(MaterialTheme.colorScheme.outlineVariant)
-            )
-        }
-        Spacer(modifier = Modifier.size(12.dp))
+    Row(
+        modifier = Modifier
+            .padding(start = indent)
+            .height(IntrinsicSize.Min)
+    ) {
+        Box(
+            modifier = Modifier
+                .width(2.dp)
+                .fillMaxHeight()
+                .background(MaterialTheme.colorScheme.outlineVariant)
+        )
+        Spacer(modifier = Modifier.width(12.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             ThreadMessage(
                 name = reply.senderName,
