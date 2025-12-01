@@ -92,22 +92,21 @@ class BuildThreadsForChatUseCase @Inject constructor(
 
             if (totalReplies > MIN_REPLY_COUNT) {
                 val rootText = messageText(root)
-                emit(
-                    ThreadUiModel(
-                        id = root.id,
-                        chatId = chat.id,
-                        chatTitle = chat.title,
-                        senderName = resolveSenderName(root, userNames, chatNames),
-                        text = rootText,
-                        richText = null,
-                        reactions = mapReactions(root),
-                        replyCount = totalReplies,
-                        firstMessageDate = root.date.toLong(),
-                        lastMessageDate = previewLastDate(root, previewReplies),
-                        replies = previewReplies.take(PREVIEW_REPLY_LIMIT),
-                        isComplete = false,
-                    ),
+                val previewModel = ThreadUiModel(
+                    id = root.id,
+                    chatId = chat.id,
+                    chatTitle = chat.title,
+                    senderName = resolveSenderName(root, userNames, chatNames),
+                    text = rootText,
+                    richText = null,
+                    reactions = mapReactions(root),
+                    replyCount = totalReplies,
+                    firstMessageDate = root.date.toLong(),
+                    lastMessageDate = previewLastDate(root, previewReplies),
+                    replies = previewReplies.take(PREVIEW_REPLY_LIMIT),
+                    isComplete = false,
                 )
+                emit(previewModel)
 
                 val flattenedReplies = collectReplies(
                     parentId = root.id,
@@ -127,18 +126,11 @@ class BuildThreadsForChatUseCase @Inject constructor(
                     val photoDeferred = async { resolvePhotoPath(root, filePaths) }
                     val avatarDeferred = async { resolveChatAvatar(chat, filePaths) }
 
-                    ThreadUiModel(
-                        id = root.id,
-                        chatId = chat.id,
-                        chatTitle = chat.title,
+                    previewModel.copy(
                         chatAvatarPath = avatarDeferred.await(),
-                        senderName = resolveSenderName(root, userNames, chatNames),
-                        text = rootText,
                         richText = richTextDeferred.await(),
                         photoPath = photoDeferred.await(),
                         reactions = reactionsDeferred.await(),
-                        replyCount = totalReplies,
-                        firstMessageDate = root.date.toLong(),
                         lastMessageDate = lastMessageDate(root, flattenedReplies),
                         replies = flattenedReplies,
                         isComplete = true,

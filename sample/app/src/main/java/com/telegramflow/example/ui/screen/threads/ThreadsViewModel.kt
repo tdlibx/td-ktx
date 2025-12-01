@@ -45,11 +45,24 @@ class ThreadsViewModel @Inject constructor(
                         try {
                             buildThreadsForChat(chat).collect { thread ->
                                 _uiState.update { state ->
-                                    val filtered = state.threads
-                                        .filterNot { it.chatId == thread.chatId && it.id == thread.id }
-                                    val merged = (filtered + thread)
-                                        .sortedByDescending { it.lastMessageDate }
-                                    state.copy(threads = merged)
+                                    val threads = state.threads.toMutableList()
+                                    val existingIndex = threads.indexOfFirst {
+                                        it.chatId == thread.chatId && it.id == thread.id
+                                    }
+                                    if (existingIndex >= 0) {
+                                        threads.removeAt(existingIndex)
+                                    }
+
+                                    val insertIndex = threads.indexOfFirst {
+                                        it.lastMessageDate < thread.lastMessageDate
+                                    }
+                                    if (insertIndex >= 0) {
+                                        threads.add(insertIndex, thread)
+                                    } else {
+                                        threads.add(thread)
+                                    }
+
+                                    state.copy(threads = threads)
                                 }
                             }
                         } catch (throwable: Throwable) {
