@@ -48,7 +48,7 @@ kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
-td-ktx = { module = "com.github.akrafts-gpt:td-ktx", version.ref = "tdktx" }
+td-ktx = { module = "com.github.tdlibx:td-ktx", version.ref = "tdktx" }
 tdlib = { module = "com.github.tdlibx:td", version.ref = "tdlib" }
 
 [plugins]

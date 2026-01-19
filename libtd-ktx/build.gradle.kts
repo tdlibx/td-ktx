@@ -12,7 +12,7 @@ plugins {
     `maven-publish`
 }
 
-group = "com.github.akrafts-gpt"
+group = "com.github.tdlibx"
 version = "1.8.56-beta5"
 
 android {
