@@ -8,8 +8,8 @@ import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.coroutines.closeSecretChat
 import kotlinx.telegram.coroutines.createSecretChat
 import kotlinx.telegram.coroutines.getSecretChat
-import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.SecretChat
+import org.drinkless.tdlib.TdApi
+import org.drinkless.tdlib.TdApi.SecretChat
 
 /**
  * Interface for access [TdApi.SecretChat] extension functions. Can be used alongside with other
@@ -38,7 +38,7 @@ interface SecretChatKtx : BaseKtx {
 
   /**
    * Suspend function, which returns information about a secret chat by its identifier. This is an
-   * offline request.
+   * offline method.
    *
    *
    * @return [TdApi.SecretChat] Represents a secret chat.

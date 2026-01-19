@@ -1,67 +1,81 @@
-# Telegram Flow
+# Telegram Flow for TDLib
 
-Kotlin Coroutines extensions for Telegram API [TDLib](https://github.com/tdlib/td) (Telegram Database
- library)
+[![](hhttps://jitpack.io/v/akrafts-gpt/td-ktx.svg)](https://jitpack.io/v/#akrafts-gpt/td-ktx)
 
-## Using library
+Telegram Flow is a Kotlin-first extension toolkit for [TDLib](https://github.com/tdlib/td) that turns callback-based Telegram API calls into coroutines and flows. It keeps your client code concise while exposing idiomatic Compose- and coroutine-friendly APIs.
 
-The main class of the library is [TelegramFlow]. It converts Telegram Updates handlers to the
-Kotlin Coroutine Flows and Telegram callback-style Functions to Kotlin Coroutine suspend functions
+## Features
+- **Coroutine wrappers** for every TDLib function so you can `suspend` instead of juggling callbacks.
+- **Flow-based updates** that emit strongly typed Telegram updates with sensible defaults.
+- **Extension interfaces** to organize API access around Telegram entities (users, chats, messages, etc.).
+- **Compose-ready**: works seamlessly with `ViewModel` scopes and state flows.
 
-### Start using
+## Setup
+Add the library dependency from Maven Central:
 
-1. Create instance of [TelegramFlow]
-2. You can collect flow of TdApi.Objects from the TelegramFlow instance and its [flow extensions].
-3. Call [attachClient] function of the [TelegramFlow] instance to connect it to the Telegram Client.
-4. Now you can use numerous [extension functions] to send data to the Telegram API and collect data
- from [flow extensions]
- 
-### Using Flows
-
-[Any update](https://core.telegram.org/tdlib/getting-started#handling-updates) listed in TdApi can be collected by corresponding flow extension of the [TelegramFlow].
-
-```Kotlin
-telegramFlow.userStatusFlow().collect { status: TdApi.UpdateUserStatus ->
-    // collect UpdateUserStatus from Telegram
-}
+```kotlin
+implementation(project(":libtd-ktx"))
 ```
 
-For the Updates where there is the only field available inside, Update class is suppress by the flow extension and return data itself, for example: 
+The `libtd-ktx` module exposes TDLib (`com.github.tdlibx:td:1.8.56`) as an API dependency, so no extra TDLib declaration is required.
 
-```Kotlin 
-telegramFlow.authorizationStateFlow().collect { state: TdApi.AuthorizationState ->
-    // collect AuthorizationState instead of TdApi.UpdateAuthorizationState since there is no other data inside
-}
+The project ships a TDLib wrapper module (`libtd-ktx`) and a Compose sample under `sample/` that demonstrates usage with Hilt and the Navigation 3 typed destination APIs.
+
+## Getting started
+1. Create a single `TelegramFlow` instance and keep it in a long-lived scope (e.g., via DI).
+2. Attach a TDLib client once at startup:
+
+```kotlin
+val telegramFlow = TelegramFlow()
+telegramFlow.attachClient()
 ```
 
-### Using Functions
+3. Provide required TDLib parameters when prompted by the authorization state flow:
 
-[Any funcrion](https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_function.html) listed in TdApi can be called via corresponding coroutine extension
-
-```Kotlin
-suspend fun sendCode(code: String) {
-    api.checkAuthenticationCode(code) // send TdApi.CheckAuthenticationCode(code) to the Client
-}
-```
-
-### Using extensions interfaces
-
-Library provides [extension interfaces](https://tdlibx.github.io/td-ktx/docs/libtd-ktx/kotlinx.telegram.extensions/index.html) to access specific Telegram Object's extensions. This allows you to use the library full potential
-
-```Kotlin
-class YourTelegramClass : UserKtx {
-    // Instance of the TelegramFlow connecting extensions to the API 
-    override val api = TelegramFlow()
-    // Flow that returns updates of the user as a full UserInfo
-    val fullInfoFlow: Flow<TdApi.UserFullInfo> = api.userFlow().map { user ->
-        user.getFullInfo() // call TdApi.GetUserFullInfo(userId) with id of the user instance
+```kotlin
+telegramFlow.authorizationStateFlow().collect { state ->
+    if (state is TdApi.AuthorizationStateWaitTdlibParameters) {
+        telegramFlow.setTdlibParameters(
+            databaseDirectory = "/data/user/0/<your.package>/files/td",
+            apiId = BuildConfig.TELEGRAM_APP_ID,
+            apiHash = BuildConfig.TELEGRAM_APP_HASH,
+            // ...other parameters
+        )
     }
 }
 ```
-All possible extensions for Telegram entities can be accessed via [TelegramKtx]. List and description of available extension interfaces can be found [here](https://tdlibx.github.io/td-ktx/docs/libtd-ktx/kotlinx.telegram.extensions/index.html)
 
-[TelegramFlow]: https://tdlibx.github.io/td-ktx/docs/libtd-ktx/kotlinx.telegram.core/-telegram-flow/index.html
-[flow extensions]: https://tdlibx.github.io/td-ktx/docs/libtd-ktx/kotlinx.telegram.flows/index.html
-[attachClient]: https://tdlibx.github.io/td-ktx/docs/libtd-ktx/kotlinx.telegram.core/-telegram-flow/attach-client.html
-[extension functions]: https://tdlibx.github.io/td-ktx/docs/libtd-ktx/kotlinx.telegram.coroutines/index.html
-[TelegramKtx]: https://tdlibx.github.io/td-ktx/docs/libtd-ktx/kotlinx.telegram.extensions/-telegram-ktx/index.html
+4. Send authentication information with coroutine calls:
+
+```kotlin
+telegramFlow.setAuthenticationPhoneNumber(phone, null)
+telegramFlow.checkAuthenticationCode(code)
+telegramFlow.checkAuthenticationPassword(password)
+```
+
+## Collecting updates
+Every TDLib update has a matching flow extension. Example: tracking user presence changes.
+
+```kotlin
+telegramFlow.userStatusFlow().collect { status ->
+    val user = telegramFlow.getUser(status.userId)
+    // update UI with latest user status
+}
+```
+
+For updates that only wrap a single value, the flow returns the inner type directly, e.g. `authorizationStateFlow()` emits `TdApi.AuthorizationState` instances.
+
+## Calling Telegram functions
+Each TDLib function is exposed as a suspending extension on `TelegramFlow`:
+
+```kotlin
+suspend fun fetchSelf(): TdApi.User = telegramFlow.getMe()
+```
+
+Explore the full API surface in the [generated docs](https://tdlibx.github.io/td-ktx/docs/libtd-ktx/).
+
+## Samples
+A minimal Compose sample lives in [`sample/app`](sample/app). It wires `TelegramFlow` with Hilt, demonstrates handling the authorization flow, and renders online users with Navigation Compose.
+
+## License
+This project is distributed under the Apache 2.0 License. See [LICENSE](LICENSE) for details.

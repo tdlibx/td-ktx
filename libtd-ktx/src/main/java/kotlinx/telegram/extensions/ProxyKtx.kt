@@ -13,9 +13,9 @@ import kotlinx.telegram.coroutines.enableProxy
 import kotlinx.telegram.coroutines.getProxyLink
 import kotlinx.telegram.coroutines.pingProxy
 import kotlinx.telegram.coroutines.removeProxy
-import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Proxy
-import org.drinkless.td.libcore.telegram.TdApi.ProxyType
+import org.drinkless.tdlib.TdApi
+import org.drinkless.tdlib.TdApi.Proxy
+import org.drinkless.tdlib.TdApi.ProxyType
 
 /**
  * Interface for access [TdApi.Proxy] extension functions. Can be used alongside with other
@@ -32,9 +32,9 @@ interface ProxyKtx : BaseKtx {
    * Suspend function, which edits an existing proxy server for network requests. Can be called
    * before authorization.
    *
-   * @param server Proxy server IP address.  
+   * @param server Proxy server domain or IP address.  
    * @param port Proxy server port.  
-   * @param enable True, if the proxy should be enabled.  
+   * @param enable Pass true to immediately enable the proxy.  
    * @param type Proxy type.
    *
    * @return [TdApi.Proxy] Contains information about a proxy server.
@@ -57,7 +57,7 @@ interface ProxyKtx : BaseKtx {
    * for SOCKS5 and MTProto proxies. Can be called before authorization.
    *
    *
-   * @return [TdApi.Text] Contains some text.
+   * @return [TdApi.HttpUrl] Contains an HTTP URL.
    */
   suspend fun Proxy.getLink() = api.getProxyLink(this.id)
 

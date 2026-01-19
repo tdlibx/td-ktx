@@ -7,20 +7,20 @@ package kotlinx.telegram.flows
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.BasicGroup
-import org.drinkless.td.libcore.telegram.TdApi.UpdateBasicGroupFullInfo
+import org.drinkless.tdlib.TdApi
+import org.drinkless.tdlib.TdApi.BasicGroup
+import org.drinkless.tdlib.TdApi.UpdateBasicGroupFullInfo
 
 /**
  * emits [BasicGroup] if some data of a basic group has changed. This update is guaranteed to come
- * before the basic group identifier is returned to the client.
+ * before the basic group identifier is returned to the application.
  */
 fun TelegramFlow.basicGroupFlow(): Flow<BasicGroup> =
     this.getUpdatesFlowOfType<TdApi.UpdateBasicGroup>()
     .mapNotNull { it.basicGroup }
 
 /**
- * emits [UpdateBasicGroupFullInfo] if some data from basicGroupFullInfo has been changed.
+ * emits [UpdateBasicGroupFullInfo] if some data in basicGroupFullInfo has been changed.
  */
 fun TelegramFlow.basicGroupFullInfoFlow(): Flow<UpdateBasicGroupFullInfo> =
     this.getUpdatesFlowOfType()

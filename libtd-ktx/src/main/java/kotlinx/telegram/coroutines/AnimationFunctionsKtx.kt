@@ -5,9 +5,9 @@
 package kotlinx.telegram.coroutines
 
 import kotlinx.telegram.core.TelegramFlow
-import org.drinkless.td.libcore.telegram.TdApi
-import org.drinkless.td.libcore.telegram.TdApi.Animations
-import org.drinkless.td.libcore.telegram.TdApi.InputFile
+import org.drinkless.tdlib.TdApi
+import org.drinkless.tdlib.TdApi.Animations
+import org.drinkless.tdlib.TdApi.InputFile
 
 /**
  * Suspend function, which manually adds a new animation to the list of saved animations. The new
@@ -15,7 +15,7 @@ import org.drinkless.td.libcore.telegram.TdApi.InputFile
  * removed first. Only non-secret video animations with MIME type &quot;video/mp4&quot; can be added to
  * the list.
  *
- * @param animation The animation file to be added. Only animations known to the server (i.e.
+ * @param animation The animation file to be added. Only animations known to the server (i.e.,
  * successfully sent via a message) can be added to the list.
  */
 suspend fun TelegramFlow.addSavedAnimation(animation: InputFile?) =

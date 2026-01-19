@@ -89,6 +89,7 @@ hs_err_pid*
 bin/
 gen/
 release/
+build/
 
 # Gradle files
 .gradle/
