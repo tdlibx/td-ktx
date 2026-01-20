@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "com.github.tdlibx"
-version = "1.8.56-beta5"
+version = "1.8.56"
 
 android {
     namespace = "kotlinx.telegram"
