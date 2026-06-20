@@ -1,5 +1,3 @@
-import org.gradle.api.GradleException
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -7,20 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.compose)
-}
-
-fun readTelegramCredential(propertyKey: String, envKey: String): String {
-    val propertyValue = findProperty(propertyKey)?.toString()?.trim()
-    if (!propertyValue.isNullOrEmpty()) {
-        return propertyValue
-    }
-
-    val envValue = System.getenv(envKey)?.toString()?.trim()
-    if (!envValue.isNullOrEmpty()) {
-        return envValue
-    }
-
-    throw GradleException("Missing Telegram credential. Provide '$propertyKey' Gradle property or '$envKey' environment variable.")
 }
 
 android {
@@ -33,12 +17,6 @@ android {
         targetSdk = 36
         versionCode = 20240621
         versionName = "0.1.0"
-
-        val telegramAppId = readTelegramCredential("telegramAppId", "TELEGRAM_APP_ID").toInt()
-        val telegramAppHash = readTelegramCredential("telegramAppHash", "TELEGRAM_APP_HASH")
-
-        buildConfigField("int", "TELEGRAM_APP_ID", telegramAppId.toString())
-        buildConfigField("String", "TELEGRAM_APP_HASH", "\"$telegramAppHash\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

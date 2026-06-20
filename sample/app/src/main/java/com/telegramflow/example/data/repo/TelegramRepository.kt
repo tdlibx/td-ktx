@@ -2,6 +2,7 @@ package com.telegramflow.example.data.repo
 
 import com.telegramflow.example.BuildConfig
 import com.telegramflow.example.data.local.AuthState
+import com.telegramflow.example.data.local.TelegramConfigStorage
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +27,10 @@ import kotlinx.telegram.flows.userStatusFlow
 import org.drinkless.tdlib.TdApi
 
 @Singleton
-class TelegramRepository @Inject constructor(override val api: TelegramFlow) : UserKtx {
+class TelegramRepository @Inject constructor(
+    override val api: TelegramFlow,
+    private val configStorage: TelegramConfigStorage
+) : UserKtx {
 
     val authFlow: Flow<AuthState?> = api.authorizationStateFlow()
         .onEach { authorizationState ->
@@ -146,8 +150,8 @@ class TelegramRepository @Inject constructor(override val api: TelegramFlow) : U
             deviceModel = "Android",
             systemVersion = "Example",
             applicationVersion = "1.1",
-            apiId = BuildConfig.TELEGRAM_APP_ID,
-            apiHash = BuildConfig.TELEGRAM_APP_HASH,
+            apiId = configStorage.appId,
+            apiHash = configStorage.appHash ?: "",
             useTestDc = false,
             filesDirectory = "/data/user/0/${BuildConfig.APPLICATION_ID}/files/td",
             databaseEncryptionKey = null,

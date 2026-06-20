@@ -3,4 +3,9 @@
     <string name="cd_app_logo">App Logo</string>
     <string name="welcome_hint">Welcome to the Telegram Flow example. Start by entering your phone number.</string>
     <string name="action_continue">Continue</string>
+    <string name="config_title">Telegram API Configuration</string>
+    <string name="config_app_id_label">App ID</string>
+    <string name="config_app_hash_label">App Hash</string>
+    <string name="config_help_text">You can get your App ID and Hash at </string>
+    <string name="config_save_action">Save and Continue</string>
 </resources>

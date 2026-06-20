@@ -16,14 +16,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.telegramflow.example.data.local.TelegramConfigStorage
 import com.telegramflow.example.ui.screen.MainScreen
+import com.telegramflow.example.ui.screen.config.ConfigScreen
 import com.telegramflow.example.ui.screen.enterPhone.LoginScreen
 import com.telegramflow.example.ui.theme.TelegramFlowComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @ExperimentalComposeUiApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var configStorage: TelegramConfigStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +46,18 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun AppNavigation() {
         val navController = rememberNavController()
-        NavHost(navController = navController, startDestination = LoginRoute) {
+        val startDestination = if (configStorage.isConfigured) LoginRoute else ConfigRoute
+        NavHost(navController = navController, startDestination = startDestination) {
+            composable<ConfigRoute> {
+                ConfigScreen(
+                    onConfigSaved = {
+                        navController.navigate(LoginRoute) {
+                            popUpTo<ConfigRoute> { inclusive = true }
+                        }
+                    }
+                )
+            }
+
             composable<UsersRoute> {
                 MainScreen()
             }

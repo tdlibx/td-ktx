@@ -7,3 +7,6 @@ object LoginRoute
 
 @Serializable
 object UsersRoute
+
+@Serializable
+object ConfigRoute
