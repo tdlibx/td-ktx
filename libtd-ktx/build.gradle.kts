@@ -1,23 +1,51 @@
 import java.net.URI
 import org.gradle.api.publish.maven.MavenPublication
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 plugins {
+    kotlin("multiplatform")
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.dokka)
     `maven-publish`
+    kotlin("plugin.serialization")
 }
 
 group = "com.github.tdlibx"
 version = "1.8.56"
 
+kotlin {
+    androidTarget {
+        publishLibraryVariants("release")
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
+    
+    macosArm64()
+    macosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(project(":libtd"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+                implementation(libs.kotlinx.serialization.json)
+            }
+        }
+    }
+}
+
 android {
     namespace = "kotlinx.telegram"
     compileSdk = 36
+
+    sourceSets {
+        getByName("main") {
+            manifest.srcFile("src/androidMain/AndroidManifest.xml")
+        }
+    }
 
     defaultConfig {
         minSdk = 21
@@ -35,12 +63,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    extensions.configure<KotlinAndroidProjectExtension>("kotlin") {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-        }
-    }
-
     lint {
         disable.add("InvalidPackage")
     }
@@ -52,30 +74,18 @@ android {
     }
 }
 
-dependencies {
-    api(libs.tdlib)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.kotlin.stdlib)
-    implementation(libs.kotlinx.coroutines.core)
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
-                groupId = project.group.toString()
-                artifactId = "td-ktx"
-                version = project.version.toString()
-            }
+publishing {
+    publications {
+        withType<MavenPublication> {
+            artifactId = "td-ktx" + (if (name == "kotlinMultiplatform") "" else "-$name")
         }
     }
 }
 
 tasks.named<DokkaTask>("dokkaGfm") {
     outputDirectory.set(file("$rootDir/wiki"))
-    dokkaSourceSets.named("main") {
-        includes.from("src/main/java/kotlinx/telegram/index.md")
+    dokkaSourceSets.named("commonMain") {
+        includes.from("src/commonMain/kotlin/kotlinx/telegram/index.md")
         externalDocumentationLink {
             url.set(URI("https://tdlibx.github.io/td/docs/").toURL())
         }

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.drinkless.tdlib.TdApi
+import org.drinkless.tdlib.generated.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,9 +24,9 @@ class UsersViewModel @Inject constructor(
                 users.update { currentUsers ->
                     val updatedUser = User(
                         id = it.id,
-                        firstName = it.firstName,
-                        lastName = it.lastName,
-                        online = it.status is TdApi.UserStatusOnline,
+                        firstName = it.firstName.orEmpty(),
+                        lastName = it.lastName.orEmpty(),
+                        online = it.status is UserStatusOnline,
                     )
 
                     val filtered = currentUsers.filterNot { user -> user.id == updatedUser.id }

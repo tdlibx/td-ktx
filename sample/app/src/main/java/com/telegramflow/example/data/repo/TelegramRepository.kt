@@ -9,28 +9,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.telegram.core.TelegramFlow
-import kotlinx.telegram.coroutines.checkAuthenticationCode
-import kotlinx.telegram.coroutines.checkAuthenticationPassword
-import kotlinx.telegram.coroutines.downloadFile
-import kotlinx.telegram.coroutines.getChat
-import kotlinx.telegram.coroutines.getChatHistory
-import kotlinx.telegram.coroutines.getChats
-import kotlinx.telegram.coroutines.getMessage
-import kotlinx.telegram.coroutines.getMessageAddedReactions
-import kotlinx.telegram.coroutines.getUser
-import kotlinx.telegram.coroutines.searchPublicChat
-import kotlinx.telegram.coroutines.setAuthenticationPhoneNumber
-import kotlinx.telegram.coroutines.setTdlibParameters
-import kotlinx.telegram.extensions.UserKtx
 import kotlinx.telegram.flows.authorizationStateFlow
 import kotlinx.telegram.flows.userStatusFlow
-import org.drinkless.tdlib.TdApi
+import org.drinkless.tdlib.generated.*
 
 @Singleton
 class TelegramRepository @Inject constructor(
-    override val api: TelegramFlow,
+    val api: TelegramFlow,
     private val configStorage: TelegramConfigStorage
-) : UserKtx {
+) {
 
     val authFlow: Flow<AuthState?> = api.authorizationStateFlow()
         .onEach { authorizationState ->
@@ -38,10 +25,10 @@ class TelegramRepository @Inject constructor(
         }
         .map { authorizationState ->
             when (authorizationState) {
-                is TdApi.AuthorizationStateReady -> AuthState.LoggedIn
-                is TdApi.AuthorizationStateWaitCode -> AuthState.EnterCode
-                is TdApi.AuthorizationStateWaitPassword -> AuthState.EnterPassword(authorizationState.passwordHint)
-                is TdApi.AuthorizationStateWaitPhoneNumber -> AuthState.EnterPhone
+                is AuthorizationStateReady -> AuthState.LoggedIn
+                is AuthorizationStateWaitCode -> AuthState.EnterCode
+                is AuthorizationStateWaitPassword -> AuthState.EnterPassword(authorizationState.passwordHint.orEmpty())
+                is AuthorizationStateWaitPhoneNumber -> AuthState.EnterPhone
                 else -> null
             }
         }
@@ -62,29 +49,29 @@ class TelegramRepository @Inject constructor(
         api.checkAuthenticationPassword(password)
     }
 
-    val userOnlineFlow: Flow<TdApi.User> = api.userStatusFlow().map { status ->
-        api.getUser(status.userId.toLong())
+    val userOnlineFlow: Flow<User> = api.userStatusFlow().map { status ->
+        api.getUser(status.userId)
     }
 
-    suspend fun fetchChats(chatList: TdApi.ChatList? = null, limit: Int): TdApi.Chats {
+    suspend fun fetchChats(chatList: ChatList? = null, limit: Int): Chats {
         return api.getChats(chatList = chatList, limit = limit)
     }
 
-    suspend fun fetchChat(chatId: Long): TdApi.Chat {
+    suspend fun fetchChat(chatId: Long): Chat {
         return api.getChat(chatId)
     }
 
-    suspend fun fetchMessage(chatId: Long, messageId: Long): TdApi.Message {
+    suspend fun fetchMessage(chatId: Long, messageId: Long): Message {
         return api.getMessage(chatId = chatId, messageId = messageId)
     }
 
     suspend fun fetchMessageAddedReactions(
         chatId: Long,
         messageId: Long,
-        reactionType: TdApi.ReactionType? = null,
+        reactionType: ReactionType? = null,
         offset: String = "",
         limit: Int = 100,
-    ): TdApi.AddedReactions {
+    ): AddedReactions {
         return api.getMessageAddedReactions(
             chatId = chatId,
             messageId = messageId,
@@ -100,7 +87,7 @@ class TelegramRepository @Inject constructor(
         offset: Int,
         limit: Int,
         onlyLocal: Boolean,
-    ): TdApi.Messages {
+    ): Messages {
         return api.getChatHistory(
             chatId = chatId,
             fromMessageId = fromMessageId,
@@ -110,14 +97,14 @@ class TelegramRepository @Inject constructor(
         )
     }
 
-    suspend fun fetchUser(userId: Long): TdApi.User {
+    suspend fun fetchUser(userId: Long): User {
         return api.getUser(userId)
     }
 
-    suspend fun fetchUserByUsername(username: String): TdApi.User? {
+    suspend fun fetchUserByUsername(username: String): User? {
         return runCatching {
             val chat = api.searchPublicChat(username)
-            val userId = (chat.type as? TdApi.ChatTypePrivate)?.userId ?: return null
+            val userId = (chat.type as? ChatTypePrivate)?.userId ?: return null
             api.getUser(userId)
         }.getOrNull()
     }
@@ -128,7 +115,7 @@ class TelegramRepository @Inject constructor(
         offset: Long = 0,
         limit: Long = 0,
         synchronous: Boolean = true,
-    ): TdApi.File {
+    ): File {
         return api.downloadFile(
             fileId = fileId,
             priority = priority,
@@ -138,8 +125,8 @@ class TelegramRepository @Inject constructor(
         )
     }
 
-    private suspend fun checkRequiredParams(state: TdApi.AuthorizationState?) {
-        if (state !is TdApi.AuthorizationStateWaitTdlibParameters) return
+    private suspend fun checkRequiredParams(state: AuthorizationState?) {
+        if (state !is AuthorizationStateWaitTdlibParameters) return
 
         api.setTdlibParameters(
             databaseDirectory = "/data/user/0/${BuildConfig.APPLICATION_ID}/files/td",

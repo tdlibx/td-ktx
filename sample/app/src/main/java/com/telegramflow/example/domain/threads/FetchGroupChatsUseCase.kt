@@ -6,27 +6,30 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.drinkless.tdlib.TdApi
+import org.drinkless.tdlib.generated.*
 
 @Singleton
 class FetchGroupChatsUseCase @Inject constructor(
     private val telegramRepository: TelegramRepository,
 ) {
-    suspend operator fun invoke(): List<TdApi.Chat> = withContext(Dispatchers.IO) {
+    suspend operator fun invoke(): List<Chat> = withContext(Dispatchers.IO) {
         val chatsResult = telegramRepository.fetchChats(chatList = null, limit = CHAT_LIMIT)
-        val chats = chatsResult.chatIds ?: longArrayOf()
+        val chats = chatsResult.chatIds ?: emptyList()
         Log.d(TAG, "Fetched chat ids count: ${chats.size}")
 
-        chats.toList().mapNotNull { chatId ->
-            runCatching { telegramRepository.fetchChat(chatId) }
-                .getOrNull()
-                ?.takeIf { chat ->
-                    when (val type = chat.type) {
-                        is TdApi.ChatTypeSupergroup -> !type.isChannel
-                        is TdApi.ChatTypeBasicGroup -> true
-                        else -> false
+        chats.mapNotNull { chatId ->
+            try {
+                telegramRepository.fetchChat(chatId)
+                    .takeIf { chat ->
+                        when (val type = chat.type) {
+                            is ChatTypeSupergroup -> !type.isChannel
+                            is ChatTypeBasicGroup -> true
+                            else -> false
+                        }
                     }
-                }
+            } catch (e: Exception) {
+                null
+            }
         }
     }
 

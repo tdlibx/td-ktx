@@ -155,3 +155,23 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
+
+# Kotlin build caches
+.kotlin/
+.cxx/
+.cxx-cache/
+.cxx-config/
+.externalNativeBuild/
+.cmake/
+.cmake-build-*/
+
+# Gradle wrapper files
+gradle-wrapper.jar
+gradle-wrapper.properties
+
+# Local configuration files
+local.properties
+secrets.properties
+
+# TDLib native libs (generated during build, not source)
+**/jniLibs/**

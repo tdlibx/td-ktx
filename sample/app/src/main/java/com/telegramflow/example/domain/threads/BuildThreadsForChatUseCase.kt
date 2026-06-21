@@ -17,20 +17,20 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import org.drinkless.tdlib.TdApi
+import org.drinkless.tdlib.generated.*
 
 @Singleton
 class BuildThreadsForChatUseCase @Inject constructor(
     private val telegramRepository: TelegramRepository,
 ) {
-    operator fun invoke(chat: TdApi.Chat): Flow<ThreadUiModel> = flow {
+    operator fun invoke(chat: Chat): Flow<ThreadUiModel> = flow {
         Log.d(TAG, "Fetching history for chat '${chat.title}' (${chat.id})")
         var fromMessageId = 0L
         var totalHistoryMessages = 0
         var page = 0
         val seenMessageIds = mutableSetOf<Long>()
-        val messagesById = mutableMapOf<Long, TdApi.Message>()
-        val repliesByParent = mutableMapOf<Long, MutableList<TdApi.Message>>()
+        val messagesById = mutableMapOf<Long, Message>()
+        val repliesByParent = mutableMapOf<Long, MutableList<Message>>()
         val userNames = mutableMapOf<Long, String>()
         val chatNames = mutableMapOf<Long, String>()
         val mentionNames = mutableMapOf<String, String>()
@@ -95,7 +95,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                 val previewModel = ThreadUiModel(
                     id = root.id,
                     chatId = chat.id,
-                    chatTitle = chat.title,
+                    chatTitle = chat.title.orEmpty(),
                     senderName = resolveSenderName(root, userNames, chatNames),
                     text = rootText,
                     richText = null,
@@ -158,14 +158,14 @@ class BuildThreadsForChatUseCase @Inject constructor(
 
     private fun countReplies(
         parentId: Long,
-        repliesByParent: Map<Long, List<TdApi.Message>>,
+        repliesByParent: Map<Long, List<Message>>,
     ): Int {
         val replies = repliesByParent[parentId].orEmpty()
         return replies.size + replies.sumOf { reply -> countReplies(reply.id, repliesByParent) }
     }
 
     private fun previewLastDate(
-        root: TdApi.Message,
+        root: Message,
         previewReplies: List<ThreadReplyUiModel>,
     ): Long {
         val latestReplyDate = previewReplies.maxOfOrNull { it.date } ?: root.date.toLong()
@@ -173,7 +173,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
     }
 
     private fun lastMessageDate(
-        root: TdApi.Message,
+        root: Message,
         replies: List<ThreadReplyUiModel>,
     ): Long {
         val latestReplyDate = replies.maxOfOrNull { it.date } ?: root.date.toLong()
@@ -182,7 +182,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
 
     private suspend fun collectReplies(
         parentId: Long,
-        repliesByParent: Map<Long, List<TdApi.Message>>,
+        repliesByParent: Map<Long, List<Message>>,
         depth: Int,
         userNames: MutableMap<Long, String>,
         chatNames: MutableMap<Long, String>,
@@ -234,10 +234,10 @@ class BuildThreadsForChatUseCase @Inject constructor(
     }
 
     private suspend fun resolvePhotoPath(
-        message: TdApi.Message,
+        message: Message,
         filePaths: MutableMap<Int, String?>,
     ): String? {
-        val content = message.content as? TdApi.MessagePhoto ?: return null
+        val content = message.content as? MessagePhoto ?: return null
         val bestSize = content.photo?.sizes?.maxByOrNull { it.photo?.expectedSize ?: 0L }
         val file = bestSize?.photo ?: return null
 
@@ -246,7 +246,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
         }
     }
 
-    private suspend fun downloadPhoto(file: TdApi.File): String? {
+    private suspend fun downloadPhoto(file: File): String? {
         val completedLocalPath = file.local?.takeIf { it.isDownloadingCompleted }?.path
             ?.takeIf { it.isNotBlank() }
         if (completedLocalPath != null) return completedLocalPath
@@ -264,7 +264,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
     }
 
     private suspend fun fetchReactions(
-        message: TdApi.Message,
+        message: Message,
         preferCached: Boolean,
     ): List<ReactionUiModel> {
         val cached = mapReactions(message)
@@ -280,7 +280,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
         return loadAddedReactionCounts(message)
     }
 
-    private suspend fun loadAddedReactionCounts(message: TdApi.Message): List<ReactionUiModel> {
+    private suspend fun loadAddedReactionCounts(message: Message): List<ReactionUiModel> {
         val countsByLabel = mutableMapOf<String, Int>()
         var offset = ""
         do {
@@ -294,7 +294,8 @@ class BuildThreadsForChatUseCase @Inject constructor(
             }.getOrNull()
             val added = page?.reactions.orEmpty()
             added.forEach { reaction ->
-                val label = reactionLabel(reaction.type) ?: return@forEach
+                val type = reaction.type ?: return@forEach
+                val label = reactionLabel(type) ?: return@forEach
                 countsByLabel[label] = countsByLabel.getOrDefault(label, 0) + 1
             }
             offset = page?.nextOffset.orEmpty()
@@ -304,7 +305,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
     }
 
     private suspend fun resolveChatAvatar(
-        chat: TdApi.Chat,
+        chat: Chat,
         filePaths: MutableMap<Int, String?>,
     ): String? {
         val file = chat.photo?.small ?: return null
@@ -322,13 +323,14 @@ class BuildThreadsForChatUseCase @Inject constructor(
         }
     }
 
-    private fun mapReactions(message: TdApi.Message): List<ReactionUiModel> {
+    private fun mapReactions(message: Message): List<ReactionUiModel> {
         val interaction = message.interactionInfo ?: return emptyList()
         val reactions = interaction.reactions ?: return emptyList()
 
         val aggregated = reactions.reactions.orEmpty()
         val mappedAggregated = aggregated.mapNotNull { reactionCount ->
-            val label = reactionLabel(reactionCount.type) ?: return@mapNotNull null
+            val type = reactionCount.type ?: return@mapNotNull null
+            val label = reactionLabel(type) ?: return@mapNotNull null
             ReactionUiModel(label = label, count = reactionCount.totalCount)
         }
         if (mappedAggregated.isNotEmpty()) return mappedAggregated
@@ -336,10 +338,10 @@ class BuildThreadsForChatUseCase @Inject constructor(
         return emptyList()
     }
 
-    private fun reactionLabel(reaction: TdApi.ReactionType): String? {
+    private fun reactionLabel(reaction: ReactionType): String? {
         return when (reaction) {
-            is TdApi.ReactionTypeEmoji -> reaction.emoji
-            is TdApi.ReactionTypeCustomEmoji -> "Custom"
+            is ReactionTypeEmoji -> reaction.emoji
+            is ReactionTypeCustomEmoji -> "Custom"
             else -> null
         }
     }
@@ -415,12 +417,12 @@ class BuildThreadsForChatUseCase @Inject constructor(
     }
 
     private suspend fun resolveSenderName(
-        message: TdApi.Message,
+        message: Message,
         userNames: MutableMap<Long, String>,
         chatNames: MutableMap<Long, String>,
     ): String {
         return when (val sender = message.senderId) {
-            is TdApi.MessageSenderUser -> {
+            is MessageSenderUser -> {
                 val userId = sender.userId
                 userNames.getOrPut(userId) {
                     runCatching { telegramRepository.fetchUser(userId) }
@@ -435,7 +437,7 @@ class BuildThreadsForChatUseCase @Inject constructor(
                         ?: "Unknown"
                 }
             }
-            is TdApi.MessageSenderChat -> {
+            is MessageSenderChat -> {
                 val senderChatId = sender.chatId
                 chatNames.getOrPut(senderChatId) {
                     runCatching { telegramRepository.fetchChat(senderChatId) }
@@ -449,21 +451,21 @@ class BuildThreadsForChatUseCase @Inject constructor(
         }
     }
 
-    private fun messageText(message: TdApi.Message): String {
-        val content = message.content
+    private fun messageText(message: Message): String {
+        val content = message.content ?: return ""
         return when (content) {
-            is TdApi.MessageText -> content.text?.text.orEmpty()
-            is TdApi.MessagePhoto -> content.caption?.text?.takeIf { it.isNotBlank() } ?: "Photo"
-            is TdApi.MessageVideo -> content.caption?.text?.takeIf { it.isNotBlank() } ?: "Video"
-            is TdApi.MessageAnimation -> content.caption?.text?.takeIf { it.isNotBlank() } ?: "Animation"
-            is TdApi.MessageAudio -> content.caption?.text?.takeIf { it.isNotBlank() } ?: "Audio"
-            else -> content.javaClass.simpleName
+            is MessageText -> content.text?.text.orEmpty()
+            is MessagePhoto -> content.caption?.text?.takeIf { it.isNotBlank() } ?: "Photo"
+            is MessageVideo -> content.caption?.text?.takeIf { it.isNotBlank() } ?: "Video"
+            is MessageAnimation -> content.caption?.text?.takeIf { it.isNotBlank() } ?: "Animation"
+            is MessageAudio -> content.caption?.text?.takeIf { it.isNotBlank() } ?: "Audio"
+            else -> content::class.simpleName ?: "Unknown"
         }
     }
 
-    private fun replyToMessageId(message: TdApi.Message): Long? {
+    private fun replyToMessageId(message: Message): Long? {
         return when (val reply = message.replyTo) {
-            is TdApi.MessageReplyToMessage -> reply.messageId
+            is MessageReplyToMessage -> reply.messageId
             else -> null
         }
     }
