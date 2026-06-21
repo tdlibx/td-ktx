@@ -1,0 +1,8 @@
+[submodule "td-core-src"]
+	path = td-core-src
+	url = git@github.com:tdlibx/td.git
+	branch = kmp
+[submodule "td-generator-src"]
+	path = td-generator-src
+	url = git@github.com:tdlibx/td-ktx-generator.git
+	branch = kmp
