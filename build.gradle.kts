@@ -6,11 +6,13 @@ plugins {
     alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.kotlin.compose) apply false
+    alias(libs.plugins.compose.multiplatform) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.dokka) apply false
     id("org.jetbrains.kotlin.multiplatform") version "2.2.21" apply false
     id("org.jetbrains.kotlin.jvm") version "2.2.21" apply false
 }
+
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
