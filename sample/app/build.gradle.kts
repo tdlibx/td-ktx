@@ -50,6 +50,14 @@ kotlin {
             }
         }
 
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.turbine)
+                implementation(kotlin("test"))
+            }
+        }
+
         val macosArm64Main by getting {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
@@ -106,6 +114,13 @@ android {
             excludes.add("/META-INF/{AL2.0,LGPL2.1}")
         }
     }
+
+    sourceSets {
+        getByName("androidTest") {
+            java.srcDirs("src/androidInstrumentedTest/kotlin")
+            manifest.srcFile("src/androidInstrumentedTest/AndroidManifest.xml")
+        }
+    }
 }
 
 dependencies {
@@ -115,8 +130,10 @@ dependencies {
     // Android test dependencies
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.kotlinx.coroutines.core)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     // Additional Android UI runtime libraries

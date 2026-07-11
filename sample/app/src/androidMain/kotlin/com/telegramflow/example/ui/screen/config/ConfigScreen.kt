@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -24,6 +25,7 @@ fun ConfigScreen(
 ) {
     var appId by remember { mutableStateOf("") }
     var appHash by remember { mutableStateOf("") }
+    var useTestDc by remember { mutableStateOf(false) }
     val uriHandler = LocalUriHandler.current
 
     Column(
@@ -36,7 +38,9 @@ fun ConfigScreen(
         Text(
             text = stringResource(id = R.string.config_title),
             style = MaterialTheme.typography.h5,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier
+                .padding(bottom = 16.dp)
+                .testTag("config_screen_title"),
         )
 
         TextField(
@@ -54,6 +58,31 @@ fun ConfigScreen(
             onValueChange = { appHash = it },
             label = { Text(stringResource(id = R.string.config_app_hash_label)) },
             modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("config_use_test_dc"),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(id = R.string.config_use_test_dc_label),
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier.weight(1f),
+            )
+            Switch(
+                checked = useTestDc,
+                onCheckedChange = { useTestDc = it },
+            )
+        }
+
+        Text(
+            text = stringResource(id = R.string.config_use_test_dc_hint),
+            style = MaterialTheme.typography.caption,
+            modifier = Modifier.padding(top = 4.dp),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -76,11 +105,13 @@ fun ConfigScreen(
             onClick = {
                 val id = appId.toIntOrNull()
                 if (id != null && appHash.isNotBlank()) {
-                    viewModel.saveConfig(id, appHash)
+                    viewModel.saveConfig(id, appHash, useTestDc)
                     onConfigSaved()
                 }
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("config_save_button"),
             enabled = appId.isNotBlank() && appHash.isNotBlank()
         ) {
             Text(stringResource(id = R.string.config_save_action))

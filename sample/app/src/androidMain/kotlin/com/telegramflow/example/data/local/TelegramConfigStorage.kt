@@ -21,11 +21,24 @@ class TelegramConfigStorage @Inject constructor(
         get() = prefs.getString(KEY_APP_HASH, null)
         set(value) = prefs.edit().putString(KEY_APP_HASH, value).apply()
 
+  /**
+   * When true, TDLib connects to Telegram's test environment (test DC) instead of production.
+   * See https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1set_tdlib_parameters.html
+   */
+    var useTestDc: Boolean
+        get() = prefs.getBoolean(KEY_USE_TEST_DC, false)
+        set(value) = prefs.edit().putBoolean(KEY_USE_TEST_DC, value).apply()
+
     val isConfigured: Boolean
         get() = appId != 0 && !appHash.isNullOrBlank()
+
+    fun clear() {
+        prefs.edit().clear().apply()
+    }
 
     companion object {
         private const val KEY_APP_ID = "app_id"
         private const val KEY_APP_HASH = "app_hash"
+        private const val KEY_USE_TEST_DC = "use_test_dc"
     }
 }

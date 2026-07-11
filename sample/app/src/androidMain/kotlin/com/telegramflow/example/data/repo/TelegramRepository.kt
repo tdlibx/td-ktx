@@ -1,13 +1,23 @@
 package com.telegramflow.example.data.repo
 
-import com.telegramflow.example.BuildConfig
+import android.content.Context
+import android.util.Log
 import com.telegramflow.example.data.local.AuthState
 import com.telegramflow.example.data.local.TelegramConfigStorage
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.telegram.core.TelegramFlow
 import kotlinx.telegram.flows.authorizationStateFlow
 import kotlinx.telegram.flows.userStatusFlow
@@ -16,22 +26,44 @@ import org.drinkless.tdlib.generated.*
 @Singleton
 class TelegramRepository @Inject constructor(
     val api: TelegramFlow,
-    private val configStorage: TelegramConfigStorage
+    private val configStorage: TelegramConfigStorage,
+    @ApplicationContext private val context: Context,
 ) {
+    private val tdDirectory = context.filesDir.resolve("td").apply { mkdirs() }
 
-    val authFlow: Flow<AuthState?> = api.authorizationStateFlow()
+    // Long-lived scope: survives as long as the @Singleton, so the eager StateFlow
+    // keeps collecting for the entire app lifetime.
+    private val repositoryScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    /**
+     * Hot [StateFlow] that always holds the latest TDLib authorization state mapped to [AuthState].
+     *
+     * Started *eagerly* so collection begins at injection time — before any UI subscriber exists.
+     * This prevents missing [AuthorizationStateWaitPhoneNumber] (and other auth transitions) that
+     * TDLib fires immediately after [AuthorizationStateWaitTdlibParameters] is handled.
+     *
+     * Previous bug: [authorizationStateFlow] was a cold [Flow]. TDLib would fire WaitPhoneNumber
+     * before the LoginScreen composed, and since [TdKtxClient.updates] has only replay=1 (raw JSON),
+     * any subsequent unrelated update (e.g. updateOption) would evict the auth event from the buffer.
+     */
+    val authFlow: StateFlow<AuthState?> = api.authorizationStateFlow()
         .onEach { authorizationState ->
             checkRequiredParams(authorizationState)
-        }
-        .map { authorizationState ->
-            when (authorizationState) {
+        }.mapNotNull { authorizationState ->
+            val mapped = when (authorizationState) {
                 is AuthorizationStateReady -> AuthState.LoggedIn
                 is AuthorizationStateWaitCode -> AuthState.EnterCode
                 is AuthorizationStateWaitPassword -> AuthState.EnterPassword(authorizationState.passwordHint.orEmpty())
                 is AuthorizationStateWaitPhoneNumber -> AuthState.EnterPhone
                 else -> null
             }
+            mapped
         }
+        .stateIn(
+            scope = repositoryScope,
+            started = SharingStarted.Eagerly,
+            initialValue = null,
+        )
 
     suspend fun attachClient() {
         api.attachClient()
@@ -129,7 +161,7 @@ class TelegramRepository @Inject constructor(
         if (state !is AuthorizationStateWaitTdlibParameters) return
 
         api.setTdlibParameters(
-            databaseDirectory = "/data/user/0/${BuildConfig.APPLICATION_ID}/files/td",
+            databaseDirectory = tdDirectory.absolutePath,
             useMessageDatabase = false,
             useSecretChats = false,
             useFileDatabase = true,
@@ -139,8 +171,8 @@ class TelegramRepository @Inject constructor(
             applicationVersion = "1.1",
             apiId = configStorage.appId,
             apiHash = configStorage.appHash ?: "",
-            useTestDc = false,
-            filesDirectory = "/data/user/0/${BuildConfig.APPLICATION_ID}/files/td",
+            useTestDc = configStorage.useTestDc,
+            filesDirectory = tdDirectory.absolutePath,
             databaseEncryptionKey = null,
             useChatInfoDatabase = false
         )

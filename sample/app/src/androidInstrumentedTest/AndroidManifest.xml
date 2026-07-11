@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+  <!-- androidx.test.ext:junit requires minSdk 21 for instrumented tests -->
+  <uses-sdk
+      android:minSdkVersion="21"
+      tools:overrideLibrary="androidx.test.ext.junit,androidx.test.runner,androidx.test.espresso.core" />
+</manifest>

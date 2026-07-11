@@ -15,3 +15,30 @@ This sample demonstrates how to build a tabbed Telegram client UI using the td-k
 10. Group chat avatars are fetched and shown on thread cards while sender names remain within message content to avoid duplication.
 
 Update this log whenever new business-level functionality is added to the sample.
+
+## UI tests
+
+Instrumented Compose UI tests live under `sample/app/src/androidInstrumentedTest/`. They cover the config screen, login screen, main tabs, and `MainActivity` navigation without requiring a logged-in Telegram account.
+
+Run on a connected emulator or device:
+
+```bash
+./gradlew :sample:app:connectedDebugAndroidTest
+```
+
+### Telegram test environment (test DC)
+
+TDLib supports a separate Telegram **test environment** for development. Pass `useTestDc = true` in `setTdlibParameters` when authorization state is `authorizationStateWaitTdlibParameters`:
+
+- [setTdlibParameters documentation](https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1set_tdlib_parameters.html)
+- [Getting started with TDLib](https://core.telegram.org/tdlib/getting-started)
+
+The sample app exposes this via the **Use Telegram test environment** toggle on the config screen. Test DC is isolated from production; you need a separate test account (same API id/hash from [my.telegram.org](https://my.telegram.org)).
+
+`TdLibTestEnvironmentIntegrationTest` verifies TDLib reaches the phone-number auth state on test DC. It is skipped unless credentials are supplied:
+
+```bash
+./gradlew :sample:app:connectedDebugAndroidTest \
+  -Pandroid.testInstrumentationRunnerArguments.telegram_app_id=YOUR_ID \
+  -Pandroid.testInstrumentationRunnerArguments.telegram_app_hash=YOUR_HASH
+```

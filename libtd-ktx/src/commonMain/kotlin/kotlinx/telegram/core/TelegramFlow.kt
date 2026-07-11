@@ -8,7 +8,7 @@ import org.drinkless.tdlib.generated.Update
 import org.drinkless.tdlib.generated.TdObject
 import org.drinkless.tdlib.generated.tdJson
 
-open class TelegramFlow : TdKtxClient() {
+open class TelegramFlow(engine: org.drinkless.tdlib.TdEngine = org.drinkless.tdlib.TdClientEngine()) : TdKtxClient(engine = engine) {
 
     val updatesFlow: Flow<Update> = this.updates.mapNotNull { json ->
         try {

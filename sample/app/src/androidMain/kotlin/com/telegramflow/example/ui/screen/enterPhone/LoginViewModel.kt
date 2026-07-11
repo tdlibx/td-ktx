@@ -6,9 +6,11 @@ import com.telegramflow.example.data.repo.TelegramRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+
+import kotlinx.coroutines.flow.onEach
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -18,12 +20,6 @@ class LoginViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            delay(300)
-            telegramRepository.attachClient()
-        }
-    }
 
     val authState = telegramRepository.authFlow
 

@@ -10,8 +10,9 @@ class ConfigViewModel @Inject constructor(
     private val configStorage: TelegramConfigStorage
 ) : ViewModel() {
 
-    fun saveConfig(appId: Int, appHash: String) {
+    fun saveConfig(appId: Int, appHash: String, useTestDc: Boolean) {
         configStorage.appId = appId
         configStorage.appHash = appHash
+        configStorage.useTestDc = useTestDc
     }
 }

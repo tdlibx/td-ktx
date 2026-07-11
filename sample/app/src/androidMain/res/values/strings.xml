@@ -8,4 +8,6 @@
     <string name="config_app_hash_label">App Hash</string>
     <string name="config_help_text">You can get your App ID and Hash at </string>
     <string name="config_save_action">Save and Continue</string>
+    <string name="config_use_test_dc_label">Use Telegram test environment</string>
+    <string name="config_use_test_dc_hint">Connects to Telegram test DC via TDLib useTestDc. Register a separate test account (see sample README).</string>
 </resources>
