@@ -9,9 +9,9 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.telegramflow.example.TestFixtures
+import com.telegramflow.example.data.local.AndroidTelegramConfigStorage
 import com.telegramflow.example.data.local.TelegramConfigStorage
 import com.telegramflow.example.ui.screen.config.ConfigScreen
-import com.telegramflow.example.ui.screen.config.ConfigViewModel
 import com.telegramflow.example.ui.theme.TelegramFlowComposeTheme
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -32,7 +32,7 @@ class ConfigScreenUiTest {
     @Before
     fun setUp() {
         TestFixtures.clearTelegramConfig()
-        configStorage = TelegramConfigStorage(TestFixtures.targetContext())
+        configStorage = AndroidTelegramConfigStorage(TestFixtures.targetContext())
         configSaved = false
     }
 
@@ -68,8 +68,8 @@ class ConfigScreenUiTest {
         composeRule.setContent {
             TelegramFlowComposeTheme {
                 ConfigScreen(
+                    configStorage = configStorage,
                     onConfigSaved = { configSaved = true },
-                    viewModel = ConfigViewModel(configStorage),
                 )
             }
         }

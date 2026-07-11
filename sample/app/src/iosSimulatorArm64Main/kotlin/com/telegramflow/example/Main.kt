@@ -1,32 +1,57 @@
 package com.telegramflow.example
 
-import kotlinx.coroutines.runBlocking
-import platform.Foundation.NSProcessInfo
+import androidx.compose.ui.window.ComposeUIViewController
+import platform.UIKit.UIViewController
+import com.telegramflow.example.ui.screen.enterPhone.LoginScreen
+import com.telegramflow.example.ui.screen.config.ConfigScreen
+import com.telegramflow.example.ui.screen.MainScreen
+import com.telegramflow.example.ui.theme.TelegramFlowComposeTheme
+import androidx.compose.runtime.CompositionLocalProvider
+import com.telegramflow.example.data.repo.LocalTelegramRepository
+import com.telegramflow.example.data.repo.TelegramRepository
+import com.telegramflow.example.data.local.AuthState
+import com.telegramflow.example.data.local.TelegramConfigStorage
+import androidx.compose.runtime.*
+import kotlinx.coroutines.launch
 
-/**
- * iOS Simulator Arm64 console entry point.
- * Demonstrates TelegramFlow client usage on iOS Simulator.
- *
- * To run:
- *   ./gradlew :sample:app:runDebugExecutableIosSimulatorArm64
- */
-fun main() {
-    println("=== TelegramFlow KMP Demo – iOS Simulator Arm64 ===")
+fun MainViewController(
+    telegramRepository: TelegramRepository,
+    configStorage: TelegramConfigStorage
+): UIViewController = ComposeUIViewController {
+    var phoneNumber by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var code by remember { mutableStateOf("") }
+    var isConfigured by remember { mutableStateOf(configStorage.isConfigured) }
+    val authState by telegramRepository.authFlow.collectAsState(null)
+    val scope = rememberCoroutineScope()
 
-    // Read from process info environment (set via Xcode scheme)
-    val env = NSProcessInfo.processInfo.environment
-    val appId = (env["TELEGRAM_APP_ID"] as? String)?.toIntOrNull() ?: 0
-    val appHash = (env["TELEGRAM_APP_HASH"] as? String) ?: ""
-
-    if (appId == 0 || appHash.isEmpty()) {
-        println("[WARN] TELEGRAM_APP_ID / TELEGRAM_APP_HASH not set. Running in no-op mode.")
-    }
-
-    runBlocking {
-        TelegramFlowDemo.run(appId, appHash) { message ->
-            println(message)
+    TelegramFlowComposeTheme {
+        CompositionLocalProvider(
+            LocalTelegramRepository provides telegramRepository
+        ) {
+            if (!isConfigured) {
+                ConfigScreen(
+                    configStorage = configStorage,
+                    onConfigSaved = {
+                        isConfigured = true
+                        scope.launch {
+                            telegramRepository.tryAndSetParams()
+                        }
+                    }
+                )
+            } else if (authState is AuthState.LoggedIn) {
+                MainScreen()
+            } else {
+                LoginScreen(
+                    phoneNumber = phoneNumber,
+                    password = password,
+                    code = code,
+                    onPhoneNumberChanged = { phoneNumber = it },
+                    onCodeChanged = { code = it },
+                    onPasswordChanged = { password = it },
+                    onNextClicked = {}
+                )
+            }
         }
     }
-
-    println("=== Demo finished ===")
 }

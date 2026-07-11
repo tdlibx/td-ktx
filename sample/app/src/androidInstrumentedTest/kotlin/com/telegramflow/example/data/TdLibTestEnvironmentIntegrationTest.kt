@@ -4,7 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.telegramflow.example.TestFixtures
 import com.telegramflow.example.data.local.AuthState
-import com.telegramflow.example.data.local.TelegramConfigStorage
+import com.telegramflow.example.data.local.AndroidTelegramConfigStorage
 import com.telegramflow.example.data.repo.TelegramRepository
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -59,7 +59,7 @@ class TdLibTestEnvironmentIntegrationTest {
     }
 
     val context = InstrumentationRegistry.getInstrumentation().targetContext
-    val configStorage = TelegramConfigStorage(context).apply {
+    val configStorage = AndroidTelegramConfigStorage(context).apply {
       this.appId = appId
       this.appHash = appHash
       useTestDc = true
@@ -68,7 +68,6 @@ class TdLibTestEnvironmentIntegrationTest {
     val repository = TelegramRepository(
       api = TelegramFlow(),
       configStorage = configStorage,
-      context = context,
     )
 
     runBlocking {

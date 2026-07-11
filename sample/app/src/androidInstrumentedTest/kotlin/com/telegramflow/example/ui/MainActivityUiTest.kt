@@ -9,7 +9,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.telegramflow.example.TestFixtures
-import com.telegramflow.example.data.local.TelegramConfigStorage
+import com.telegramflow.example.data.local.AndroidTelegramConfigStorage
 import com.telegramflow.example.ui.screen.MainActivity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -50,7 +50,7 @@ class MainActivityUiTest {
         ).assertIsDisplayed()
         composeRule.onNodeWithTag("login_continue_button").assertIsDisplayed()
 
-        val configStorage = TelegramConfigStorage(TestFixtures.targetContext())
+        val configStorage = AndroidTelegramConfigStorage(TestFixtures.targetContext())
         assertTrue(configStorage.isConfigured)
         assertEquals(12345, configStorage.appId)
         assertEquals("test_hash_value", configStorage.appHash)

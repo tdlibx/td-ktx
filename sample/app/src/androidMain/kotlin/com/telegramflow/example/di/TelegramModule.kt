@@ -38,4 +38,16 @@ object TelegramModule {
             }
         }
     }
+
+    @Provides
+    @Singleton
+    fun provideTelegramConfigStorage(@dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context): com.telegramflow.example.data.local.TelegramConfigStorage {
+        return com.telegramflow.example.data.local.AndroidTelegramConfigStorage(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTelegramRepository(api: TelegramFlow, config: com.telegramflow.example.data.local.TelegramConfigStorage): com.telegramflow.example.data.repo.TelegramRepository {
+        return com.telegramflow.example.data.repo.TelegramRepository(api, config)
+    }
 }

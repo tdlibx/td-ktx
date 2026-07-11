@@ -31,12 +31,19 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var configStorage: TelegramConfigStorage
 
+    @Inject
+    lateinit var telegramRepository: com.telegramflow.example.data.repo.TelegramRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TelegramFlowComposeTheme {
                 Surface {
-                    AppNavigation()
+                    androidx.compose.runtime.CompositionLocalProvider(
+                        com.telegramflow.example.data.repo.LocalTelegramRepository provides telegramRepository
+                    ) {
+                        AppNavigation()
+                    }
                 }
             }
         }
@@ -50,6 +57,7 @@ class MainActivity : ComponentActivity() {
         NavHost(navController = navController, startDestination = startDestination) {
             composable<ConfigRoute> {
                 ConfigScreen(
+                    configStorage = configStorage,
                     onConfigSaved = {
                         navController.navigate(LoginRoute) {
                             popUpTo<ConfigRoute> { inclusive = true }
