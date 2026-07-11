@@ -1,6 +1,7 @@
 package com.telegramflow.example.ui.screen.users
 
 import androidx.activity.compose.ReportDrawnWhen
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -112,8 +113,9 @@ fun UserLoginItem(
             .fillMaxWidth()
             .height(64.dp)
             .clickable(
-                onClick = { onItemClick(userCredentials) },
                 interactionSource = remember { MutableInteractionSource() },
+                indication = LocalIndication.current,
+                onClick = { onItemClick(userCredentials) },
             )
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
