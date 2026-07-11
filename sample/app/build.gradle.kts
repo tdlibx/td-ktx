@@ -16,8 +16,22 @@ kotlin {
             }
         }
     }
-    macosArm64()
-    iosSimulatorArm64()
+    macosArm64 {
+        binaries {
+            executable {
+                baseName = "sample-app"
+                entryPoint = "com.telegramflow.example.main"
+                linkerOpts("-L${project.rootDir.absolutePath}/td-core-src/td-kmp-core/native_libs/macos", "-ltdjson", "-lc++")
+            }
+        }
+    }
+    iosSimulatorArm64 {
+        binaries.framework {
+            baseName = "shared"
+            isStatic = false
+            linkerOpts("-L${project.rootDir.absolutePath}/td-core-src/td-kmp-core/native_libs/ios-simulator", "-ltdjson", "-lc++")
+        }
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -28,8 +42,10 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(compose.runtime)
                 implementation(compose.foundation)
+                implementation(compose.material)
                 implementation(compose.material3)
                 implementation(compose.ui)
+                implementation(compose.materialIconsExtended)
             }
         }
 
@@ -141,4 +157,23 @@ dependencies {
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+}
+
+// ── macOS: copy libtdjson into the Frameworks folder that @rpath resolves to ──
+// The dylib's embedded install name is @rpath/libtdjson.1.8.65.dylib, but the file
+// on disk is named libtdjson.dylib. We copy it with the expected versioned name so
+// dyld can find it when the executable runs.
+val copyMacosLibtdjson by tasks.registering(Copy::class) {
+    // The binary's LC_RPATH is @executable_path/../Frameworks, so relative to
+    // build/bin/macosArm64/debugExecutable/sample-app.kexe that resolves to
+    // build/bin/macosArm64/Frameworks/ (one level up from debugExecutable/).
+    val frameworksDir = layout.buildDirectory.dir("bin/macosArm64/Frameworks")
+    val libsSrc = project.rootDir.resolve("td-core-src/td-kmp-core/native_libs/macos/libtdjson.dylib")
+    from(libsSrc)
+    into(frameworksDir)
+    rename { "libtdjson.1.8.65.dylib" }
+}
+
+tasks.matching { it.name == "runDebugExecutableMacosArm64" }.configureEach {
+    dependsOn(copyMacosLibtdjson)
 }
