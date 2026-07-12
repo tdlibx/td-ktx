@@ -33,8 +33,8 @@ jobs:
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: release-artifacts
-          path: sample/app/build/outputs/apk/release/app-release.apk
+          name: sample-app-release
+          path: sample/app/build/outputs/apk/release/*.apk
           retention-days: 1
 
   distribute:
@@ -49,7 +49,7 @@ jobs:
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
-          name: release-artifacts
+          name: sample-app-release
           path: sample/app/build/outputs/apk/release
 
       - name: Install Firebase CLI
@@ -65,11 +65,11 @@ jobs:
         run: |
           echo "$CREDENTIAL_CONTENT" > service-account.json
           
-          # CHANGED: Explicitly using app-release.apk
-          APK_PATH="sample/app/build/outputs/apk/release/app-release.apk"
+          # Following KMP output naming (matching baseName from build.gradle.kts)
+          APK_PATH=$(ls sample/app/build/outputs/apk/release/*.apk | head -n 1)
 
-          if [ ! -f "$APK_PATH" ]; then
-            echo "Error: APK not found at $APK_PATH"
+          if [ -z "$APK_PATH" ]; then
+            echo "Error: APK not found in sample/app/build/outputs/apk/release/"
             ls -R sample/app/build/outputs/apk/
             exit 1
           fi
@@ -97,6 +97,6 @@ jobs:
             Automated Release build for commit ${{ github.sha }} on master.
             This release contains the sample Compose client APK built from sample/app's Release variant.
           prerelease: false
-          files: sample/app/build/outputs/apk/release/app-release.apk
+          files: sample/app/build/outputs/apk/release/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
