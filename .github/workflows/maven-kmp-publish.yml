@@ -1,0 +1,39 @@
+name: Publish KMP Library
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: # Allows manual triggering from the GitHub UI
+
+jobs:
+  publish:
+    # Critical: Must use macOS to compile iOS targets along with JVM/Android
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Gradle Cache
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Reconstruct GPG Keyring File
+        run: |
+          mkdir -p secrets
+          echo "${{ secrets.GPG_KEYRING_BASE64 }}" | base64 --decode > secrets/secret-keyring.gpg
+
+      - name: Execute Publish to Maven Central
+        run: |
+          ./gradlew publishToMavenCentral \
+            -PmavenCentralUsername="${{ secrets.MAVEN_CENTRAL_USERNAME }}" \
+            -PmavenCentralPassword="${{ secrets.MAVEN_CENTRAL_PASSWORD }}" \
+            -Psigning.keyId="${{ secrets.GPG_KEY_ID }}" \
+            -Psigning.password="${{ secrets.GPG_PASSPHRASE }}" \
+            -Psigning.secretKeyRingFile="$GITHUB_WORKSPACE/secrets/secret-keyring.gpg" \
+            --no-daemon
