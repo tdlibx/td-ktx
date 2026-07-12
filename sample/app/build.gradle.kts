@@ -1,3 +1,5 @@
+val isReleaseBuild = gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.multiplatform)
@@ -36,7 +38,11 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":libtd-ktx"))
+                if (isReleaseBuild) {
+                    implementation("io.github.tdlibx:td-ktx:1.8.56-RC1")
+                } else {
+                    implementation(project(":libtd-ktx"))
+                }
                 implementation(project(":libtd"))
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)

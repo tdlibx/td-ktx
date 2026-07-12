@@ -77,5 +77,19 @@ Explore the full API surface in the [generated docs](https://tdlibx.github.io/td
 ## Samples
 A minimal Compose sample lives in [`sample/app`](sample/app). It wires `TelegramFlow` with Hilt, demonstrates handling the authorization flow, and renders online users with Navigation Compose.
 
+## Versioning & Testing Policy
+
+### Versioning Scheme
+Telegram Flow follows the underlying **Telegram SDK (TDLib) versioning** (e.g., `1.8.56`). 
+* **Release Candidates**: Pre-release builds for testing against new TDLib versions are published with an `-RC` suffix (e.g., `1.8.56-RC1`).
+* **Stable Releases**: Regular versions match the stable TDLib release they target.
+
+### Dual-Dependency Testing Mechanism
+The sample application in this repository is configured to automatically swap dependencies based on the build target:
+* **Debug Builds**: Use the local `:libtd-ktx` module. This allows for immediate testing of local changes during development.
+* **Release Builds**: Use the remote Maven Central artifact (matching the current library coordinates). This ensures that the release version of the sample app is always validated against the actual published binary.
+
+This behavior is controlled in `sample/app/build.gradle.kts` by inspecting the Gradle task graph for any `release` tasks.
+
 ## License
 This project is distributed under the Apache 2.0 License. See [LICENSE](LICENSE) for details.

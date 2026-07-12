@@ -1,17 +1,14 @@
 import java.net.URI
-import org.gradle.api.publish.maven.MavenPublication
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     kotlin("multiplatform")
     alias(libs.plugins.android.library)
     alias(libs.plugins.dokka)
-    `maven-publish`
     kotlin("plugin.serialization")
+    id("com.vanniktech.maven.publish")
 }
 
-group = "com.github.tdlibx"
-version = "1.8.56"
 
 kotlin {
     androidTarget {
@@ -74,14 +71,6 @@ android {
     }
 }
 
-publishing {
-    publications {
-        withType<MavenPublication> {
-            artifactId = "td-ktx" + (if (name == "kotlinMultiplatform") "" else "-$name")
-        }
-    }
-}
-
 tasks.named<DokkaTask>("dokkaGfm") {
     outputDirectory.set(file("$rootDir/wiki"))
     dokkaSourceSets.named("commonMain") {
@@ -94,4 +83,38 @@ tasks.named<DokkaTask>("dokkaGfm") {
 
 tasks.register("dokkaMarkdown") {
     dependsOn(tasks.named("dokkaGfm"))
+}
+
+mavenPublishing {
+    coordinates("io.github.tdlibx", "td-ktx", "1.8.56-RC1")
+
+    pom {
+        name.set("td-ktx")
+        description.set("Kotlin Coroutines and Flows extensions for Telegram API TDLib")
+        inceptionYear.set("2026")
+        url.set("https://github.com/tdlibx/td-ktx")
+        licenses {
+            license {
+                name.set("The Apache Software License, Version 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+            }
+        }
+        developers {
+            developer {
+                id.set("tdlibx")
+                name.set("tdlibx Contributors")
+            }
+        }
+        scm {
+            url.set("https://github.com/tdlibx/td-ktx")
+            connection.set("scm:git:git://github.com/tdlibx/td-ktx.git")
+            developerConnection.set("scm:git:ssh://git@github.com/tdlibx/td-ktx.git")
+        }
+    }
+
+    // Configure targeting the modern Sonatype Central Portal
+    publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL)
+
+    // Sign all generated multiplatform target publications
+    signAllPublications()
 }
