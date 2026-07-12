@@ -23,7 +23,7 @@ kotlin {
             executable {
                 baseName = "sample-app"
                 entryPoint = "com.telegramflow.example.main"
-                linkerOpts("-L${project.rootDir.absolutePath}/td-core-src/td-kmp-core/native_libs/macos", "-ltdjson", "-lc++")
+                linkerOpts("-L${project.rootDir.absolutePath}/td-core-src/libtd/native_libs/macos", "-ltdjson", "-lc++")
             }
         }
     }
@@ -31,7 +31,7 @@ kotlin {
         binaries.framework {
             baseName = "shared"
             isStatic = false
-            linkerOpts("-L${project.rootDir.absolutePath}/td-core-src/td-kmp-core/native_libs/ios-simulator", "-ltdjson", "-lc++")
+            linkerOpts("-L${project.rootDir.absolutePath}/td-core-src/libtd/native_libs/ios-simulator", "-ltdjson", "-lc++")
         }
     }
 
@@ -39,11 +39,12 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 if (isReleaseBuild) {
-                    implementation("io.github.tdlibx:td-ktx:1.8.56-RC1")
+                    implementation(libs.td.ktx)
+                    implementation(libs.tdlib)
                 } else {
                     implementation(project(":libtd-ktx"))
+                    implementation(project(":libtd"))
                 }
-                implementation(project(":libtd"))
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(compose.runtime)
@@ -174,7 +175,7 @@ val copyMacosLibtdjson by tasks.registering(Copy::class) {
     // build/bin/macosArm64/debugExecutable/sample-app.kexe that resolves to
     // build/bin/macosArm64/Frameworks/ (one level up from debugExecutable/).
     val frameworksDir = layout.buildDirectory.dir("bin/macosArm64/Frameworks")
-    val libsSrc = project.rootDir.resolve("td-core-src/td-kmp-core/native_libs/macos/libtdjson.dylib")
+    val libsSrc = project.rootDir.resolve("td-core-src/libtd/native_libs/macos/libtdjson.dylib")
     from(libsSrc)
     into(frameworksDir)
     rename { "libtdjson.1.8.65.dylib" }

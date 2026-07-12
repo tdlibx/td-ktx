@@ -1,7 +1,5 @@
 # Telegram Flow for TDLib
 
-[![](hhttps://jitpack.io/v/tdlibx/td-ktx.svg)](https://jitpack.io/v/#tdlibx/td-ktx)
-
 Telegram Flow is a Kotlin-first extension toolkit for [TDLib](https://github.com/tdlib/td) that turns callback-based Telegram API calls into coroutines and flows. It keeps your client code concise while exposing idiomatic Compose- and coroutine-friendly APIs.
 
 ## Features
@@ -17,7 +15,7 @@ Add the library dependency from Maven Central:
 implementation(project(":libtd-ktx"))
 ```
 
-The `libtd-ktx` module exposes TDLib (`com.github.tdlibx:td:1.8.56`) as an API dependency, so no extra TDLib declaration is required.
+The `libtd-ktx` module exposes TDLib (`io.github.tdlibx:td:1.8.56-RC4`) as an API dependency, so no extra TDLib declaration is required.
 
 The project ships a TDLib wrapper module (`libtd-ktx`) and a Compose sample under `sample/` that demonstrates usage with Hilt and the Navigation 3 typed destination APIs.
 

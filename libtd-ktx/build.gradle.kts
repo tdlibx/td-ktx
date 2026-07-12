@@ -9,6 +9,8 @@ plugins {
     id("com.vanniktech.maven.publish")
 }
 
+group = "io.github.tdlibx"
+version = "1.8.56-RC4"
 
 kotlin {
     androidTarget {
@@ -26,9 +28,16 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(project(":libtd"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+                api(project(":libtd"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
                 implementation(libs.kotlinx.serialization.json)
+            }
+        }
+        
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
             }
         }
     }
@@ -86,7 +95,7 @@ tasks.register("dokkaMarkdown") {
 }
 
 mavenPublishing {
-    coordinates("io.github.tdlibx", "td-ktx", "1.8.56-RC1")
+    coordinates("io.github.tdlibx", "td-ktx", "1.8.56-RC4")
 
     pom {
         name.set("td-ktx")
