@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "io.github.tdlibx"
-version = "1.8.56-RC4"
+version = "1.8.56-RC5"
 
 kotlin {
     androidTarget {
@@ -20,8 +20,12 @@ kotlin {
         }
     }
     
+    jvm() // For Desktop (JVM)
+
     macosArm64()
     macosX64()
+    
+    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
@@ -95,7 +99,7 @@ tasks.register("dokkaMarkdown") {
 }
 
 mavenPublishing {
-    coordinates("io.github.tdlibx", "td-ktx", "1.8.56-RC4")
+    coordinates("io.github.tdlibx", "td-ktx", "1.8.56-RC5")
 
     pom {
         name.set("td-ktx")

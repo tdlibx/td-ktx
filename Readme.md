@@ -12,12 +12,34 @@ Telegram Flow is a Kotlin-first extension toolkit for [TDLib](https://github.com
 Add the library dependency from Maven Central:
 
 ```kotlin
-implementation(project(":libtd-ktx"))
+implementation("io.github.tdlibx:td-ktx:1.8.56-RC5")
 ```
 
-The `libtd-ktx` module exposes TDLib (`io.github.tdlibx:td:1.8.56-RC4`) as an API dependency, so no extra TDLib declaration is required.
+### Kotlin Version Requirement
+**Important**: Version `1.8.56-RC5` is compiled with **Kotlin 2.2.21**. Due to KMP ABI stability constraints, your project must also use Kotlin `2.2.21`.
 
-The project ships a TDLib wrapper module (`libtd-ktx`) and a Compose sample under `sample/` that demonstrates usage with Hilt and the Navigation 3 typed destination APIs.
+### Native Binaries (iOS)
+The Maven artifact contains the Kotlin wrapper but **does not bundle the native TDLib C++ binaries** for iOS (as they are several hundred MBs). To link them in your iOS application:
+
+1. Download `libtdjson.xcframework` (e.g., from [Swiftgram/TDLibFramework](https://github.com/Swiftgram/TDLibFramework)).
+2. Place it in your `iosApp/libs/` directory.
+3. Configure your `shared` module to link against the framework:
+
+```kotlin
+// shared/build.gradle.kts
+val iosTargets = listOf(iosArm64(), iosSimulatorArm64(), iosX64())
+iosTargets.forEach { target ->
+    target.binaries.framework {
+        val archPath = when (target.konanTarget.name) {
+            "ios_arm64" -> "ios-arm64"
+            "ios_x64", "ios_simulator_arm64" -> "ios-arm64_x86_64-simulator"
+            else -> ""
+        }
+        val frameworkDir = project.rootProject.file("iosApp/libs/libtdjson.xcframework/$archPath").absolutePath
+        linkerOpts("-F$frameworkDir", "-framework", "libtdjson", "-lz", "-lssl", "-lcrypto")
+    }
+}
+```
 
 ## Getting started
 1. Create a single `TelegramFlow` instance and keep it in a long-lived scope (e.g., via DI).

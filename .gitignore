@@ -176,3 +176,9 @@ secrets.properties
 
 # TDLib native libs (generated during build, not source)
 **/jniLibs/**
+
+# Secrets and debug logs — never commit these
+secret-keyring.gpg
+signing_debug.log
+
+.aider*
