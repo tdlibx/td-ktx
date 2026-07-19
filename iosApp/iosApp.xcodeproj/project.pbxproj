@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AB1DFA7A29225F7C00F7AF9C /* libtdjson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB1DFA7929225F7C00F7AF9C /* libtdjson.xcframework */; };
-		AB1DFA7B29225F7C00F7AF9C /* libtdjson.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AB1DFA7929225F7C00F7AF9C /* libtdjson.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AB1DFA7B29225F7C00F7AF9C /* shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AB1DFA7929225F7C00F7AF9C /* shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AB1DFA7E29225F7C00F7AF9C /* libtdjson.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AB1DFA7D29225F7C00F7AF9C /* libtdjson.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
@@ -16,7 +16,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AB1DFA7929225F7C00F7AF9C /* libtdjson.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libtdjson.xcframework; sourceTree = "<group>"; };
+		AB1DFA7929225F7C00F7AF9C /* shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = shared.framework; path = "../sample/app/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)/shared.framework"; sourceTree = "<group>"; };
+		AB1DFA7D29225F7C00F7AF9C /* libtdjson.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtdjson.dylib; path = "../sample/app/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)/libtdjson.dylib"; sourceTree = "<group>"; };
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
@@ -33,7 +34,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				AB1DFA7B29225F7C00F7AF9C /* libtdjson.xcframework in Embed Frameworks */,
+				AB1DFA7B29225F7C00F7AF9C /* shared.framework in Embed Frameworks */,
+				AB1DFA7E29225F7C00F7AF9C /* libtdjson.dylib in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -45,7 +47,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AB1DFA7A29225F7C00F7AF9C /* libtdjson.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,7 +64,8 @@
 		42799AB246E5F90AF97AA0EF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AB1DFA7929225F7C00F7AF9C /* libtdjson.xcframework */,
+				AB1DFA7929225F7C00F7AF9C /* shared.framework */,
+				AB1DFA7D29225F7C00F7AF9C /* libtdjson.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -190,7 +192,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :sample:app:embedAndSignAppleFrameworkForXcode";
+			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/../sample\"\n./gradlew :app:embedAndSignAppleFrameworkForXcode\n# Copy libtdjson.dylib from the Maven-downloaded xcframework into the same directory\n# Xcode builds shared.framework into, so Xcode can embed both into the app bundle.\n# Map Xcode SDK_NAME to the xcframework slice used by the io.github.tdlibx.tdlib-xcframework\n# plugin (ios-arm64 -> device, ios-arm64_x86_64-simulator -> simulator).\nDST=\"$SRCROOT/../sample/app/build/xcode-frameworks/$CONFIGURATION/$SDK_NAME\"\ncase \"$SDK_NAME\" in\n  iphoneos*)      SLICE=ios-arm64 ;;\n  iphonesimulator*) SLICE=ios-arm64_x86_64-simulator ;;\n  *)              echo \"Unsupported SDK: $SDK_NAME\"; exit 1 ;;\nesac\nSRC=\"$SRCROOT/../sample/app/build/tdlib-xcframework/unpacked/$SLICE/libtdjson.dylib\"\nif [ -f \"$SRC\" ] && [ -d \"$DST\" ]; then\n  cp -f \"$SRC\" \"$DST/libtdjson.dylib\"\n  echo \"Copied $SRC -> $DST/libtdjson.dylib\"\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
