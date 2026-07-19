@@ -9,37 +9,44 @@ Telegram Flow is a Kotlin-first extension toolkit for [TDLib](https://github.com
 - **Compose-ready**: works seamlessly with `ViewModel` scopes and state flows.
 
 ## Setup
-Add the library dependency from Maven Central:
+Apply the bootstrap settings plugin in `settings.gradle.kts`:
 
 ```kotlin
-implementation("io.github.tdlibx:td-ktx:1.8.56-RC5")
+plugins {
+    id("io.github.tdlibx.plugin") version "1.8.56-RC10"
+}
 ```
 
-### Kotlin Version Requirement
-**Important**: Version `1.8.56-RC5` is compiled with **Kotlin 2.2.21**. Due to KMP ABI stability constraints, your project must also use Kotlin `2.2.21`.
-
-### Native Binaries (iOS)
-The Maven artifact contains the Kotlin wrapper but **does not bundle the native TDLib C++ binaries** for iOS (as they are several hundred MBs). To link them in your iOS application:
-
-1. Download `libtdjson.xcframework` (e.g., from [Swiftgram/TDLibFramework](https://github.com/Swiftgram/TDLibFramework)).
-2. Place it in your `iosApp/libs/` directory.
-3. Configure your `shared` module to link against the framework:
+Then apply the project plugin and add the dependencies you need in each subproject that uses KMP:
 
 ```kotlin
 // shared/build.gradle.kts
-val iosTargets = listOf(iosArm64(), iosSimulatorArm64(), iosX64())
-iosTargets.forEach { target ->
-    target.binaries.framework {
-        val archPath = when (target.konanTarget.name) {
-            "ios_arm64" -> "ios-arm64"
-            "ios_x64", "ios_simulator_arm64" -> "ios-arm64_x86_64-simulator"
-            else -> ""
-        }
-        val frameworkDir = project.rootProject.file("iosApp/libs/libtdjson.xcframework/$archPath").absolutePath
-        linkerOpts("-F$frameworkDir", "-framework", "libtdjson", "-lz", "-lssl", "-lcrypto")
-    }
+plugins {
+    kotlin("multiplatform")
+    id("io.github.tdlibx.tdlib-xcframework")  // version is declared above
+}
+
+dependencies {
+    commonMain.implementation("io.github.tdlibx:td:1.8.56-RC10")
+    commonMain.implementation("io.github.tdlibx:td-ktx:1.8.56-RC10")
 }
 ```
+
+The bootstrap plugin takes care of:
+- Resolving `mavenCentral()` + `gradlePluginPortal()` repositories in both `pluginManagement` and `dependencyResolutionManagement`.
+- Declaring `tdlib-xcframework` at the bootstrap version so consumers don't repeat it.
+
+If you only need the raw bindings (no coroutines/Flows), depend on `td` alone and skip `td-ktx`.
+
+### Kotlin Version Requirement
+**Important**: Version `1.8.56-RC10` is compiled with **Kotlin 2.2.21**. Due to KMP ABI stability constraints, your project must also use Kotlin `2.2.21`.
+
+### Native Binaries (iOS/macOS)
+The setup above is the entire integration for iOS (`iosArm64`, `iosX64`, `iosSimulatorArm64`) and macOS (`macosArm64`, `macosX64`). The xcframework download, unpack, and `linkerOpts` injection are handled automatically by `id("io.github.tdlibx.tdlib-xcframework")` — no manual `linkerOpts` block or xcframework download required.
+
+**Android**: The `td` AAR bundles native `.so` libraries (via `libtdjson.so` + JNI bridge in `jniLibs/<abi>/`) and is self-contained. Just the dependency is needed.
+
+**JVM**: Provide `libtdjson.{so,dylib,dll}` on `java.library.path` at runtime.
 
 ## Getting started
 1. Create a single `TelegramFlow` instance and keep it in a long-lived scope (e.g., via DI).

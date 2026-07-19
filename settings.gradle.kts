@@ -20,6 +20,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        mavenLocal()
     }
 }
 
@@ -33,9 +34,18 @@ project(":libtd").projectDir = file("td-core-src/libtd")
 include(":tdktxgen")
 project(":tdktxgen").projectDir = file("td-generator-src/tdktxgen")
 
+include(":tdjson-xcframework")
+project(":tdjson-xcframework").projectDir = file("tdjson-xcframework")
+
+include(":td-gradle-plugin")
+project(":td-gradle-plugin").projectDir = file("td-gradle-plugin")
+
+include(":td-bootstrap-settings-plugin")
+project(":td-bootstrap-settings-plugin").projectDir = file("td-bootstrap-settings-plugin")
+
 // This prevents the build from crashing due to missing secrets in the sample app.
-if (true) {
-    include(":sample:app")
-    project(":sample:app").projectDir = file("sample/app")
-}
+// The sample is a standalone Gradle project to demonstrate consumer usage of
+// io.github.tdlibx:td / io.github.tdlibx:td-ktx from Maven Central (and mavenLocal
+// during local development). See sample/README.md for how to build it.
+
 

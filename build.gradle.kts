@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.dokka) apply false
     id("org.jetbrains.kotlin.multiplatform") version "2.2.21" apply false
     id("org.jetbrains.kotlin.jvm") version "2.2.21" apply false
-    id("com.vanniktech.maven.publish") version "0.30.0" apply false
+    id("com.vanniktech.maven.publish") version "0.37.0" apply false
 }
 
 val secretsFile = rootProject.file("secrets.properties")

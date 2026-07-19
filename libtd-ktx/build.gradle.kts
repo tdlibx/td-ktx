@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "io.github.tdlibx"
-version = "1.8.56-RC5"
+version = "1.8.56-RC10"
 
 kotlin {
     androidTarget {
@@ -24,10 +24,10 @@ kotlin {
 
     macosArm64()
     macosX64()
-    
-    iosX64()
+
     iosArm64()
     iosSimulatorArm64()
+    iosX64()
 
     sourceSets {
         commonMain {
@@ -99,7 +99,7 @@ tasks.register("dokkaMarkdown") {
 }
 
 mavenPublishing {
-    coordinates("io.github.tdlibx", "td-ktx", "1.8.56-RC5")
+    coordinates("io.github.tdlibx", "td-ktx", "1.8.56-RC10")
 
     pom {
         name.set("td-ktx")
@@ -126,7 +126,7 @@ mavenPublishing {
     }
 
     // Configure targeting the modern Sonatype Central Portal
-    publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
 
     // Sign all generated multiplatform target publications
     signAllPublications()

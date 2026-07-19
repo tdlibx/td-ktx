@@ -1,5 +1,3 @@
-val isReleaseBuild = gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.multiplatform)
@@ -8,6 +6,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.kapt)
     kotlin("multiplatform")
+    id("io.github.tdlibx.tdlib-xcframework")
 }
 
 kotlin {
@@ -23,7 +22,6 @@ kotlin {
             executable {
                 baseName = "sample-app"
                 entryPoint = "com.telegramflow.example.main"
-                linkerOpts("-L${project.rootDir.absolutePath}/td-core-src/libtd/native_libs/macos", "-ltdjson", "-lc++")
             }
         }
     }
@@ -31,20 +29,14 @@ kotlin {
         binaries.framework {
             baseName = "shared"
             isStatic = false
-            linkerOpts("-L${project.rootDir.absolutePath}/td-core-src/libtd/native_libs/ios-simulator", "-ltdjson", "-lc++")
         }
     }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                if (isReleaseBuild) {
-                    implementation(libs.td.ktx)
-                    implementation(libs.tdlib)
-                } else {
-                    implementation(project(":libtd-ktx"))
-                    implementation(project(":libtd"))
-                }
+                implementation(libs.td.ktx)
+                implementation(libs.tdlib)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(compose.runtime)
@@ -164,23 +156,4 @@ dependencies {
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
-}
-
-// ── macOS: copy libtdjson into the Frameworks folder that @rpath resolves to ──
-// The dylib's embedded install name is @rpath/libtdjson.1.8.65.dylib, but the file
-// on disk is named libtdjson.dylib. We copy it with the expected versioned name so
-// dyld can find it when the executable runs.
-val copyMacosLibtdjson by tasks.registering(Copy::class) {
-    // The binary's LC_RPATH is @executable_path/../Frameworks, so relative to
-    // build/bin/macosArm64/debugExecutable/sample-app.kexe that resolves to
-    // build/bin/macosArm64/Frameworks/ (one level up from debugExecutable/).
-    val frameworksDir = layout.buildDirectory.dir("bin/macosArm64/Frameworks")
-    val libsSrc = project.rootDir.resolve("td-core-src/libtd/native_libs/macos/libtdjson.dylib")
-    from(libsSrc)
-    into(frameworksDir)
-    rename { "libtdjson.1.8.65.dylib" }
-}
-
-tasks.matching { it.name == "runDebugExecutableMacosArm64" }.configureEach {
-    dependsOn(copyMacosLibtdjson)
 }
