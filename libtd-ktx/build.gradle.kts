@@ -1,5 +1,5 @@
-import java.net.URI
 import org.jetbrains.dokka.gradle.DokkaTask
+import java.net.URI
 
 plugins {
     kotlin("multiplatform")
@@ -19,7 +19,7 @@ kotlin {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
         }
     }
-    
+
     jvm() // For Desktop (JVM)
 
     macosArm64()
@@ -37,7 +37,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
             }
         }
-        
+
         commonTest {
             dependencies {
                 implementation(kotlin("test"))

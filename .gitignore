@@ -182,3 +182,13 @@ secret-keyring.gpg
 signing_debug.log
 
 .aider*
+
+# Local scratch / tooling artifacts (not project source)
+graphify-out/
+consumer-smoke-tests/
+node_modules/
+package.json
+package-lock.json
+.env
+lcongif.yaml
+lc

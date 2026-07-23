@@ -1,4 +1,6 @@
-import com.vanniktech.maven.publish.*
+import com.vanniktech.maven.publish.GradlePlugin
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.SourcesJar
 
 plugins {
     kotlin("jvm")
@@ -63,10 +65,12 @@ mavenPublishing {
 
     publishToMavenCentral()
 
-    configure(GradlePlugin(
-        javadocJar = JavadocJar.Empty(),
-        sourcesJar = SourcesJar.Sources(),
-    ))
+    configure(
+        GradlePlugin(
+            javadocJar = JavadocJar.Empty(),
+            sourcesJar = SourcesJar.Sources(),
+        ),
+    )
 
     signAllPublications()
 }

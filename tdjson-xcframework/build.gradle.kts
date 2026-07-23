@@ -1,5 +1,4 @@
 import org.gradle.api.publish.maven.MavenPublication
-import com.vanniktech.maven.publish.*
 
 plugins {
     id("com.vanniktech.maven.publish")

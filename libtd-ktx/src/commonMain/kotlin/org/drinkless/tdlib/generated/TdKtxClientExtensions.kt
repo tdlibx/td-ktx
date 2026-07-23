@@ -1,14 +1,13 @@
 package org.drinkless.tdlib.generated
 
-import org.drinkless.tdlib.TdKtxClient
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import org.drinkless.tdlib.TdKtxClient
 
 /**
  * Returns the current authorization state. This is an offline method. For informational purposes only. Use updateAuthorizationState instead to maintain the current authorization state. Can be called before initialization
  */
-suspend fun TdKtxClient.getAuthorizationState(
-): AuthorizationState {
+suspend fun TdKtxClient.getAuthorizationState(): AuthorizationState {
     val request = GetAuthorizationState()
     val requestJson = tdJson.encodeToString(GetAuthorizationState.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -48,7 +47,23 @@ suspend fun TdKtxClient.setTdlibParameters(
     systemVersion: String? = null,
     applicationVersion: String? = null,
 ): Ok {
-    val request = SetTdlibParameters(useTestDc, databaseDirectory, filesDirectory, databaseEncryptionKey, useFileDatabase, useChatInfoDatabase, useMessageDatabase, useSecretChats, apiId, apiHash, systemLanguageCode, deviceModel, systemVersion, applicationVersion)
+    val request =
+        SetTdlibParameters(
+            useTestDc,
+            databaseDirectory,
+            filesDirectory,
+            databaseEncryptionKey,
+            useFileDatabase,
+            useChatInfoDatabase,
+            useMessageDatabase,
+            useSecretChats,
+            apiId,
+            apiHash,
+            systemLanguageCode,
+            deviceModel,
+            systemVersion,
+            applicationVersion,
+        )
     val requestJson = tdJson.encodeToString(SetTdlibParameters.serializer(), request)
     println("TD_FLOW_DEBUG -> $requestJson")
     val responseJson = this.sendJson(requestJson)
@@ -112,9 +127,7 @@ suspend fun TdKtxClient.setAuthenticationPremiumPurchaseTransaction(
 /**
  * Sets the email address of the user and sends an authentication code to the email address. Works only when the current authorization state is authorizationStateWaitEmailAddress @email_address The email address of the user
  */
-suspend fun TdKtxClient.setAuthenticationEmailAddress(
-    emailAddress: String? = null,
-): Ok {
+suspend fun TdKtxClient.setAuthenticationEmailAddress(emailAddress: String? = null): Ok {
     val request = SetAuthenticationEmailAddress(emailAddress)
     val requestJson = tdJson.encodeToString(SetAuthenticationEmailAddress.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -125,9 +138,7 @@ suspend fun TdKtxClient.setAuthenticationEmailAddress(
  * Resends an authentication code to the user. Works only when the current authorization state is authorizationStateWaitCode, the next_code_type of the result is not null and the server-specified timeout has passed, or when the current authorization state is authorizationStateWaitEmailCode
  * @param reason Reason of code resending; pass null if unknown
  */
-suspend fun TdKtxClient.resendAuthenticationCode(
-    reason: ResendCodeReason? = null,
-): Ok {
+suspend fun TdKtxClient.resendAuthenticationCode(reason: ResendCodeReason? = null): Ok {
     val request = ResendAuthenticationCode(reason)
     val requestJson = tdJson.encodeToString(ResendAuthenticationCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -137,9 +148,7 @@ suspend fun TdKtxClient.resendAuthenticationCode(
 /**
  * Checks the authentication of an email address. Works only when the current authorization state is authorizationStateWaitEmailCode @code Email address authentication to check
  */
-suspend fun TdKtxClient.checkAuthenticationEmailCode(
-    code: EmailAddressAuthentication? = null,
-): Ok {
+suspend fun TdKtxClient.checkAuthenticationEmailCode(code: EmailAddressAuthentication? = null): Ok {
     val request = CheckAuthenticationEmailCode(code)
     val requestJson = tdJson.encodeToString(CheckAuthenticationEmailCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -149,9 +158,7 @@ suspend fun TdKtxClient.checkAuthenticationEmailCode(
 /**
  * Checks the authentication code. Works only when the current authorization state is authorizationStateWaitCode @code Authentication code to check
  */
-suspend fun TdKtxClient.checkAuthenticationCode(
-    code: String? = null,
-): Ok {
+suspend fun TdKtxClient.checkAuthenticationCode(code: String? = null): Ok {
     val request = CheckAuthenticationCode(code)
     val requestJson = tdJson.encodeToString(CheckAuthenticationCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -162,9 +169,7 @@ suspend fun TdKtxClient.checkAuthenticationCode(
  * Requests QR code authentication by scanning a QR code on another logged in device. Works only when the current authorization state is authorizationStateWaitPhoneNumber, or if there is no pending authentication query and the current authorization state is authorizationStateWaitPremiumPurchase, authorizationStateWaitEmailAddress, authorizationStateWaitEmailCode, authorizationStateWaitCode, authorizationStateWaitRegistration, or authorizationStateWaitPassword
  * @param otherUserIds List of user identifiers of other users currently using the application
  */
-suspend fun TdKtxClient.requestQrCodeAuthentication(
-    otherUserIds: List<Long>? = null,
-): Ok {
+suspend fun TdKtxClient.requestQrCodeAuthentication(otherUserIds: List<Long>? = null): Ok {
     val request = RequestQrCodeAuthentication(otherUserIds)
     val requestJson = tdJson.encodeToString(RequestQrCodeAuthentication.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -174,8 +179,7 @@ suspend fun TdKtxClient.requestQrCodeAuthentication(
 /**
  * Returns parameters for authentication using a passkey as JSON-serialized string
  */
-suspend fun TdKtxClient.getAuthenticationPasskeyParameters(
-): Text {
+suspend fun TdKtxClient.getAuthenticationPasskeyParameters(): Text {
     val request = GetAuthenticationPasskeyParameters()
     val requestJson = tdJson.encodeToString(GetAuthenticationPasskeyParameters.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -238,8 +242,7 @@ suspend fun TdKtxClient.registerUser(
 /**
  * Resets the login email address. May return an error with a message "TASK_ALREADY_EXISTS" if reset is still pending. Works only when the current authorization state is authorizationStateWaitEmailCode and authorization_state.can_reset_email_address == true
  */
-suspend fun TdKtxClient.resetAuthenticationEmailAddress(
-): Ok {
+suspend fun TdKtxClient.resetAuthenticationEmailAddress(): Ok {
     val request = ResetAuthenticationEmailAddress()
     val requestJson = tdJson.encodeToString(ResetAuthenticationEmailAddress.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -249,9 +252,7 @@ suspend fun TdKtxClient.resetAuthenticationEmailAddress(
 /**
  * Checks the 2-step verification password for correctness. Works only when the current authorization state is authorizationStateWaitPassword @password The 2-step verification password to check
  */
-suspend fun TdKtxClient.checkAuthenticationPassword(
-    password: String? = null,
-): Ok {
+suspend fun TdKtxClient.checkAuthenticationPassword(password: String? = null): Ok {
     val request = CheckAuthenticationPassword(password)
     val requestJson = tdJson.encodeToString(CheckAuthenticationPassword.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -261,8 +262,7 @@ suspend fun TdKtxClient.checkAuthenticationPassword(
 /**
  * Requests to send a 2-step verification password recovery code to an email address that was previously set up. Works only when the current authorization state is authorizationStateWaitPassword
  */
-suspend fun TdKtxClient.requestAuthenticationPasswordRecovery(
-): Ok {
+suspend fun TdKtxClient.requestAuthenticationPasswordRecovery(): Ok {
     val request = RequestAuthenticationPasswordRecovery()
     val requestJson = tdJson.encodeToString(RequestAuthenticationPasswordRecovery.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -272,9 +272,7 @@ suspend fun TdKtxClient.requestAuthenticationPasswordRecovery(
 /**
  * Checks whether a 2-step verification password recovery code sent to an email address is valid. Works only when the current authorization state is authorizationStateWaitPassword @recovery_code Recovery code to check
  */
-suspend fun TdKtxClient.checkAuthenticationPasswordRecoveryCode(
-    recoveryCode: String? = null,
-): Ok {
+suspend fun TdKtxClient.checkAuthenticationPasswordRecoveryCode(recoveryCode: String? = null): Ok {
     val request = CheckAuthenticationPasswordRecoveryCode(recoveryCode)
     val requestJson = tdJson.encodeToString(CheckAuthenticationPasswordRecoveryCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -302,9 +300,7 @@ suspend fun TdKtxClient.recoverAuthenticationPassword(
  * Sends Firebase Authentication SMS to the phone number of the user. Works only when the current authorization state is authorizationStateWaitCode and the server returned code of the type authenticationCodeTypeFirebaseAndroid or authenticationCodeTypeFirebaseIos
  * @param token Play Integrity API or SafetyNet Attestation API token for the Android application, or secret from push notification for the iOS application
  */
-suspend fun TdKtxClient.sendAuthenticationFirebaseSms(
-    token: String? = null,
-): Ok {
+suspend fun TdKtxClient.sendAuthenticationFirebaseSms(token: String? = null): Ok {
     val request = SendAuthenticationFirebaseSms(token)
     val requestJson = tdJson.encodeToString(SendAuthenticationFirebaseSms.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -314,9 +310,7 @@ suspend fun TdKtxClient.sendAuthenticationFirebaseSms(
 /**
  * Reports that authentication code wasn't delivered via SMS; for official mobile applications only. Works only when the current authorization state is authorizationStateWaitCode @mobile_network_code Current mobile network code
  */
-suspend fun TdKtxClient.reportAuthenticationCodeMissing(
-    mobileNetworkCode: String? = null,
-): Ok {
+suspend fun TdKtxClient.reportAuthenticationCodeMissing(mobileNetworkCode: String? = null): Ok {
     val request = ReportAuthenticationCodeMissing(mobileNetworkCode)
     val requestJson = tdJson.encodeToString(ReportAuthenticationCodeMissing.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -326,9 +320,7 @@ suspend fun TdKtxClient.reportAuthenticationCodeMissing(
 /**
  * Checks the authentication token of a bot; to log in as a bot. Works only when the current authorization state is authorizationStateWaitPhoneNumber. Can be used instead of setAuthenticationPhoneNumber and checkAuthenticationCode to log in @token The bot token
  */
-suspend fun TdKtxClient.checkAuthenticationBotToken(
-    token: String? = null,
-): Ok {
+suspend fun TdKtxClient.checkAuthenticationBotToken(token: String? = null): Ok {
     val request = CheckAuthenticationBotToken(token)
     val requestJson = tdJson.encodeToString(CheckAuthenticationBotToken.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -338,8 +330,7 @@ suspend fun TdKtxClient.checkAuthenticationBotToken(
 /**
  * Closes the TDLib instance after a proper logout. Requires an available network connection. All local data will be destroyed. After the logout completes, updateAuthorizationState with authorizationStateClosed will be sent
  */
-suspend fun TdKtxClient.logOut(
-): Ok {
+suspend fun TdKtxClient.logOut(): Ok {
     val request = LogOut()
     val requestJson = tdJson.encodeToString(LogOut.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -349,8 +340,7 @@ suspend fun TdKtxClient.logOut(
 /**
  * Closes the TDLib instance. All databases will be flushed to disk and properly closed. After the close completes, updateAuthorizationState with authorizationStateClosed will be sent. Can be called before initialization
  */
-suspend fun TdKtxClient.close(
-): Ok {
+suspend fun TdKtxClient.close(): Ok {
     val request = Close()
     val requestJson = tdJson.encodeToString(Close.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -360,8 +350,7 @@ suspend fun TdKtxClient.close(
 /**
  * Closes the TDLib instance, destroying all local data without a proper logout. The current user session will remain in the list of all active sessions. All local data will be destroyed. After the destruction completes updateAuthorizationState with authorizationStateClosed will be sent. Can be called before authorization
  */
-suspend fun TdKtxClient.destroy(
-): Ok {
+suspend fun TdKtxClient.destroy(): Ok {
     val request = Destroy()
     val requestJson = tdJson.encodeToString(Destroy.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -371,9 +360,7 @@ suspend fun TdKtxClient.destroy(
 /**
  * Confirms QR code authentication on another device. Returns created session on success @link A link from a QR code. The link must be scanned by the in-app camera
  */
-suspend fun TdKtxClient.confirmQrCodeAuthentication(
-    link: String? = null,
-): Session {
+suspend fun TdKtxClient.confirmQrCodeAuthentication(link: String? = null): Session {
     val request = ConfirmQrCodeAuthentication(link)
     val requestJson = tdJson.encodeToString(ConfirmQrCodeAuthentication.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -383,8 +370,7 @@ suspend fun TdKtxClient.confirmQrCodeAuthentication(
 /**
  * Returns all updates needed to restore current TDLib state, i.e. all actual updateAuthorizationState/updateUser/updateNewChat and others. This is especially useful if TDLib is run in a separate process. Can be called before initialization
  */
-suspend fun TdKtxClient.getCurrentState(
-): Updates {
+suspend fun TdKtxClient.getCurrentState(): Updates {
     val request = GetCurrentState()
     val requestJson = tdJson.encodeToString(GetCurrentState.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -394,9 +380,7 @@ suspend fun TdKtxClient.getCurrentState(
 /**
  * Changes the database encryption key. Usually the encryption key is never changed and is stored in some OS keychain @new_encryption_key New encryption key
  */
-suspend fun TdKtxClient.setDatabaseEncryptionKey(
-    newEncryptionKey: String? = null,
-): Ok {
+suspend fun TdKtxClient.setDatabaseEncryptionKey(newEncryptionKey: String? = null): Ok {
     val request = SetDatabaseEncryptionKey(newEncryptionKey)
     val requestJson = tdJson.encodeToString(SetDatabaseEncryptionKey.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -406,8 +390,7 @@ suspend fun TdKtxClient.setDatabaseEncryptionKey(
 /**
  * Returns the current state of 2-step verification
  */
-suspend fun TdKtxClient.getPasswordState(
-): PasswordState {
+suspend fun TdKtxClient.getPasswordState(): PasswordState {
     val request = GetPasswordState()
     val requestJson = tdJson.encodeToString(GetPasswordState.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -438,8 +421,7 @@ suspend fun TdKtxClient.setPassword(
 /**
  * Checks whether the current user is required to set login email address
  */
-suspend fun TdKtxClient.isLoginEmailAddressRequired(
-): Ok {
+suspend fun TdKtxClient.isLoginEmailAddressRequired(): Ok {
     val request = IsLoginEmailAddressRequired()
     val requestJson = tdJson.encodeToString(IsLoginEmailAddressRequired.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -450,9 +432,7 @@ suspend fun TdKtxClient.isLoginEmailAddressRequired(
  * Changes the login email address of the user. The email address can be changed only if the current user already has login email and passwordState.login_email_address_pattern is non-empty, or the user received suggestedActionSetLoginEmailAddress and isLoginEmailAddressRequired succeeds. The change will not be applied until the new login email address is confirmed with checkLoginEmailAddressCode. To use Apple ID/Google ID instead of an email address, call checkLoginEmailAddressCode directly
  * @param newLoginEmailAddress New login email address
  */
-suspend fun TdKtxClient.setLoginEmailAddress(
-    newLoginEmailAddress: String? = null,
-): EmailAddressAuthenticationCodeInfo {
+suspend fun TdKtxClient.setLoginEmailAddress(newLoginEmailAddress: String? = null): EmailAddressAuthenticationCodeInfo {
     val request = SetLoginEmailAddress(newLoginEmailAddress)
     val requestJson = tdJson.encodeToString(SetLoginEmailAddress.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -462,8 +442,7 @@ suspend fun TdKtxClient.setLoginEmailAddress(
 /**
  * Resends the login email address verification code
  */
-suspend fun TdKtxClient.resendLoginEmailAddressCode(
-): EmailAddressAuthenticationCodeInfo {
+suspend fun TdKtxClient.resendLoginEmailAddressCode(): EmailAddressAuthenticationCodeInfo {
     val request = ResendLoginEmailAddressCode()
     val requestJson = tdJson.encodeToString(ResendLoginEmailAddressCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -473,9 +452,7 @@ suspend fun TdKtxClient.resendLoginEmailAddressCode(
 /**
  * Checks the login email address authentication @code Email address authentication to check
  */
-suspend fun TdKtxClient.checkLoginEmailAddressCode(
-    code: EmailAddressAuthentication? = null,
-): Ok {
+suspend fun TdKtxClient.checkLoginEmailAddressCode(code: EmailAddressAuthentication? = null): Ok {
     val request = CheckLoginEmailAddressCode(code)
     val requestJson = tdJson.encodeToString(CheckLoginEmailAddressCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -485,9 +462,7 @@ suspend fun TdKtxClient.checkLoginEmailAddressCode(
 /**
  * Returns a 2-step verification recovery email address that was previously set up. This method can be used to verify a password provided by the user @password The 2-step verification password for the current user
  */
-suspend fun TdKtxClient.getRecoveryEmailAddress(
-    password: String? = null,
-): RecoveryEmailAddress {
+suspend fun TdKtxClient.getRecoveryEmailAddress(password: String? = null): RecoveryEmailAddress {
     val request = GetRecoveryEmailAddress(password)
     val requestJson = tdJson.encodeToString(GetRecoveryEmailAddress.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -512,9 +487,7 @@ suspend fun TdKtxClient.setRecoveryEmailAddress(
 /**
  * Checks the 2-step verification recovery email address verification code @code Verification code to check
  */
-suspend fun TdKtxClient.checkRecoveryEmailAddressCode(
-    code: String? = null,
-): PasswordState {
+suspend fun TdKtxClient.checkRecoveryEmailAddressCode(code: String? = null): PasswordState {
     val request = CheckRecoveryEmailAddressCode(code)
     val requestJson = tdJson.encodeToString(CheckRecoveryEmailAddressCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -524,8 +497,7 @@ suspend fun TdKtxClient.checkRecoveryEmailAddressCode(
 /**
  * Resends the 2-step verification recovery email address verification code
  */
-suspend fun TdKtxClient.resendRecoveryEmailAddressCode(
-): PasswordState {
+suspend fun TdKtxClient.resendRecoveryEmailAddressCode(): PasswordState {
     val request = ResendRecoveryEmailAddressCode()
     val requestJson = tdJson.encodeToString(ResendRecoveryEmailAddressCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -535,8 +507,7 @@ suspend fun TdKtxClient.resendRecoveryEmailAddressCode(
 /**
  * Cancels verification of the 2-step verification recovery email address
  */
-suspend fun TdKtxClient.cancelRecoveryEmailAddressVerification(
-): PasswordState {
+suspend fun TdKtxClient.cancelRecoveryEmailAddressVerification(): PasswordState {
     val request = CancelRecoveryEmailAddressVerification()
     val requestJson = tdJson.encodeToString(CancelRecoveryEmailAddressVerification.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -546,8 +517,7 @@ suspend fun TdKtxClient.cancelRecoveryEmailAddressVerification(
 /**
  * Requests to send a 2-step verification password recovery code to an email address that was previously set up
  */
-suspend fun TdKtxClient.requestPasswordRecovery(
-): EmailAddressAuthenticationCodeInfo {
+suspend fun TdKtxClient.requestPasswordRecovery(): EmailAddressAuthenticationCodeInfo {
     val request = RequestPasswordRecovery()
     val requestJson = tdJson.encodeToString(RequestPasswordRecovery.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -557,9 +527,7 @@ suspend fun TdKtxClient.requestPasswordRecovery(
 /**
  * Checks whether a 2-step verification password recovery code sent to an email address is valid @recovery_code Recovery code to check
  */
-suspend fun TdKtxClient.checkPasswordRecoveryCode(
-    recoveryCode: String? = null,
-): Ok {
+suspend fun TdKtxClient.checkPasswordRecoveryCode(recoveryCode: String? = null): Ok {
     val request = CheckPasswordRecoveryCode(recoveryCode)
     val requestJson = tdJson.encodeToString(CheckPasswordRecoveryCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -586,8 +554,7 @@ suspend fun TdKtxClient.recoverPassword(
 /**
  * Removes 2-step verification password without previous password and access to recovery email address. The password can't be reset immediately and the request needs to be repeated after the specified time
  */
-suspend fun TdKtxClient.resetPassword(
-): ResetPasswordResult {
+suspend fun TdKtxClient.resetPassword(): ResetPasswordResult {
     val request = ResetPassword()
     val requestJson = tdJson.encodeToString(ResetPassword.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -597,8 +564,7 @@ suspend fun TdKtxClient.resetPassword(
 /**
  * Cancels reset of 2-step verification password. The method can be called if passwordState.pending_reset_date > 0
  */
-suspend fun TdKtxClient.cancelPasswordReset(
-): Ok {
+suspend fun TdKtxClient.cancelPasswordReset(): Ok {
     val request = CancelPasswordReset()
     val requestJson = tdJson.encodeToString(CancelPasswordReset.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -621,8 +587,7 @@ suspend fun TdKtxClient.createTemporaryPassword(
 /**
  * Returns information about the current temporary password
  */
-suspend fun TdKtxClient.getTemporaryPasswordState(
-): TemporaryPasswordState {
+suspend fun TdKtxClient.getTemporaryPasswordState(): TemporaryPasswordState {
     val request = GetTemporaryPasswordState()
     val requestJson = tdJson.encodeToString(GetTemporaryPasswordState.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -632,8 +597,7 @@ suspend fun TdKtxClient.getTemporaryPasswordState(
 /**
  * Returns the current user
  */
-suspend fun TdKtxClient.getMe(
-): User {
+suspend fun TdKtxClient.getMe(): User {
     val request = GetMe()
     val requestJson = tdJson.encodeToString(GetMe.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -643,9 +607,7 @@ suspend fun TdKtxClient.getMe(
 /**
  * Returns information about a user by their identifier. This is an offline method if the current user is not a bot @user_id User identifier
  */
-suspend fun TdKtxClient.getUser(
-    userId: Long,
-): User {
+suspend fun TdKtxClient.getUser(userId: Long): User {
     val request = GetUser(userId)
     val requestJson = tdJson.encodeToString(GetUser.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -655,9 +617,7 @@ suspend fun TdKtxClient.getUser(
 /**
  * Returns full information about a user by their identifier @user_id User identifier
  */
-suspend fun TdKtxClient.getUserFullInfo(
-    userId: Long,
-): UserFullInfo {
+suspend fun TdKtxClient.getUserFullInfo(userId: Long): UserFullInfo {
     val request = GetUserFullInfo(userId)
     val requestJson = tdJson.encodeToString(GetUserFullInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -667,9 +627,7 @@ suspend fun TdKtxClient.getUserFullInfo(
 /**
  * Returns information about a basic group by its identifier. This is an offline method if the current user is not a bot @basic_group_id Basic group identifier
  */
-suspend fun TdKtxClient.getBasicGroup(
-    basicGroupId: Long,
-): BasicGroup {
+suspend fun TdKtxClient.getBasicGroup(basicGroupId: Long): BasicGroup {
     val request = GetBasicGroup(basicGroupId)
     val requestJson = tdJson.encodeToString(GetBasicGroup.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -679,9 +637,7 @@ suspend fun TdKtxClient.getBasicGroup(
 /**
  * Returns full information about a basic group by its identifier @basic_group_id Basic group identifier
  */
-suspend fun TdKtxClient.getBasicGroupFullInfo(
-    basicGroupId: Long,
-): BasicGroupFullInfo {
+suspend fun TdKtxClient.getBasicGroupFullInfo(basicGroupId: Long): BasicGroupFullInfo {
     val request = GetBasicGroupFullInfo(basicGroupId)
     val requestJson = tdJson.encodeToString(GetBasicGroupFullInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -691,9 +647,7 @@ suspend fun TdKtxClient.getBasicGroupFullInfo(
 /**
  * Returns information about a supergroup or a channel by its identifier. This is an offline method if the current user is not a bot @supergroup_id Supergroup or channel identifier
  */
-suspend fun TdKtxClient.getSupergroup(
-    supergroupId: Long,
-): Supergroup {
+suspend fun TdKtxClient.getSupergroup(supergroupId: Long): Supergroup {
     val request = GetSupergroup(supergroupId)
     val requestJson = tdJson.encodeToString(GetSupergroup.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -703,9 +657,7 @@ suspend fun TdKtxClient.getSupergroup(
 /**
  * Returns full information about a supergroup or a channel by its identifier, cached for up to 1 minute @supergroup_id Supergroup or channel identifier
  */
-suspend fun TdKtxClient.getSupergroupFullInfo(
-    supergroupId: Long,
-): SupergroupFullInfo {
+suspend fun TdKtxClient.getSupergroupFullInfo(supergroupId: Long): SupergroupFullInfo {
     val request = GetSupergroupFullInfo(supergroupId)
     val requestJson = tdJson.encodeToString(GetSupergroupFullInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -715,9 +667,7 @@ suspend fun TdKtxClient.getSupergroupFullInfo(
 /**
  * Returns information about a secret chat by its identifier. This is an offline method @secret_chat_id Secret chat identifier
  */
-suspend fun TdKtxClient.getSecretChat(
-    secretChatId: Int,
-): SecretChat {
+suspend fun TdKtxClient.getSecretChat(secretChatId: Int): SecretChat {
     val request = GetSecretChat(secretChatId)
     val requestJson = tdJson.encodeToString(GetSecretChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -727,9 +677,7 @@ suspend fun TdKtxClient.getSecretChat(
 /**
  * Returns information about a chat by its identifier. This is an offline method if the current user is not a bot @chat_id Chat identifier
  */
-suspend fun TdKtxClient.getChat(
-    chatId: Long,
-): Chat {
+suspend fun TdKtxClient.getChat(chatId: Long): Chat {
     val request = GetChat(chatId)
     val requestJson = tdJson.encodeToString(GetChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -784,9 +732,7 @@ suspend fun TdKtxClient.getRepliedMessage(
 /**
  * Returns information about a newest pinned message in the chat. Returns a 404 error if the message doesn't exist @chat_id Identifier of the chat the message belongs to
  */
-suspend fun TdKtxClient.getChatPinnedMessage(
-    chatId: Long,
-): Message {
+suspend fun TdKtxClient.getChatPinnedMessage(chatId: Long): Message {
     val request = GetChatPinnedMessage(chatId)
     val requestJson = tdJson.encodeToString(GetChatPinnedMessage.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -924,9 +870,7 @@ suspend fun TdKtxClient.getMessageAuthor(
 /**
  * Returns information about a file. This is an offline method @file_id Identifier of the file to get
  */
-suspend fun TdKtxClient.getFile(
-    fileId: Int,
-): File {
+suspend fun TdKtxClient.getFile(fileId: Int): File {
     val request = GetFile(fileId)
     val requestJson = tdJson.encodeToString(GetFile.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -981,9 +925,7 @@ suspend fun TdKtxClient.getChats(
 /**
  * Searches a public chat by its username. Currently, only private chats, supergroups and channels can be public. Returns the chat if found; otherwise, an error is returned @username Username to be resolved
  */
-suspend fun TdKtxClient.searchPublicChat(
-    username: String? = null,
-): Chat {
+suspend fun TdKtxClient.searchPublicChat(username: String? = null): Chat {
     val request = SearchPublicChat(username)
     val requestJson = tdJson.encodeToString(SearchPublicChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1042,8 +984,7 @@ suspend fun TdKtxClient.searchChatsOnServer(
 /**
  * Returns a list of channel chats recommended to the current user
  */
-suspend fun TdKtxClient.getRecommendedChats(
-): Chats {
+suspend fun TdKtxClient.getRecommendedChats(): Chats {
     val request = GetRecommendedChats()
     val requestJson = tdJson.encodeToString(GetRecommendedChats.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1053,9 +994,7 @@ suspend fun TdKtxClient.getRecommendedChats(
 /**
  * Returns a list of chats similar to the given chat @chat_id Identifier of the target chat; must be an identifier of a channel chat
  */
-suspend fun TdKtxClient.getChatSimilarChats(
-    chatId: Long,
-): Chats {
+suspend fun TdKtxClient.getChatSimilarChats(chatId: Long): Chats {
     val request = GetChatSimilarChats(chatId)
     val requestJson = tdJson.encodeToString(GetChatSimilarChats.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1095,9 +1034,7 @@ suspend fun TdKtxClient.openChatSimilarChat(
 /**
  * Returns a list of bots similar to the given bot @bot_user_id User identifier of the target bot
  */
-suspend fun TdKtxClient.getBotSimilarBots(
-    botUserId: Long,
-): Users {
+suspend fun TdKtxClient.getBotSimilarBots(botUserId: Long): Users {
     val request = GetBotSimilarBots(botUserId)
     val requestJson = tdJson.encodeToString(GetBotSimilarBots.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1180,9 +1117,7 @@ suspend fun TdKtxClient.searchRecentlyFoundChats(
 /**
  * Adds a chat to the list of recently found chats. The chat is added to the beginning of the list. If the chat is already in the list, it will be removed from the list first @chat_id Identifier of the chat to add
  */
-suspend fun TdKtxClient.addRecentlyFoundChat(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.addRecentlyFoundChat(chatId: Long): Ok {
     val request = AddRecentlyFoundChat(chatId)
     val requestJson = tdJson.encodeToString(AddRecentlyFoundChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1192,9 +1127,7 @@ suspend fun TdKtxClient.addRecentlyFoundChat(
 /**
  * Removes a chat from the list of recently found chats @chat_id Identifier of the chat to be removed
  */
-suspend fun TdKtxClient.removeRecentlyFoundChat(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.removeRecentlyFoundChat(chatId: Long): Ok {
     val request = RemoveRecentlyFoundChat(chatId)
     val requestJson = tdJson.encodeToString(RemoveRecentlyFoundChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1204,8 +1137,7 @@ suspend fun TdKtxClient.removeRecentlyFoundChat(
 /**
  * Clears the list of recently found chats
  */
-suspend fun TdKtxClient.clearRecentlyFoundChats(
-): Ok {
+suspend fun TdKtxClient.clearRecentlyFoundChats(): Ok {
     val request = ClearRecentlyFoundChats()
     val requestJson = tdJson.encodeToString(ClearRecentlyFoundChats.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1215,9 +1147,7 @@ suspend fun TdKtxClient.clearRecentlyFoundChats(
 /**
  * Returns recently opened chats. This is an offline method. Returns chats in the order of last opening @limit The maximum number of chats to be returned
  */
-suspend fun TdKtxClient.getRecentlyOpenedChats(
-    limit: Int,
-): Chats {
+suspend fun TdKtxClient.getRecentlyOpenedChats(limit: Int): Chats {
     val request = GetRecentlyOpenedChats(limit)
     val requestJson = tdJson.encodeToString(GetRecentlyOpenedChats.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1240,9 +1170,7 @@ suspend fun TdKtxClient.checkChatUsername(
 /**
  * Returns a list of public chats of the specified type, owned by the user @type Type of the public chats to return
  */
-suspend fun TdKtxClient.getCreatedPublicChats(
-    type: PublicChatType? = null,
-): Chats {
+suspend fun TdKtxClient.getCreatedPublicChats(type: PublicChatType? = null): Chats {
     val request = GetCreatedPublicChats(type)
     val requestJson = tdJson.encodeToString(GetCreatedPublicChats.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1252,9 +1180,7 @@ suspend fun TdKtxClient.getCreatedPublicChats(
 /**
  * Checks whether the maximum number of owned public chats has been reached. Returns corresponding error if the limit was reached. The limit can be increased with Telegram Premium @type Type of the public chats, for which to check the limit
  */
-suspend fun TdKtxClient.checkCreatedPublicChatsLimit(
-    type: PublicChatType? = null,
-): Ok {
+suspend fun TdKtxClient.checkCreatedPublicChatsLimit(type: PublicChatType? = null): Ok {
     val request = CheckCreatedPublicChatsLimit(type)
     val requestJson = tdJson.encodeToString(CheckCreatedPublicChatsLimit.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1264,8 +1190,7 @@ suspend fun TdKtxClient.checkCreatedPublicChatsLimit(
 /**
  * Returns a list of basic group and supergroup chats, which can be used as a discussion group for a channel. Returned basic group chats must be first upgraded to supergroups before they can be set as a discussion group. To set a returned supergroup as a discussion group, access to its old messages must be enabled using toggleSupergroupIsAllHistoryAvailable first
  */
-suspend fun TdKtxClient.getSuitableDiscussionChats(
-): Chats {
+suspend fun TdKtxClient.getSuitableDiscussionChats(): Chats {
     val request = GetSuitableDiscussionChats()
     val requestJson = tdJson.encodeToString(GetSuitableDiscussionChats.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1275,8 +1200,7 @@ suspend fun TdKtxClient.getSuitableDiscussionChats(
 /**
  * Returns a list of recently inactive supergroups and channels. Can be used when user reaches limit on the number of joined supergroups and channels and receives the error "CHANNELS_TOO_MUCH". Also, the limit can be increased with Telegram Premium
  */
-suspend fun TdKtxClient.getInactiveSupergroupChats(
-): Chats {
+suspend fun TdKtxClient.getInactiveSupergroupChats(): Chats {
     val request = GetInactiveSupergroupChats()
     val requestJson = tdJson.encodeToString(GetInactiveSupergroupChats.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1286,8 +1210,7 @@ suspend fun TdKtxClient.getInactiveSupergroupChats(
 /**
  * Returns a list of channel chats, which can be used as a personal chat
  */
-suspend fun TdKtxClient.getSuitablePersonalChats(
-): Chats {
+suspend fun TdKtxClient.getSuitablePersonalChats(): Chats {
     val request = GetSuitablePersonalChats()
     val requestJson = tdJson.encodeToString(GetSuitablePersonalChats.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1481,9 +1404,7 @@ suspend fun TdKtxClient.toggleDirectMessagesChatTopicCanSendUnpaidMessages(
  * Loads more Saved Messages topics. The loaded topics will be sent through updateSavedMessagesTopic. Topics are sorted by their topic.order in descending order. Returns a 404 error if all topics have been loaded
  * @param limit The maximum number of topics to be loaded. For optimal performance, the number of loaded topics is chosen by TDLib and can be smaller than the specified limit, even if the end of the list is not reached
  */
-suspend fun TdKtxClient.loadSavedMessagesTopics(
-    limit: Int,
-): Ok {
+suspend fun TdKtxClient.loadSavedMessagesTopics(limit: Int): Ok {
     val request = LoadSavedMessagesTopics(limit)
     val requestJson = tdJson.encodeToString(LoadSavedMessagesTopics.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1527,9 +1448,7 @@ suspend fun TdKtxClient.getSavedMessagesTopicMessageByDate(
 /**
  * Deletes all messages in a Saved Messages topic @saved_messages_topic_id Identifier of Saved Messages topic which messages will be deleted
  */
-suspend fun TdKtxClient.deleteSavedMessagesTopicHistory(
-    savedMessagesTopicId: Long,
-): Ok {
+suspend fun TdKtxClient.deleteSavedMessagesTopicHistory(savedMessagesTopicId: Long): Ok {
     val request = DeleteSavedMessagesTopicHistory(savedMessagesTopicId)
     val requestJson = tdJson.encodeToString(DeleteSavedMessagesTopicHistory.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1571,9 +1490,7 @@ suspend fun TdKtxClient.toggleSavedMessagesTopicIsPinned(
 /**
  * Changes the order of pinned Saved Messages topics @saved_messages_topic_ids Identifiers of the new pinned Saved Messages topics
  */
-suspend fun TdKtxClient.setPinnedSavedMessagesTopics(
-    savedMessagesTopicIds: List<Long>? = null,
-): Ok {
+suspend fun TdKtxClient.setPinnedSavedMessagesTopics(savedMessagesTopicIds: List<Long>? = null): Ok {
     val request = SetPinnedSavedMessagesTopics(savedMessagesTopicIds)
     val requestJson = tdJson.encodeToString(SetPinnedSavedMessagesTopics.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1660,9 +1577,7 @@ suspend fun TdKtxClient.deleteChatHistory(
  * Deletes a chat along with all messages in the corresponding chat for all chat members. For group chats this will release the usernames and remove all members. Use the field chat.can_be_deleted_for_all_users to find whether the method can be applied to the chat
  * @param chatId Chat identifier
  */
-suspend fun TdKtxClient.deleteChat(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.deleteChat(chatId: Long): Ok {
     val request = DeleteChat(chatId)
     val requestJson = tdJson.encodeToString(DeleteChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1802,9 +1717,7 @@ suspend fun TdKtxClient.searchOutgoingDocumentMessages(
 /**
  * Checks public post search limits without actually performing the search @query Query that will be searched for
  */
-suspend fun TdKtxClient.getPublicPostSearchLimits(
-    query: String? = null,
-): PublicPostSearchLimits {
+suspend fun TdKtxClient.getPublicPostSearchLimits(query: String? = null): PublicPostSearchLimits {
     val request = GetPublicPostSearchLimits(query)
     val requestJson = tdJson.encodeToString(GetPublicPostSearchLimits.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1918,9 +1831,7 @@ suspend fun TdKtxClient.getSearchedForTags(
 /**
  * Removes a hashtag or a cashtag from the list of recently searched for hashtags or cashtags @tag Hashtag or cashtag to delete
  */
-suspend fun TdKtxClient.removeSearchedForTag(
-    tag: String? = null,
-): Ok {
+suspend fun TdKtxClient.removeSearchedForTag(tag: String? = null): Ok {
     val request = RemoveSearchedForTag(tag)
     val requestJson = tdJson.encodeToString(RemoveSearchedForTag.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1930,9 +1841,7 @@ suspend fun TdKtxClient.removeSearchedForTag(
 /**
  * Clears the list of recently searched for hashtags or cashtags @clear_cashtags Pass true to clear the list of recently searched for cashtags; otherwise, the list of recently searched for hashtags will be cleared
  */
-suspend fun TdKtxClient.clearSearchedForTags(
-    clearCashtags: Boolean,
-): Ok {
+suspend fun TdKtxClient.clearSearchedForTags(clearCashtags: Boolean): Ok {
     val request = ClearSearchedForTags(clearCashtags)
     val requestJson = tdJson.encodeToString(ClearSearchedForTags.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -1942,9 +1851,7 @@ suspend fun TdKtxClient.clearSearchedForTags(
 /**
  * Deletes all call messages @revoke Pass true to delete the messages for all users
  */
-suspend fun TdKtxClient.deleteAllCallMessages(
-    revoke: Boolean,
-): Ok {
+suspend fun TdKtxClient.deleteAllCallMessages(revoke: Boolean): Ok {
     val request = DeleteAllCallMessages(revoke)
     val requestJson = tdJson.encodeToString(DeleteAllCallMessages.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2060,9 +1967,7 @@ suspend fun TdKtxClient.getChatMessagePosition(
 /**
  * Returns all scheduled messages in a chat. The messages are returned in reverse chronological order (i.e., in order of decreasing message_id) @chat_id Chat identifier
  */
-suspend fun TdKtxClient.getChatScheduledMessages(
-    chatId: Long,
-): Messages {
+suspend fun TdKtxClient.getChatScheduledMessages(chatId: Long): Messages {
     val request = GetChatScheduledMessages(chatId)
     val requestJson = tdJson.encodeToString(GetChatScheduledMessages.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2072,9 +1977,7 @@ suspend fun TdKtxClient.getChatScheduledMessages(
 /**
  * Returns sponsored messages to be shown in a chat; for channel chats and chats with bots only @chat_id Identifier of the chat
  */
-suspend fun TdKtxClient.getChatSponsoredMessages(
-    chatId: Long,
-): SponsoredMessages {
+suspend fun TdKtxClient.getChatSponsoredMessages(chatId: Long): SponsoredMessages {
     val request = GetChatSponsoredMessages(chatId)
     val requestJson = tdJson.encodeToString(GetChatSponsoredMessages.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2120,9 +2023,7 @@ suspend fun TdKtxClient.reportChatSponsoredMessage(
 /**
  * Returns sponsored chats to be shown in the search results @query Query the user searches for
  */
-suspend fun TdKtxClient.getSearchSponsoredChats(
-    query: String? = null,
-): SponsoredChats {
+suspend fun TdKtxClient.getSearchSponsoredChats(query: String? = null): SponsoredChats {
     val request = GetSearchSponsoredChats(query)
     val requestJson = tdJson.encodeToString(GetSearchSponsoredChats.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2132,9 +2033,7 @@ suspend fun TdKtxClient.getSearchSponsoredChats(
 /**
  * Informs TDLib that the user fully viewed a sponsored chat @sponsored_chat_unique_id Unique identifier of the sponsored chat
  */
-suspend fun TdKtxClient.viewSponsoredChat(
-    sponsoredChatUniqueId: Long,
-): Ok {
+suspend fun TdKtxClient.viewSponsoredChat(sponsoredChatUniqueId: Long): Ok {
     val request = ViewSponsoredChat(sponsoredChatUniqueId)
     val requestJson = tdJson.encodeToString(ViewSponsoredChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2144,9 +2043,7 @@ suspend fun TdKtxClient.viewSponsoredChat(
 /**
  * Informs TDLib that the user opened a sponsored chat @sponsored_chat_unique_id Unique identifier of the sponsored chat
  */
-suspend fun TdKtxClient.openSponsoredChat(
-    sponsoredChatUniqueId: Long,
-): Ok {
+suspend fun TdKtxClient.openSponsoredChat(sponsoredChatUniqueId: Long): Ok {
     val request = OpenSponsoredChat(sponsoredChatUniqueId)
     val requestJson = tdJson.encodeToString(OpenSponsoredChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2186,9 +2083,7 @@ suspend fun TdKtxClient.getVideoMessageAdvertisements(
 /**
  * Informs TDLib that the user viewed a video message advertisement @advertisement_unique_id Unique identifier of the advertisement
  */
-suspend fun TdKtxClient.viewVideoMessageAdvertisement(
-    advertisementUniqueId: Long,
-): Ok {
+suspend fun TdKtxClient.viewVideoMessageAdvertisement(advertisementUniqueId: Long): Ok {
     val request = ViewVideoMessageAdvertisement(advertisementUniqueId)
     val requestJson = tdJson.encodeToString(ViewVideoMessageAdvertisement.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2198,9 +2093,7 @@ suspend fun TdKtxClient.viewVideoMessageAdvertisement(
 /**
  * Informs TDLib that the user clicked a video message advertisement @advertisement_unique_id Unique identifier of the advertisement
  */
-suspend fun TdKtxClient.clickVideoMessageAdvertisement(
-    advertisementUniqueId: Long,
-): Ok {
+suspend fun TdKtxClient.clickVideoMessageAdvertisement(advertisementUniqueId: Long): Ok {
     val request = ClickVideoMessageAdvertisement(advertisementUniqueId)
     val requestJson = tdJson.encodeToString(ClickVideoMessageAdvertisement.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2293,9 +2186,7 @@ suspend fun TdKtxClient.getMessageEmbeddingCode(
 /**
  * Returns information about a public or private message link. Can be called for any internal link of the type internalLinkTypeMessage @url The message link
  */
-suspend fun TdKtxClient.getMessageLinkInfo(
-    url: String? = null,
-): MessageLinkInfo {
+suspend fun TdKtxClient.getMessageLinkInfo(url: String? = null): MessageLinkInfo {
     val request = GetMessageLinkInfo(url)
     val requestJson = tdJson.encodeToString(GetMessageLinkInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2346,9 +2237,7 @@ suspend fun TdKtxClient.editTextCompositionStyle(
  * Deletes a custom text composition style that was created by the current user
  * @param name Name of the style
  */
-suspend fun TdKtxClient.deleteTextCompositionStyle(
-    name: String? = null,
-): Ok {
+suspend fun TdKtxClient.deleteTextCompositionStyle(name: String? = null): Ok {
     val request = DeleteTextCompositionStyle(name)
     val requestJson = tdJson.encodeToString(DeleteTextCompositionStyle.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2358,9 +2247,7 @@ suspend fun TdKtxClient.deleteTextCompositionStyle(
 /**
  * Searches a custom text composition style by its name @name Name of the style
  */
-suspend fun TdKtxClient.searchTextCompositionStyle(
-    name: String? = null,
-): TextCompositionStyle {
+suspend fun TdKtxClient.searchTextCompositionStyle(name: String? = null): TextCompositionStyle {
     val request = SearchTextCompositionStyle(name)
     val requestJson = tdJson.encodeToString(SearchTextCompositionStyle.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2386,9 +2273,7 @@ suspend fun TdKtxClient.getTextCompositionStyleExample(
  * Adds a custom text composition style to the list of used by the user styles. May return an error with a message "TONES_SAVED_TOO_MANY" if the maximum number of added custom styles has been reached
  * @param name Name of the style
  */
-suspend fun TdKtxClient.addTextCompositionStyle(
-    name: String? = null,
-): Ok {
+suspend fun TdKtxClient.addTextCompositionStyle(name: String? = null): Ok {
     val request = AddTextCompositionStyle(name)
     val requestJson = tdJson.encodeToString(AddTextCompositionStyle.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2399,9 +2284,7 @@ suspend fun TdKtxClient.addTextCompositionStyle(
  * Removes a custom text composition style from the list of used by the user styles. If the style was created by the current user, then it can only be deleted
  * @param name Name of the style
  */
-suspend fun TdKtxClient.removeTextCompositionStyle(
-    name: String? = null,
-): Ok {
+suspend fun TdKtxClient.removeTextCompositionStyle(name: String? = null): Ok {
     val request = RemoveTextCompositionStyle(name)
     val requestJson = tdJson.encodeToString(RemoveTextCompositionStyle.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2486,9 +2369,7 @@ suspend fun TdKtxClient.composeTextWithAi(
  * Fixes text using an AI model; must not be used in secret chats. May return an error with a message "AICOMPOSE_FLOOD_PREMIUM" if Telegram Premium is required to send further requests
  * @param text The original text
  */
-suspend fun TdKtxClient.fixTextWithAi(
-    text: FormattedText? = null,
-): FixedText {
+suspend fun TdKtxClient.fixTextWithAi(text: FormattedText? = null): FixedText {
     val request = FixTextWithAi(text)
     val requestJson = tdJson.encodeToString(FixTextWithAi.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -2527,9 +2408,7 @@ suspend fun TdKtxClient.rateSpeechRecognition(
 /**
  * Returns the list of message sender identifiers, which can be used to send messages in a chat @chat_id Chat identifier
  */
-suspend fun TdKtxClient.getChatAvailableMessageSenders(
-    chatId: Long,
-): ChatMessageSenders {
+suspend fun TdKtxClient.getChatAvailableMessageSenders(chatId: Long): ChatMessageSenders {
     val request = GetChatAvailableMessageSenders(chatId)
     val requestJson = tdJson.encodeToString(GetChatAvailableMessageSenders.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3020,7 +2899,17 @@ suspend fun TdKtxClient.sendBusinessMessage(
     replyMarkup: ReplyMarkup? = null,
     inputMessageContent: InputMessageContent? = null,
 ): BusinessMessage {
-    val request = SendBusinessMessage(businessConnectionId, chatId, replyTo, disableNotification, protectContent, effectId, replyMarkup, inputMessageContent)
+    val request =
+        SendBusinessMessage(
+            businessConnectionId,
+            chatId,
+            replyTo,
+            disableNotification,
+            protectContent,
+            effectId,
+            replyMarkup,
+            inputMessageContent,
+        )
     val requestJson = tdJson.encodeToString(SendBusinessMessage.serializer(), request)
     val responseJson = this.sendJson(requestJson)
     return tdJson.decodeFromString(BusinessMessage.serializer(), responseJson)
@@ -3045,7 +2934,8 @@ suspend fun TdKtxClient.sendBusinessMessageAlbum(
     effectId: Long,
     inputMessageContents: List<InputMessageContent>? = null,
 ): BusinessMessages {
-    val request = SendBusinessMessageAlbum(businessConnectionId, chatId, replyTo, disableNotification, protectContent, effectId, inputMessageContents)
+    val request =
+        SendBusinessMessageAlbum(businessConnectionId, chatId, replyTo, disableNotification, protectContent, effectId, inputMessageContents)
     val requestJson = tdJson.encodeToString(SendBusinessMessageAlbum.serializer(), request)
     val responseJson = this.sendJson(requestJson)
     return tdJson.decodeFromString(BusinessMessages.serializer(), responseJson)
@@ -3367,9 +3257,7 @@ suspend fun TdKtxClient.setBusinessAccountGiftSettings(
 /**
  * Returns the Telegram Star amount owned by a business account; for bots only @business_connection_id Unique identifier of business connection
  */
-suspend fun TdKtxClient.getBusinessAccountStarAmount(
-    businessConnectionId: String? = null,
-): StarAmount {
+suspend fun TdKtxClient.getBusinessAccountStarAmount(businessConnectionId: String? = null): StarAmount {
     val request = GetBusinessAccountStarAmount(businessConnectionId)
     val requestJson = tdJson.encodeToString(GetBusinessAccountStarAmount.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3394,9 +3282,7 @@ suspend fun TdKtxClient.transferBusinessAccountStars(
 /**
  * Checks validness of a name for a quick reply shortcut. Can be called synchronously @name The name of the shortcut; 1-32 characters
  */
-suspend fun TdKtxClient.checkQuickReplyShortcutName(
-    name: String? = null,
-): Ok {
+suspend fun TdKtxClient.checkQuickReplyShortcutName(name: String? = null): Ok {
     val request = CheckQuickReplyShortcutName(name)
     val requestJson = tdJson.encodeToString(CheckQuickReplyShortcutName.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3406,8 +3292,7 @@ suspend fun TdKtxClient.checkQuickReplyShortcutName(
 /**
  * Loads quick reply shortcuts created by the current user. The loaded data will be sent through updateQuickReplyShortcut and updateQuickReplyShortcuts
  */
-suspend fun TdKtxClient.loadQuickReplyShortcuts(
-): Ok {
+suspend fun TdKtxClient.loadQuickReplyShortcuts(): Ok {
     val request = LoadQuickReplyShortcuts()
     val requestJson = tdJson.encodeToString(LoadQuickReplyShortcuts.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3430,9 +3315,7 @@ suspend fun TdKtxClient.setQuickReplyShortcutName(
 /**
  * Deletes a quick reply shortcut @shortcut_id Unique identifier of the quick reply shortcut
  */
-suspend fun TdKtxClient.deleteQuickReplyShortcut(
-    shortcutId: Int,
-): Ok {
+suspend fun TdKtxClient.deleteQuickReplyShortcut(shortcutId: Int): Ok {
     val request = DeleteQuickReplyShortcut(shortcutId)
     val requestJson = tdJson.encodeToString(DeleteQuickReplyShortcut.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3442,9 +3325,7 @@ suspend fun TdKtxClient.deleteQuickReplyShortcut(
 /**
  * Changes the order of quick reply shortcuts @shortcut_ids The new order of quick reply shortcuts
  */
-suspend fun TdKtxClient.reorderQuickReplyShortcuts(
-    shortcutIds: List<Int>? = null,
-): Ok {
+suspend fun TdKtxClient.reorderQuickReplyShortcuts(shortcutIds: List<Int>? = null): Ok {
     val request = ReorderQuickReplyShortcuts(shortcutIds)
     val requestJson = tdJson.encodeToString(ReorderQuickReplyShortcuts.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3455,9 +3336,7 @@ suspend fun TdKtxClient.reorderQuickReplyShortcuts(
  * Loads quick reply messages that can be sent by a given quick reply shortcut. The loaded messages will be sent through updateQuickReplyShortcutMessages
  * @param shortcutId Unique identifier of the quick reply shortcut
  */
-suspend fun TdKtxClient.loadQuickReplyShortcutMessages(
-    shortcutId: Int,
-): Ok {
+suspend fun TdKtxClient.loadQuickReplyShortcutMessages(shortcutId: Int): Ok {
     val request = LoadQuickReplyShortcutMessages(shortcutId)
     val requestJson = tdJson.encodeToString(LoadQuickReplyShortcutMessages.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3569,8 +3448,7 @@ suspend fun TdKtxClient.editQuickReplyMessage(
 /**
  * Returns the list of custom emoji, which can be used as forum topic icon by all users
  */
-suspend fun TdKtxClient.getForumTopicDefaultIcons(
-): Stickers {
+suspend fun TdKtxClient.getForumTopicDefaultIcons(): Stickers {
     val request = GetForumTopicDefaultIcons()
     val requestJson = tdJson.encodeToString(GetForumTopicDefaultIcons.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3848,8 +3726,7 @@ suspend fun TdKtxClient.unpinAllForumTopicMessages(
 /**
  * Returns parameters for creating of a new passkey as JSON-serialized string
  */
-suspend fun TdKtxClient.getPasskeyParameters(
-): Text {
+suspend fun TdKtxClient.getPasskeyParameters(): Text {
     val request = GetPasskeyParameters()
     val requestJson = tdJson.encodeToString(GetPasskeyParameters.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3874,8 +3751,7 @@ suspend fun TdKtxClient.addLoginPasskey(
 /**
  * Returns the list of passkeys allowed to be used for the login by the current user
  */
-suspend fun TdKtxClient.getLoginPasskeys(
-): Passkeys {
+suspend fun TdKtxClient.getLoginPasskeys(): Passkeys {
     val request = GetLoginPasskeys()
     val requestJson = tdJson.encodeToString(GetLoginPasskeys.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3885,9 +3761,7 @@ suspend fun TdKtxClient.getLoginPasskeys(
 /**
  * Removes a passkey from the list of passkeys allowed to be used for the login by the current user @passkey_id Unique identifier of the passkey to remove
  */
-suspend fun TdKtxClient.removeLoginPasskey(
-    passkeyId: String? = null,
-): Ok {
+suspend fun TdKtxClient.removeLoginPasskey(passkeyId: String? = null): Ok {
     val request = RemoveLoginPasskey(passkeyId)
     val requestJson = tdJson.encodeToString(RemoveLoginPasskey.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3897,9 +3771,7 @@ suspend fun TdKtxClient.removeLoginPasskey(
 /**
  * Returns information about an emoji reaction. Returns a 404 error if the reaction is not found @emoji Text representation of the reaction
  */
-suspend fun TdKtxClient.getEmojiReaction(
-    emoji: String? = null,
-): EmojiReaction {
+suspend fun TdKtxClient.getEmojiReaction(emoji: String? = null): EmojiReaction {
     val request = GetEmojiReaction(emoji)
     val requestJson = tdJson.encodeToString(GetEmojiReaction.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3909,8 +3781,7 @@ suspend fun TdKtxClient.getEmojiReaction(
 /**
  * Returns TGS stickers with generic animations for custom emoji reactions
  */
-suspend fun TdKtxClient.getCustomEmojiReactionAnimations(
-): Stickers {
+suspend fun TdKtxClient.getCustomEmojiReactionAnimations(): Stickers {
     val request = GetCustomEmojiReactionAnimations()
     val requestJson = tdJson.encodeToString(GetCustomEmojiReactionAnimations.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -3937,8 +3808,7 @@ suspend fun TdKtxClient.getMessageAvailableReactions(
 /**
  * Clears the list of recently used reactions
  */
-suspend fun TdKtxClient.clearRecentReactions(
-): Ok {
+suspend fun TdKtxClient.clearRecentReactions(): Ok {
     val request = ClearRecentReactions()
     val requestJson = tdJson.encodeToString(ClearRecentReactions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4018,9 +3888,7 @@ suspend fun TdKtxClient.deleteMessageReactionsFromSender(
 /**
  * Returns the list of message sender identifiers, which can be used to send a paid reaction in a chat @chat_id Chat identifier
  */
-suspend fun TdKtxClient.getChatAvailablePaidMessageReactionSenders(
-    chatId: Long,
-): MessageSenders {
+suspend fun TdKtxClient.getChatAvailablePaidMessageReactionSenders(chatId: Long): MessageSenders {
     val request = GetChatAvailablePaidMessageReactionSenders(chatId)
     val requestJson = tdJson.encodeToString(GetChatAvailablePaidMessageReactionSenders.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4132,9 +4000,7 @@ suspend fun TdKtxClient.getMessageAddedReactions(
 /**
  * Changes type of default reaction for the current user @reaction_type New type of the default reaction. The paid reaction can't be set as default
  */
-suspend fun TdKtxClient.setDefaultReactionType(
-    reactionType: ReactionType? = null,
-): Ok {
+suspend fun TdKtxClient.setDefaultReactionType(reactionType: ReactionType? = null): Ok {
     val request = SetDefaultReactionType(reactionType)
     val requestJson = tdJson.encodeToString(SetDefaultReactionType.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4145,9 +4011,7 @@ suspend fun TdKtxClient.setDefaultReactionType(
  * Returns tags used in Saved Messages or a Saved Messages topic
  * @param savedMessagesTopicId Identifier of Saved Messages topic which tags will be returned; pass 0 to get all Saved Messages tags
  */
-suspend fun TdKtxClient.getSavedMessagesTags(
-    savedMessagesTopicId: Long,
-): SavedMessagesTags {
+suspend fun TdKtxClient.getSavedMessagesTags(savedMessagesTopicId: Long): SavedMessagesTags {
     val request = GetSavedMessagesTags(savedMessagesTopicId)
     val requestJson = tdJson.encodeToString(GetSavedMessagesTags.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4170,9 +4034,7 @@ suspend fun TdKtxClient.setSavedMessagesTagLabel(
 /**
  * Returns information about a message effect. Returns a 404 error if the effect is not found @effect_id Unique identifier of the effect
  */
-suspend fun TdKtxClient.getMessageEffect(
-    effectId: Long,
-): MessageEffect {
+suspend fun TdKtxClient.getMessageEffect(effectId: Long): MessageEffect {
     val request = GetMessageEffect(effectId)
     val requestJson = tdJson.encodeToString(GetMessageEffect.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4199,9 +4061,7 @@ suspend fun TdKtxClient.searchQuote(
 /**
  * Returns all entities (mentions, hashtags, cashtags, bot commands, bank card numbers, URLs, and email addresses) found in the text. Can be called synchronously @text The text in which to look for entities
  */
-suspend fun TdKtxClient.getTextEntities(
-    text: String? = null,
-): TextEntities {
+suspend fun TdKtxClient.getTextEntities(text: String? = null): TextEntities {
     val request = GetTextEntities(text)
     val requestJson = tdJson.encodeToString(GetTextEntities.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4227,9 +4087,7 @@ suspend fun TdKtxClient.parseTextEntities(
  * Parses Markdown entities in a human-friendly format, ignoring markup errors. Can be called synchronously
  * @param text The text to parse. For example, "__italic__ ~~strikethrough~~ ||spoiler|| **bold** `code` ```pre``` __[italic__ text_url](telegram.org) __italic**bold italic__bold**"
  */
-suspend fun TdKtxClient.parseMarkdown(
-    text: FormattedText? = null,
-): FormattedText {
+suspend fun TdKtxClient.parseMarkdown(text: FormattedText? = null): FormattedText {
     val request = ParseMarkdown(text)
     val requestJson = tdJson.encodeToString(ParseMarkdown.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4239,9 +4097,7 @@ suspend fun TdKtxClient.parseMarkdown(
 /**
  * Replaces text entities with Markdown formatting in a human-friendly format. Entities that can't be represented in Markdown unambiguously are kept as is. Can be called synchronously @text The text
  */
-suspend fun TdKtxClient.getMarkdownText(
-    text: FormattedText? = null,
-): FormattedText {
+suspend fun TdKtxClient.getMarkdownText(text: FormattedText? = null): FormattedText {
     val request = GetMarkdownText(text)
     val requestJson = tdJson.encodeToString(GetMarkdownText.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4251,9 +4107,7 @@ suspend fun TdKtxClient.getMarkdownText(
 /**
  * Returns an emoji for the given country. Returns an empty string on failure. Can be called synchronously @country_code A two-letter ISO 3166-1 alpha-2 country code as received from getCountries
  */
-suspend fun TdKtxClient.getCountryFlagEmoji(
-    countryCode: String? = null,
-): Text {
+suspend fun TdKtxClient.getCountryFlagEmoji(countryCode: String? = null): Text {
     val request = GetCountryFlagEmoji(countryCode)
     val requestJson = tdJson.encodeToString(GetCountryFlagEmoji.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4263,9 +4117,7 @@ suspend fun TdKtxClient.getCountryFlagEmoji(
 /**
  * Returns the MIME type of a file, guessed by its extension. Returns an empty string on failure. Can be called synchronously @file_name The name of the file or path to the file
  */
-suspend fun TdKtxClient.getFileMimeType(
-    fileName: String? = null,
-): Text {
+suspend fun TdKtxClient.getFileMimeType(fileName: String? = null): Text {
     val request = GetFileMimeType(fileName)
     val requestJson = tdJson.encodeToString(GetFileMimeType.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4275,9 +4127,7 @@ suspend fun TdKtxClient.getFileMimeType(
 /**
  * Returns the extension of a file, guessed by its MIME type. Returns an empty string on failure. Can be called synchronously @mime_type The MIME type of the file
  */
-suspend fun TdKtxClient.getFileExtension(
-    mimeType: String? = null,
-): Text {
+suspend fun TdKtxClient.getFileExtension(mimeType: String? = null): Text {
     val request = GetFileExtension(mimeType)
     val requestJson = tdJson.encodeToString(GetFileExtension.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4287,9 +4137,7 @@ suspend fun TdKtxClient.getFileExtension(
 /**
  * Removes potentially dangerous characters from the name of a file. Returns an empty string on failure. Can be called synchronously @file_name File name or path to the file
  */
-suspend fun TdKtxClient.cleanFileName(
-    fileName: String? = null,
-): Text {
+suspend fun TdKtxClient.cleanFileName(fileName: String? = null): Text {
     val request = CleanFileName(fileName)
     val requestJson = tdJson.encodeToString(CleanFileName.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4318,9 +4166,7 @@ suspend fun TdKtxClient.getLanguagePackString(
 /**
  * Converts a JSON-serialized string to corresponding JsonValue object. Can be called synchronously @json The JSON-serialized string
  */
-suspend fun TdKtxClient.getJsonValue(
-    json: String? = null,
-): JsonValue {
+suspend fun TdKtxClient.getJsonValue(json: String? = null): JsonValue {
     val request = GetJsonValue(json)
     val requestJson = tdJson.encodeToString(GetJsonValue.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4330,9 +4176,7 @@ suspend fun TdKtxClient.getJsonValue(
 /**
  * Converts a JsonValue object to corresponding JSON-serialized string. Can be called synchronously @json_value The JsonValue object
  */
-suspend fun TdKtxClient.getJsonString(
-    jsonValue: JsonValue? = null,
-): Text {
+suspend fun TdKtxClient.getJsonString(jsonValue: JsonValue? = null): Text {
     val request = GetJsonString(jsonValue)
     val requestJson = tdJson.encodeToString(GetJsonString.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4342,9 +4186,7 @@ suspend fun TdKtxClient.getJsonString(
 /**
  * Converts a themeParameters object to corresponding JSON-serialized string. Can be called synchronously @theme Theme parameters to convert to JSON
  */
-suspend fun TdKtxClient.getThemeParametersJsonString(
-    theme: ThemeParameters? = null,
-): Text {
+suspend fun TdKtxClient.getThemeParametersJsonString(theme: ThemeParameters? = null): Text {
     val request = GetThemeParametersJsonString(theme)
     val requestJson = tdJson.encodeToString(GetThemeParametersJsonString.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4496,9 +4338,7 @@ suspend fun TdKtxClient.markChecklistTasksAsDone(
 /**
  * Hides a suggested action @action Suggested action to hide
  */
-suspend fun TdKtxClient.hideSuggestedAction(
-    action: SuggestedAction? = null,
-): Ok {
+suspend fun TdKtxClient.hideSuggestedAction(action: SuggestedAction? = null): Ok {
     val request = HideSuggestedAction(action)
     val requestJson = tdJson.encodeToString(HideSuggestedAction.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4508,8 +4348,7 @@ suspend fun TdKtxClient.hideSuggestedAction(
 /**
  * Hides the list of contacts that have close birthdays for 24 hours
  */
-suspend fun TdKtxClient.hideContactCloseBirthdays(
-): Ok {
+suspend fun TdKtxClient.hideContactCloseBirthdays(): Ok {
     val request = HideContactCloseBirthdays()
     val requestJson = tdJson.encodeToString(HideContactCloseBirthdays.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4519,9 +4358,7 @@ suspend fun TdKtxClient.hideContactCloseBirthdays(
 /**
  * Returns information about a business connection by its identifier; for bots only @connection_id Identifier of the business connection to return
  */
-suspend fun TdKtxClient.getBusinessConnection(
-    connectionId: String? = null,
-): BusinessConnection {
+suspend fun TdKtxClient.getBusinessConnection(connectionId: String? = null): BusinessConnection {
     val request = GetBusinessConnection(connectionId)
     val requestJson = tdJson.encodeToString(GetBusinessConnection.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4756,9 +4593,7 @@ suspend fun TdKtxClient.searchWebApp(
 /**
  * Returns a default placeholder for Web Apps of a bot. This is an offline method. Returns a 404 error if the placeholder isn't known @bot_user_id Identifier of the target bot
  */
-suspend fun TdKtxClient.getWebAppPlaceholder(
-    botUserId: Long,
-): Outline {
+suspend fun TdKtxClient.getWebAppPlaceholder(botUserId: Long): Outline {
     val request = GetWebAppPlaceholder(botUserId)
     val requestJson = tdJson.encodeToString(GetWebAppPlaceholder.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -4867,9 +4702,7 @@ suspend fun TdKtxClient.openWebApp(
 /**
  * Informs TDLib that a previously opened Web App was closed @web_app_launch_id Identifier of Web App launch, received from openWebApp
  */
-suspend fun TdKtxClient.closeWebApp(
-    webAppLaunchId: Long,
-): Ok {
+suspend fun TdKtxClient.closeWebApp(webAppLaunchId: Long): Ok {
     val request = CloseWebApp(webAppLaunchId)
     val requestJson = tdJson.encodeToString(CloseWebApp.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5136,9 +4969,7 @@ suspend fun TdKtxClient.sendRichMessageDraft(
 /**
  * Informs TDLib that the chat is opened by the user. Many useful activities depend on the chat being opened or closed (e.g., in supergroups and channels all updates are received only for opened chats) @chat_id Chat identifier
  */
-suspend fun TdKtxClient.openChat(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.openChat(chatId: Long): Ok {
     val request = OpenChat(chatId)
     val requestJson = tdJson.encodeToString(OpenChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5148,9 +4979,7 @@ suspend fun TdKtxClient.openChat(
 /**
  * Informs TDLib that the chat is closed by the user. Many useful activities depend on the chat being opened or closed @chat_id Chat identifier
  */
-suspend fun TdKtxClient.closeChat(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.closeChat(chatId: Long): Ok {
     val request = CloseChat(chatId)
     val requestJson = tdJson.encodeToString(CloseChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5236,7 +5065,8 @@ suspend fun TdKtxClient.sendMessageViewMetrics(
     heightToViewportRatioPerMille: Int,
     seenRangeRatioPerMille: Int,
 ): Ok {
-    val request = SendMessageViewMetrics(chatId, messageId, timeInViewMs, activeTimeInViewMs, heightToViewportRatioPerMille, seenRangeRatioPerMille)
+    val request =
+        SendMessageViewMetrics(chatId, messageId, timeInViewMs, activeTimeInViewMs, heightToViewportRatioPerMille, seenRangeRatioPerMille)
     val requestJson = tdJson.encodeToString(SendMessageViewMetrics.serializer(), request)
     val responseJson = this.sendJson(requestJson)
     return tdJson.decodeFromString(Ok.serializer(), responseJson)
@@ -5258,9 +5088,7 @@ suspend fun TdKtxClient.getInternalLink(
 /**
  * Returns information about the type of internal link. Returns a 404 error if the link is not internal. Can be called before authorization @link The link
  */
-suspend fun TdKtxClient.getInternalLinkType(
-    link: String? = null,
-): InternalLinkType {
+suspend fun TdKtxClient.getInternalLinkType(link: String? = null): InternalLinkType {
     val request = GetInternalLinkType(link)
     val requestJson = tdJson.encodeToString(GetInternalLinkType.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5271,9 +5099,7 @@ suspend fun TdKtxClient.getInternalLinkType(
  * Returns information about an action to be done when the current user clicks an external link. Don't use this method for links from secret chats if link preview is disabled in secret chats, and use directly getLinkWebBrowserType
  * @param link The link
  */
-suspend fun TdKtxClient.getExternalLinkInfo(
-    link: String? = null,
-): LoginUrlInfo {
+suspend fun TdKtxClient.getExternalLinkInfo(link: String? = null): LoginUrlInfo {
     val request = GetExternalLinkInfo(link)
     val requestJson = tdJson.encodeToString(GetExternalLinkInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5299,9 +5125,7 @@ suspend fun TdKtxClient.getExternalLink(
  * Returns a type of the web browser which must be used to open the link
  * @param link The HTTP link
  */
-suspend fun TdKtxClient.getLinkWebBrowserType(
-    link: String? = null,
-): WebBrowserType {
+suspend fun TdKtxClient.getLinkWebBrowserType(link: String? = null): WebBrowserType {
     val request = GetLinkWebBrowserType(link)
     val requestJson = tdJson.encodeToString(GetLinkWebBrowserType.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5361,9 +5185,7 @@ suspend fun TdKtxClient.acceptOauthRequest(
  * Declines an OAuth authorization request
  * @param url URL of the OAuth deep link
  */
-suspend fun TdKtxClient.declineOauthRequest(
-    url: String? = null,
-): Ok {
+suspend fun TdKtxClient.declineOauthRequest(url: String? = null): Ok {
     val request = DeclineOauthRequest(url)
     val requestJson = tdJson.encodeToString(DeclineOauthRequest.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5373,9 +5195,7 @@ suspend fun TdKtxClient.declineOauthRequest(
 /**
  * Marks all mentions in a chat as read @chat_id Chat identifier
  */
-suspend fun TdKtxClient.readAllChatMentions(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.readAllChatMentions(chatId: Long): Ok {
     val request = ReadAllChatMentions(chatId)
     val requestJson = tdJson.encodeToString(ReadAllChatMentions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5385,9 +5205,7 @@ suspend fun TdKtxClient.readAllChatMentions(
 /**
  * Marks all reactions in a chat as read @chat_id Chat identifier
  */
-suspend fun TdKtxClient.readAllChatReactions(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.readAllChatReactions(chatId: Long): Ok {
     val request = ReadAllChatReactions(chatId)
     val requestJson = tdJson.encodeToString(ReadAllChatReactions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5397,9 +5215,7 @@ suspend fun TdKtxClient.readAllChatReactions(
 /**
  * Marks all poll votes in a chat as read @chat_id Chat identifier
  */
-suspend fun TdKtxClient.readAllChatPollVotes(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.readAllChatPollVotes(chatId: Long): Ok {
     val request = ReadAllChatPollVotes(chatId)
     val requestJson = tdJson.encodeToString(ReadAllChatPollVotes.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5448,9 +5264,7 @@ suspend fun TdKtxClient.createSupergroupChat(
 /**
  * Returns an existing chat corresponding to a known secret chat @secret_chat_id Secret chat identifier
  */
-suspend fun TdKtxClient.createSecretChat(
-    secretChatId: Int,
-): Chat {
+suspend fun TdKtxClient.createSecretChat(secretChatId: Int): Chat {
     val request = CreateSecretChat(secretChatId)
     val requestJson = tdJson.encodeToString(CreateSecretChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5501,9 +5315,7 @@ suspend fun TdKtxClient.createNewSupergroupChat(
 /**
  * Creates a new secret chat. Returns the newly created chat @user_id Identifier of the target user
  */
-suspend fun TdKtxClient.createNewSecretChat(
-    userId: Long,
-): Chat {
+suspend fun TdKtxClient.createNewSecretChat(userId: Long): Chat {
     val request = CreateNewSecretChat(userId)
     val requestJson = tdJson.encodeToString(CreateNewSecretChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5513,9 +5325,7 @@ suspend fun TdKtxClient.createNewSecretChat(
 /**
  * Creates a new supergroup from an existing basic group and sends a corresponding messageChatUpgradeTo and messageChatUpgradeFrom; requires owner privileges. Deactivates the original basic group @chat_id Identifier of the chat to upgrade
  */
-suspend fun TdKtxClient.upgradeBasicGroupChatToSupergroupChat(
-    chatId: Long,
-): Chat {
+suspend fun TdKtxClient.upgradeBasicGroupChatToSupergroupChat(chatId: Long): Chat {
     val request = UpgradeBasicGroupChatToSupergroupChat(chatId)
     val requestJson = tdJson.encodeToString(UpgradeBasicGroupChatToSupergroupChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5525,9 +5335,7 @@ suspend fun TdKtxClient.upgradeBasicGroupChatToSupergroupChat(
 /**
  * Returns chat lists to which the chat can be added. This is an offline method @chat_id Chat identifier
  */
-suspend fun TdKtxClient.getChatListsToAddChat(
-    chatId: Long,
-): ChatLists {
+suspend fun TdKtxClient.getChatListsToAddChat(chatId: Long): ChatLists {
     val request = GetChatListsToAddChat(chatId)
     val requestJson = tdJson.encodeToString(GetChatListsToAddChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5552,9 +5360,7 @@ suspend fun TdKtxClient.addChatToList(
 /**
  * Returns information about a chat folder by its identifier @chat_folder_id Chat folder identifier
  */
-suspend fun TdKtxClient.getChatFolder(
-    chatFolderId: Int,
-): ChatFolder {
+suspend fun TdKtxClient.getChatFolder(chatFolderId: Int): ChatFolder {
     val request = GetChatFolder(chatFolderId)
     val requestJson = tdJson.encodeToString(GetChatFolder.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5564,9 +5370,7 @@ suspend fun TdKtxClient.getChatFolder(
 /**
  * Creates new chat folder. Returns information about the created chat folder. There can be up to getOption("chat_folder_count_max") chat folders, but the limit can be increased with Telegram Premium @folder The new chat folder
  */
-suspend fun TdKtxClient.createChatFolder(
-    folder: ChatFolder? = null,
-): ChatFolderInfo {
+suspend fun TdKtxClient.createChatFolder(folder: ChatFolder? = null): ChatFolderInfo {
     val request = CreateChatFolder(folder)
     val requestJson = tdJson.encodeToString(CreateChatFolder.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5602,9 +5406,7 @@ suspend fun TdKtxClient.deleteChatFolder(
 /**
  * Returns identifiers of pinned or always included chats from a chat folder, which are suggested to be left when the chat folder is deleted @chat_folder_id Chat folder identifier
  */
-suspend fun TdKtxClient.getChatFolderChatsToLeave(
-    chatFolderId: Int,
-): Chats {
+suspend fun TdKtxClient.getChatFolderChatsToLeave(chatFolderId: Int): Chats {
     val request = GetChatFolderChatsToLeave(chatFolderId)
     val requestJson = tdJson.encodeToString(GetChatFolderChatsToLeave.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5614,9 +5416,7 @@ suspend fun TdKtxClient.getChatFolderChatsToLeave(
 /**
  * Returns approximate number of chats in a being created chat folder. Main and archive chat lists must be fully preloaded for this function to work correctly @folder The new chat folder
  */
-suspend fun TdKtxClient.getChatFolderChatCount(
-    folder: ChatFolder? = null,
-): Count {
+suspend fun TdKtxClient.getChatFolderChatCount(folder: ChatFolder? = null): Count {
     val request = GetChatFolderChatCount(folder)
     val requestJson = tdJson.encodeToString(GetChatFolderChatCount.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5639,9 +5439,7 @@ suspend fun TdKtxClient.reorderChatFolders(
 /**
  * Toggles whether chat folder tags are enabled @are_tags_enabled Pass true to enable folder tags; pass false to disable them
  */
-suspend fun TdKtxClient.toggleChatFolderTags(
-    areTagsEnabled: Boolean,
-): Ok {
+suspend fun TdKtxClient.toggleChatFolderTags(areTagsEnabled: Boolean): Ok {
     val request = ToggleChatFolderTags(areTagsEnabled)
     val requestJson = tdJson.encodeToString(ToggleChatFolderTags.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5651,8 +5449,7 @@ suspend fun TdKtxClient.toggleChatFolderTags(
 /**
  * Returns recommended chat folders for the current user
  */
-suspend fun TdKtxClient.getRecommendedChatFolders(
-): RecommendedChatFolders {
+suspend fun TdKtxClient.getRecommendedChatFolders(): RecommendedChatFolders {
     val request = GetRecommendedChatFolders()
     val requestJson = tdJson.encodeToString(GetRecommendedChatFolders.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5662,9 +5459,7 @@ suspend fun TdKtxClient.getRecommendedChatFolders(
 /**
  * Returns default icon name for a folder. Can be called synchronously @folder Chat folder
  */
-suspend fun TdKtxClient.getChatFolderDefaultIconName(
-    folder: ChatFolder? = null,
-): ChatFolderIcon {
+suspend fun TdKtxClient.getChatFolderDefaultIconName(folder: ChatFolder? = null): ChatFolderIcon {
     val request = GetChatFolderDefaultIconName(folder)
     val requestJson = tdJson.encodeToString(GetChatFolderDefaultIconName.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5674,9 +5469,7 @@ suspend fun TdKtxClient.getChatFolderDefaultIconName(
 /**
  * Returns identifiers of chats from a chat folder, suitable for adding to a chat folder invite link @chat_folder_id Chat folder identifier
  */
-suspend fun TdKtxClient.getChatsForChatFolderInviteLink(
-    chatFolderId: Int,
-): Chats {
+suspend fun TdKtxClient.getChatsForChatFolderInviteLink(chatFolderId: Int): Chats {
     val request = GetChatsForChatFolderInviteLink(chatFolderId)
     val requestJson = tdJson.encodeToString(GetChatsForChatFolderInviteLink.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5703,9 +5496,7 @@ suspend fun TdKtxClient.createChatFolderInviteLink(
 /**
  * Returns invite links created by the current user for a shareable chat folder @chat_folder_id Chat folder identifier
  */
-suspend fun TdKtxClient.getChatFolderInviteLinks(
-    chatFolderId: Int,
-): ChatFolderInviteLinks {
+suspend fun TdKtxClient.getChatFolderInviteLinks(chatFolderId: Int): ChatFolderInviteLinks {
     val request = GetChatFolderInviteLinks(chatFolderId)
     val requestJson = tdJson.encodeToString(GetChatFolderInviteLinks.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5749,9 +5540,7 @@ suspend fun TdKtxClient.deleteChatFolderInviteLink(
 /**
  * Checks the validity of an invite link for a chat folder and returns information about the corresponding chat folder @invite_link Invite link to be checked
  */
-suspend fun TdKtxClient.checkChatFolderInviteLink(
-    inviteLink: String? = null,
-): ChatFolderInviteLinkInfo {
+suspend fun TdKtxClient.checkChatFolderInviteLink(inviteLink: String? = null): ChatFolderInviteLinkInfo {
     val request = CheckChatFolderInviteLink(inviteLink)
     val requestJson = tdJson.encodeToString(CheckChatFolderInviteLink.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5774,9 +5563,7 @@ suspend fun TdKtxClient.addChatFolderByInviteLink(
 /**
  * Returns new chats added to a shareable chat folder by its owner. The method must be called at most once in getOption("chat_folder_new_chats_update_period") for the given chat folder @chat_folder_id Chat folder identifier
  */
-suspend fun TdKtxClient.getChatFolderNewChats(
-    chatFolderId: Int,
-): Chats {
+suspend fun TdKtxClient.getChatFolderNewChats(chatFolderId: Int): Chats {
     val request = GetChatFolderNewChats(chatFolderId)
     val requestJson = tdJson.encodeToString(GetChatFolderNewChats.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5799,8 +5586,7 @@ suspend fun TdKtxClient.processChatFolderNewChats(
 /**
  * Returns settings for automatic moving of chats to and from the Archive chat lists
  */
-suspend fun TdKtxClient.getArchiveChatListSettings(
-): ArchiveChatListSettings {
+suspend fun TdKtxClient.getArchiveChatListSettings(): ArchiveChatListSettings {
     val request = GetArchiveChatListSettings()
     val requestJson = tdJson.encodeToString(GetArchiveChatListSettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -5810,9 +5596,7 @@ suspend fun TdKtxClient.getArchiveChatListSettings(
 /**
  * Changes settings for automatic moving of chats to and from the Archive chat lists @settings New settings
  */
-suspend fun TdKtxClient.setArchiveChatListSettings(
-    settings: ArchiveChatListSettings? = null,
-): Ok {
+suspend fun TdKtxClient.setArchiveChatListSettings(settings: ArchiveChatListSettings? = null): Ok {
     val request = SetArchiveChatListSettings(settings)
     val requestJson = tdJson.encodeToString(SetArchiveChatListSettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6242,9 +6026,7 @@ suspend fun TdKtxClient.unpinChatMessage(
 /**
  * Removes all pinned messages from a chat; requires can_pin_messages member right if the chat is a basic group or supergroup, or can_edit_messages administrator right if the chat is a channel @chat_id Identifier of the chat
  */
-suspend fun TdKtxClient.unpinAllChatMessages(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.unpinAllChatMessages(chatId: Long): Ok {
     val request = UnpinAllChatMessages(chatId)
     val requestJson = tdJson.encodeToString(UnpinAllChatMessages.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6254,9 +6036,7 @@ suspend fun TdKtxClient.unpinAllChatMessages(
 /**
  * Adds the current user as a new member to a chat. Private and secret chats can't be joined using this method @chat_id Chat identifier
  */
-suspend fun TdKtxClient.joinChat(
-    chatId: Long,
-): ChatJoinResult {
+suspend fun TdKtxClient.joinChat(chatId: Long): ChatJoinResult {
     val request = JoinChat(chatId)
     val requestJson = tdJson.encodeToString(JoinChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6266,9 +6046,7 @@ suspend fun TdKtxClient.joinChat(
 /**
  * Removes the current user from chat members. Private and secret chats can't be left using this method @chat_id Chat identifier
  */
-suspend fun TdKtxClient.leaveChat(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.leaveChat(chatId: Long): Ok {
     val request = LeaveChat(chatId)
     val requestJson = tdJson.encodeToString(LeaveChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6363,8 +6141,7 @@ suspend fun TdKtxClient.banChatMember(
 /**
  * Checks whether the current session can be used to transfer a chat ownership to another user
  */
-suspend fun TdKtxClient.canTransferOwnership(
-): CanTransferOwnershipResult {
+suspend fun TdKtxClient.canTransferOwnership(): CanTransferOwnershipResult {
     val request = CanTransferOwnership()
     val requestJson = tdJson.encodeToString(CanTransferOwnership.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6392,9 +6169,7 @@ suspend fun TdKtxClient.transferChatOwnership(
  * Returns the user who will become the owner of the chat after 7 days if the current user does not return to the supergroup or channel during that period or immediately for basic groups; requires owner privileges in the chat. Available only for basic groups, supergroups, and channel chats
  * @param chatId Chat identifier
  */
-suspend fun TdKtxClient.getChatOwnerAfterLeaving(
-    chatId: Long,
-): User {
+suspend fun TdKtxClient.getChatOwnerAfterLeaving(chatId: Long): User {
     val request = GetChatOwnerAfterLeaving(chatId)
     val requestJson = tdJson.encodeToString(GetChatOwnerAfterLeaving.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6436,9 +6211,7 @@ suspend fun TdKtxClient.searchChatMembers(
 /**
  * Returns a list of administrators of the chat with their custom titles @chat_id Chat identifier
  */
-suspend fun TdKtxClient.getChatAdministrators(
-    chatId: Long,
-): ChatAdministrators {
+suspend fun TdKtxClient.getChatAdministrators(chatId: Long): ChatAdministrators {
     val request = GetChatAdministrators(chatId)
     val requestJson = tdJson.encodeToString(GetChatAdministrators.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6448,9 +6221,7 @@ suspend fun TdKtxClient.getChatAdministrators(
 /**
  * Clears message drafts in all chats @exclude_secret_chats Pass true to keep local message drafts in secret chats
  */
-suspend fun TdKtxClient.clearAllDraftMessages(
-    excludeSecretChats: Boolean,
-): Ok {
+suspend fun TdKtxClient.clearAllDraftMessages(excludeSecretChats: Boolean): Ok {
     val request = ClearAllDraftMessages(excludeSecretChats)
     val requestJson = tdJson.encodeToString(ClearAllDraftMessages.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6460,8 +6231,7 @@ suspend fun TdKtxClient.clearAllDraftMessages(
 /**
  * Returns the current state of stake dice
  */
-suspend fun TdKtxClient.getStakeDiceState(
-): StakeDiceState {
+suspend fun TdKtxClient.getStakeDiceState(): StakeDiceState {
     val request = GetStakeDiceState()
     val requestJson = tdJson.encodeToString(GetStakeDiceState.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6471,9 +6241,7 @@ suspend fun TdKtxClient.getStakeDiceState(
 /**
  * Returns saved notification sound by its identifier. Returns a 404 error if there is no saved notification sound with the specified identifier @notification_sound_id Identifier of the notification sound
  */
-suspend fun TdKtxClient.getSavedNotificationSound(
-    notificationSoundId: Long,
-): NotificationSound {
+suspend fun TdKtxClient.getSavedNotificationSound(notificationSoundId: Long): NotificationSound {
     val request = GetSavedNotificationSound(notificationSoundId)
     val requestJson = tdJson.encodeToString(GetSavedNotificationSound.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6483,8 +6251,7 @@ suspend fun TdKtxClient.getSavedNotificationSound(
 /**
  * Returns the list of saved notification sounds. If a sound isn't in the list, then default sound needs to be used
  */
-suspend fun TdKtxClient.getSavedNotificationSounds(
-): NotificationSounds {
+suspend fun TdKtxClient.getSavedNotificationSounds(): NotificationSounds {
     val request = GetSavedNotificationSounds()
     val requestJson = tdJson.encodeToString(GetSavedNotificationSounds.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6494,9 +6261,7 @@ suspend fun TdKtxClient.getSavedNotificationSounds(
 /**
  * Adds a new notification sound to the list of saved notification sounds. The new notification sound is added to the top of the list. If it is already in the list, its position isn't changed @sound Notification sound file to add
  */
-suspend fun TdKtxClient.addSavedNotificationSound(
-    sound: InputFile? = null,
-): NotificationSound {
+suspend fun TdKtxClient.addSavedNotificationSound(sound: InputFile? = null): NotificationSound {
     val request = AddSavedNotificationSound(sound)
     val requestJson = tdJson.encodeToString(AddSavedNotificationSound.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6506,9 +6271,7 @@ suspend fun TdKtxClient.addSavedNotificationSound(
 /**
  * Removes a notification sound from the list of saved notification sounds @notification_sound_id Identifier of the notification sound
  */
-suspend fun TdKtxClient.removeSavedNotificationSound(
-    notificationSoundId: Long,
-): Ok {
+suspend fun TdKtxClient.removeSavedNotificationSound(notificationSoundId: Long): Ok {
     val request = RemoveSavedNotificationSound(notificationSoundId)
     val requestJson = tdJson.encodeToString(RemoveSavedNotificationSound.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6533,9 +6296,7 @@ suspend fun TdKtxClient.getChatNotificationSettingsExceptions(
 /**
  * Returns the notification settings for chats of a given type @scope Types of chats for which to return the notification settings information
  */
-suspend fun TdKtxClient.getScopeNotificationSettings(
-    scope: NotificationSettingsScope? = null,
-): ScopeNotificationSettings {
+suspend fun TdKtxClient.getScopeNotificationSettings(scope: NotificationSettingsScope? = null): ScopeNotificationSettings {
     val request = GetScopeNotificationSettings(scope)
     val requestJson = tdJson.encodeToString(GetScopeNotificationSettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6558,9 +6319,7 @@ suspend fun TdKtxClient.setScopeNotificationSettings(
 /**
  * Changes notification settings for reactions @notification_settings The new notification settings for reactions
  */
-suspend fun TdKtxClient.setReactionNotificationSettings(
-    notificationSettings: ReactionNotificationSettings? = null,
-): Ok {
+suspend fun TdKtxClient.setReactionNotificationSettings(notificationSettings: ReactionNotificationSettings? = null): Ok {
     val request = SetReactionNotificationSettings(notificationSettings)
     val requestJson = tdJson.encodeToString(SetReactionNotificationSettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6570,8 +6329,7 @@ suspend fun TdKtxClient.setReactionNotificationSettings(
 /**
  * Resets all chat and scope notification settings to their default values. By default, all chats are unmuted and message previews are shown
  */
-suspend fun TdKtxClient.resetAllNotificationSettings(
-): Ok {
+suspend fun TdKtxClient.resetAllNotificationSettings(): Ok {
     val request = ResetAllNotificationSettings()
     val requestJson = tdJson.encodeToString(ResetAllNotificationSettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6611,9 +6369,7 @@ suspend fun TdKtxClient.setPinnedChats(
 /**
  * Traverses all chats in a chat list and marks all messages in the chats as read @chat_list Chat list in which to mark all chats as read
  */
-suspend fun TdKtxClient.readChatList(
-    chatList: ChatList? = null,
-): Ok {
+suspend fun TdKtxClient.readChatList(chatList: ChatList? = null): Ok {
     val request = ReadChatList(chatList)
     val requestJson = tdJson.encodeToString(ReadChatList.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6623,9 +6379,7 @@ suspend fun TdKtxClient.readChatList(
 /**
  * Returns the current weather in the given location @location The location
  */
-suspend fun TdKtxClient.getCurrentWeather(
-    location: Location? = null,
-): CurrentWeather {
+suspend fun TdKtxClient.getCurrentWeather(location: Location? = null): CurrentWeather {
     val request = GetCurrentWeather(location)
     val requestJson = tdJson.encodeToString(GetCurrentWeather.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6652,8 +6406,7 @@ suspend fun TdKtxClient.getStory(
 /**
  * Returns supergroup and channel chats in which the current user has the right to post stories. The chats must be rechecked with canPostStory before actually trying to post a story there
  */
-suspend fun TdKtxClient.getChatsToPostStories(
-): Chats {
+suspend fun TdKtxClient.getChatsToPostStories(): Chats {
     val request = GetChatsToPostStories()
     val requestJson = tdJson.encodeToString(GetChatsToPostStories.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6664,9 +6417,7 @@ suspend fun TdKtxClient.getChatsToPostStories(
  * Checks whether the current user can post a story on behalf of a chat; requires can_post_stories administrator right for supergroup and channel chats
  * @param chatId Chat identifier. Pass Saved Messages chat identifier when posting a story on behalf of the current user
  */
-suspend fun TdKtxClient.canPostStory(
-    chatId: Long,
-): CanPostStoryResult {
+suspend fun TdKtxClient.canPostStory(chatId: Long): CanPostStoryResult {
     val request = CanPostStory(chatId)
     val requestJson = tdJson.encodeToString(CanPostStory.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6698,7 +6449,19 @@ suspend fun TdKtxClient.postStory(
     isPostedToChatPage: Boolean,
     protectContent: Boolean,
 ): Story {
-    val request = PostStory(chatId, content, areas, caption, privacySettings, albumIds, activePeriod, fromStoryFullId, isPostedToChatPage, protectContent)
+    val request =
+        PostStory(
+            chatId,
+            content,
+            areas,
+            caption,
+            privacySettings,
+            albumIds,
+            activePeriod,
+            fromStoryFullId,
+            isPostedToChatPage,
+            protectContent,
+        )
     val requestJson = tdJson.encodeToString(PostStory.serializer(), request)
     val responseJson = this.sendJson(requestJson)
     return tdJson.decodeFromString(Story.serializer(), responseJson)
@@ -6815,8 +6578,7 @@ suspend fun TdKtxClient.deleteStory(
 /**
  * Returns the list of chats with non-default notification settings for stories
  */
-suspend fun TdKtxClient.getStoryNotificationSettingsExceptions(
-): Chats {
+suspend fun TdKtxClient.getStoryNotificationSettingsExceptions(): Chats {
     val request = GetStoryNotificationSettingsExceptions()
     val requestJson = tdJson.encodeToString(GetStoryNotificationSettingsExceptions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6827,9 +6589,7 @@ suspend fun TdKtxClient.getStoryNotificationSettingsExceptions(
  * Loads more active stories from a story list. The loaded stories will be sent through updates. Active stories are sorted by the pair (active_stories.order, active_stories.story_poster_chat_id) in descending order. Returns a 404 error if all active stories have been loaded
  * @param storyList The story list in which to load active stories
  */
-suspend fun TdKtxClient.loadActiveStories(
-    storyList: StoryList? = null,
-): Ok {
+suspend fun TdKtxClient.loadActiveStories(storyList: StoryList? = null): Ok {
     val request = LoadActiveStories(storyList)
     val requestJson = tdJson.encodeToString(LoadActiveStories.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6852,9 +6612,7 @@ suspend fun TdKtxClient.setChatActiveStoriesList(
 /**
  * Returns the list of active stories posted by the given chat @chat_id Chat identifier
  */
-suspend fun TdKtxClient.getChatActiveStories(
-    chatId: Long,
-): ChatActiveStories {
+suspend fun TdKtxClient.getChatActiveStories(chatId: Long): ChatActiveStories {
     val request = GetChatActiveStories(chatId)
     val requestJson = tdJson.encodeToString(GetChatActiveStories.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -6943,9 +6701,7 @@ suspend fun TdKtxClient.closeStory(
 /**
  * Returns reactions, which can be chosen for a story @row_size Number of reaction per row, 5-25
  */
-suspend fun TdKtxClient.getStoryAvailableReactions(
-    rowSize: Int,
-): AvailableReactions {
+suspend fun TdKtxClient.getStoryAvailableReactions(rowSize: Int): AvailableReactions {
     val request = GetStoryAvailableReactions(rowSize)
     val requestJson = tdJson.encodeToString(GetStoryAvailableReactions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7041,8 +6797,7 @@ suspend fun TdKtxClient.reportStory(
 /**
  * Activates stealth mode for stories, which hides all views of stories from the current user in the last "story_stealth_mode_past_period" seconds and for the next "story_stealth_mode_future_period" seconds; for Telegram Premium users only
  */
-suspend fun TdKtxClient.activateStoryStealthMode(
-): Ok {
+suspend fun TdKtxClient.activateStoryStealthMode(): Ok {
     val request = ActivateStoryStealthMode()
     val requestJson = tdJson.encodeToString(ActivateStoryStealthMode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7071,9 +6826,7 @@ suspend fun TdKtxClient.getStoryPublicForwards(
 /**
  * Returns the list of story albums owned by the given chat @chat_id Chat identifier
  */
-suspend fun TdKtxClient.getChatStoryAlbums(
-    chatId: Long,
-): StoryAlbums {
+suspend fun TdKtxClient.getChatStoryAlbums(chatId: Long): StoryAlbums {
     val request = GetChatStoryAlbums(chatId)
     val requestJson = tdJson.encodeToString(GetChatStoryAlbums.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7233,9 +6986,7 @@ suspend fun TdKtxClient.getChatBoostLevelFeatures(
  * Returns the list of features available for different chat boost levels. This is an offline method
  * @param isChannel Pass true to get the list of features for channels; pass false to get the list of features for supergroups
  */
-suspend fun TdKtxClient.getChatBoostFeatures(
-    isChannel: Boolean,
-): ChatBoostFeatures {
+suspend fun TdKtxClient.getChatBoostFeatures(isChannel: Boolean): ChatBoostFeatures {
     val request = GetChatBoostFeatures(isChannel)
     val requestJson = tdJson.encodeToString(GetChatBoostFeatures.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7245,8 +6996,7 @@ suspend fun TdKtxClient.getChatBoostFeatures(
 /**
  * Returns the list of available chat boost slots for the current user
  */
-suspend fun TdKtxClient.getAvailableChatBoostSlots(
-): ChatBoostSlots {
+suspend fun TdKtxClient.getAvailableChatBoostSlots(): ChatBoostSlots {
     val request = GetAvailableChatBoostSlots()
     val requestJson = tdJson.encodeToString(GetAvailableChatBoostSlots.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7256,9 +7006,7 @@ suspend fun TdKtxClient.getAvailableChatBoostSlots(
 /**
  * Returns the current boost status for a supergroup or a channel chat @chat_id Identifier of the chat
  */
-suspend fun TdKtxClient.getChatBoostStatus(
-    chatId: Long,
-): ChatBoostStatus {
+suspend fun TdKtxClient.getChatBoostStatus(chatId: Long): ChatBoostStatus {
     val request = GetChatBoostStatus(chatId)
     val requestJson = tdJson.encodeToString(GetChatBoostStatus.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7283,9 +7031,7 @@ suspend fun TdKtxClient.boostChat(
 /**
  * Returns an HTTPS link to boost the specified supergroup or channel chat @chat_id Identifier of the chat
  */
-suspend fun TdKtxClient.getChatBoostLink(
-    chatId: Long,
-): ChatBoostLink {
+suspend fun TdKtxClient.getChatBoostLink(chatId: Long): ChatBoostLink {
     val request = GetChatBoostLink(chatId)
     val requestJson = tdJson.encodeToString(GetChatBoostLink.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7295,9 +7041,7 @@ suspend fun TdKtxClient.getChatBoostLink(
 /**
  * Returns information about a link to boost a chat. Can be called for any internal link of the type internalLinkTypeChatBoost @url The link to boost a chat
  */
-suspend fun TdKtxClient.getChatBoostLinkInfo(
-    url: String? = null,
-): ChatBoostLinkInfo {
+suspend fun TdKtxClient.getChatBoostLinkInfo(url: String? = null): ChatBoostLinkInfo {
     val request = GetChatBoostLinkInfo(url)
     val requestJson = tdJson.encodeToString(GetChatBoostLinkInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7341,9 +7085,7 @@ suspend fun TdKtxClient.getUserChatBoosts(
 /**
  * Returns information about a bot that can be added to attachment or side menu @bot_user_id Bot's user identifier
  */
-suspend fun TdKtxClient.getAttachmentMenuBot(
-    botUserId: Long,
-): AttachmentMenuBot {
+suspend fun TdKtxClient.getAttachmentMenuBot(botUserId: Long): AttachmentMenuBot {
     val request = GetAttachmentMenuBot(botUserId)
     val requestJson = tdJson.encodeToString(GetAttachmentMenuBot.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7370,8 +7112,7 @@ suspend fun TdKtxClient.toggleBotIsAddedToAttachmentMenu(
 /**
  * Returns up to 8 emoji statuses, which must be shown right after the default Premium Badge in the emoji status list for self status
  */
-suspend fun TdKtxClient.getThemedEmojiStatuses(
-): EmojiStatusCustomEmojis {
+suspend fun TdKtxClient.getThemedEmojiStatuses(): EmojiStatusCustomEmojis {
     val request = GetThemedEmojiStatuses()
     val requestJson = tdJson.encodeToString(GetThemedEmojiStatuses.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7381,8 +7122,7 @@ suspend fun TdKtxClient.getThemedEmojiStatuses(
 /**
  * Returns recent emoji statuses for self status
  */
-suspend fun TdKtxClient.getRecentEmojiStatuses(
-): EmojiStatuses {
+suspend fun TdKtxClient.getRecentEmojiStatuses(): EmojiStatuses {
     val request = GetRecentEmojiStatuses()
     val requestJson = tdJson.encodeToString(GetRecentEmojiStatuses.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7392,8 +7132,7 @@ suspend fun TdKtxClient.getRecentEmojiStatuses(
 /**
  * Returns available upgraded gift emoji statuses for self status
  */
-suspend fun TdKtxClient.getUpgradedGiftEmojiStatuses(
-): EmojiStatuses {
+suspend fun TdKtxClient.getUpgradedGiftEmojiStatuses(): EmojiStatuses {
     val request = GetUpgradedGiftEmojiStatuses()
     val requestJson = tdJson.encodeToString(GetUpgradedGiftEmojiStatuses.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7403,8 +7142,7 @@ suspend fun TdKtxClient.getUpgradedGiftEmojiStatuses(
 /**
  * Returns default emoji statuses for self status
  */
-suspend fun TdKtxClient.getDefaultEmojiStatuses(
-): EmojiStatusCustomEmojis {
+suspend fun TdKtxClient.getDefaultEmojiStatuses(): EmojiStatusCustomEmojis {
     val request = GetDefaultEmojiStatuses()
     val requestJson = tdJson.encodeToString(GetDefaultEmojiStatuses.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7414,8 +7152,7 @@ suspend fun TdKtxClient.getDefaultEmojiStatuses(
 /**
  * Clears the list of recently used emoji statuses for self status
  */
-suspend fun TdKtxClient.clearRecentEmojiStatuses(
-): Ok {
+suspend fun TdKtxClient.clearRecentEmojiStatuses(): Ok {
     val request = ClearRecentEmojiStatuses()
     val requestJson = tdJson.encodeToString(ClearRecentEmojiStatuses.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7425,8 +7162,7 @@ suspend fun TdKtxClient.clearRecentEmojiStatuses(
 /**
  * Returns up to 8 emoji statuses, which must be shown in the emoji status list for chats
  */
-suspend fun TdKtxClient.getThemedChatEmojiStatuses(
-): EmojiStatusCustomEmojis {
+suspend fun TdKtxClient.getThemedChatEmojiStatuses(): EmojiStatusCustomEmojis {
     val request = GetThemedChatEmojiStatuses()
     val requestJson = tdJson.encodeToString(GetThemedChatEmojiStatuses.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7436,8 +7172,7 @@ suspend fun TdKtxClient.getThemedChatEmojiStatuses(
 /**
  * Returns default emoji statuses for chats
  */
-suspend fun TdKtxClient.getDefaultChatEmojiStatuses(
-): EmojiStatusCustomEmojis {
+suspend fun TdKtxClient.getDefaultChatEmojiStatuses(): EmojiStatusCustomEmojis {
     val request = GetDefaultChatEmojiStatuses()
     val requestJson = tdJson.encodeToString(GetDefaultChatEmojiStatuses.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7447,8 +7182,7 @@ suspend fun TdKtxClient.getDefaultChatEmojiStatuses(
 /**
  * Returns the list of emoji statuses, which can't be used as chat emoji status, even if they are from a sticker set with is_allowed_as_chat_emoji_status == true
  */
-suspend fun TdKtxClient.getDisallowedChatEmojiStatuses(
-): EmojiStatusCustomEmojis {
+suspend fun TdKtxClient.getDisallowedChatEmojiStatuses(): EmojiStatusCustomEmojis {
     val request = GetDisallowedChatEmojiStatuses()
     val requestJson = tdJson.encodeToString(GetDisallowedChatEmojiStatuses.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7535,9 +7269,7 @@ suspend fun TdKtxClient.preliminaryUploadFile(
 /**
  * Stops the preliminary uploading of a file. Supported only for files uploaded by using preliminaryUploadFile @file_id Identifier of the file to stop uploading
  */
-suspend fun TdKtxClient.cancelPreliminaryUploadFile(
-    fileId: Int,
-): Ok {
+suspend fun TdKtxClient.cancelPreliminaryUploadFile(fileId: Int): Ok {
     val request = CancelPreliminaryUploadFile(fileId)
     val requestJson = tdJson.encodeToString(CancelPreliminaryUploadFile.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7613,9 +7345,7 @@ suspend fun TdKtxClient.readFilePart(
 /**
  * Deletes a file from the TDLib file cache @file_id Identifier of the file to delete
  */
-suspend fun TdKtxClient.deleteFile(
-    fileId: Int,
-): Ok {
+suspend fun TdKtxClient.deleteFile(fileId: Int): Ok {
     val request = DeleteFile(fileId)
     val requestJson = tdJson.encodeToString(DeleteFile.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7659,9 +7389,7 @@ suspend fun TdKtxClient.toggleDownloadIsPaused(
 /**
  * Changes pause state of all files in the file download list @are_paused Pass true to pause all downloads; pass false to unpause them
  */
-suspend fun TdKtxClient.toggleAllDownloadsArePaused(
-    arePaused: Boolean,
-): Ok {
+suspend fun TdKtxClient.toggleAllDownloadsArePaused(arePaused: Boolean): Ok {
     val request = ToggleAllDownloadsArePaused(arePaused)
     val requestJson = tdJson.encodeToString(ToggleAllDownloadsArePaused.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7737,9 +7465,7 @@ suspend fun TdKtxClient.setApplicationVerificationToken(
 /**
  * Returns information about a file with messages exported from another application @message_file_head Beginning of the message file; up to 100 first lines
  */
-suspend fun TdKtxClient.getMessageFileType(
-    messageFileHead: String? = null,
-): MessageFileType {
+suspend fun TdKtxClient.getMessageFileType(messageFileHead: String? = null): MessageFileType {
     val request = GetMessageFileType(messageFileHead)
     val requestJson = tdJson.encodeToString(GetMessageFileType.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7750,9 +7476,7 @@ suspend fun TdKtxClient.getMessageFileType(
  * Returns a confirmation text to be shown to the user before starting message import
  * @param chatId Identifier of a chat to which the messages will be imported. It must be an identifier of a private chat with a mutual contact or an identifier of a supergroup chat with can_change_info member right
  */
-suspend fun TdKtxClient.getMessageImportConfirmationText(
-    chatId: Long,
-): Text {
+suspend fun TdKtxClient.getMessageImportConfirmationText(chatId: Long): Text {
     val request = GetMessageImportConfirmationText(chatId)
     val requestJson = tdJson.encodeToString(GetMessageImportConfirmationText.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7779,9 +7503,7 @@ suspend fun TdKtxClient.importMessages(
 /**
  * Replaces current primary invite link for a chat with a new primary invite link. Available for basic groups, supergroups, and channels. Requires administrator privileges and can_invite_users right @chat_id Chat identifier
  */
-suspend fun TdKtxClient.replacePrimaryChatInviteLink(
-    chatId: Long,
-): ChatInviteLink {
+suspend fun TdKtxClient.replacePrimaryChatInviteLink(chatId: Long): ChatInviteLink {
     val request = ReplacePrimaryChatInviteLink(chatId)
     val requestJson = tdJson.encodeToString(ReplacePrimaryChatInviteLink.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7884,9 +7606,7 @@ suspend fun TdKtxClient.getChatInviteLink(
 /**
  * Returns the list of chat administrators with number of their invite links. Requires owner privileges in the chat @chat_id Chat identifier
  */
-suspend fun TdKtxClient.getChatInviteLinkCounts(
-    chatId: Long,
-): ChatInviteLinkCounts {
+suspend fun TdKtxClient.getChatInviteLinkCounts(chatId: Long): ChatInviteLinkCounts {
     val request = GetChatInviteLinkCounts(chatId)
     val requestJson = tdJson.encodeToString(GetChatInviteLinkCounts.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7983,9 +7703,7 @@ suspend fun TdKtxClient.deleteAllRevokedChatInviteLinks(
 /**
  * Checks the validity of an invite link for a chat and returns information about the corresponding chat @invite_link Invite link to be checked
  */
-suspend fun TdKtxClient.checkChatInviteLink(
-    inviteLink: String? = null,
-): ChatInviteLinkInfo {
+suspend fun TdKtxClient.checkChatInviteLink(inviteLink: String? = null): ChatInviteLinkInfo {
     val request = CheckChatInviteLink(inviteLink)
     val requestJson = tdJson.encodeToString(CheckChatInviteLink.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -7995,9 +7713,7 @@ suspend fun TdKtxClient.checkChatInviteLink(
 /**
  * Uses an invite link to add the current user to the chat if possible @invite_link Invite link to use
  */
-suspend fun TdKtxClient.joinChatByInviteLink(
-    inviteLink: String? = null,
-): ChatJoinResult {
+suspend fun TdKtxClient.joinChatByInviteLink(inviteLink: String? = null): ChatJoinResult {
     val request = JoinChatByInviteLink(inviteLink)
     val requestJson = tdJson.encodeToString(JoinChatByInviteLink.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8221,9 +7937,7 @@ suspend fun TdKtxClient.sendCallLog(
 /**
  * Returns the list of participant identifiers, on whose behalf a video chat in the chat can be joined @chat_id Chat identifier
  */
-suspend fun TdKtxClient.getVideoChatAvailableParticipants(
-    chatId: Long,
-): MessageSenders {
+suspend fun TdKtxClient.getVideoChatAvailableParticipants(chatId: Long): MessageSenders {
     val request = GetVideoChatAvailableParticipants(chatId)
     val requestJson = tdJson.encodeToString(GetVideoChatAvailableParticipants.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8267,9 +7981,7 @@ suspend fun TdKtxClient.createVideoChat(
 /**
  * Creates a new group call that isn't bound to a chat @join_parameters Parameters to join the call; pass null to only create call link without joining the call
  */
-suspend fun TdKtxClient.createGroupCall(
-    joinParameters: GroupCallJoinParameters? = null,
-): GroupCallInfo {
+suspend fun TdKtxClient.createGroupCall(joinParameters: GroupCallJoinParameters? = null): GroupCallInfo {
     val request = CreateGroupCall(joinParameters)
     val requestJson = tdJson.encodeToString(CreateGroupCall.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8279,9 +7991,7 @@ suspend fun TdKtxClient.createGroupCall(
 /**
  * Returns RTMP URL for streaming to the video chat of a chat; requires can_manage_video_chats administrator right @chat_id Chat identifier
  */
-suspend fun TdKtxClient.getVideoChatRtmpUrl(
-    chatId: Long,
-): RtmpUrl {
+suspend fun TdKtxClient.getVideoChatRtmpUrl(chatId: Long): RtmpUrl {
     val request = GetVideoChatRtmpUrl(chatId)
     val requestJson = tdJson.encodeToString(GetVideoChatRtmpUrl.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8291,9 +8001,7 @@ suspend fun TdKtxClient.getVideoChatRtmpUrl(
 /**
  * Replaces the current RTMP URL for streaming to the video chat of a chat; requires owner privileges in the chat @chat_id Chat identifier
  */
-suspend fun TdKtxClient.replaceVideoChatRtmpUrl(
-    chatId: Long,
-): RtmpUrl {
+suspend fun TdKtxClient.replaceVideoChatRtmpUrl(chatId: Long): RtmpUrl {
     val request = ReplaceVideoChatRtmpUrl(chatId)
     val requestJson = tdJson.encodeToString(ReplaceVideoChatRtmpUrl.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8303,9 +8011,7 @@ suspend fun TdKtxClient.replaceVideoChatRtmpUrl(
 /**
  * Returns RTMP URL for streaming to a live story; requires can_post_stories administrator right for channel chats @chat_id Chat identifier
  */
-suspend fun TdKtxClient.getLiveStoryRtmpUrl(
-    chatId: Long,
-): RtmpUrl {
+suspend fun TdKtxClient.getLiveStoryRtmpUrl(chatId: Long): RtmpUrl {
     val request = GetLiveStoryRtmpUrl(chatId)
     val requestJson = tdJson.encodeToString(GetLiveStoryRtmpUrl.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8315,9 +8021,7 @@ suspend fun TdKtxClient.getLiveStoryRtmpUrl(
 /**
  * Replaces the current RTMP URL for streaming to a live story; requires owner privileges for channel chats @chat_id Chat identifier
  */
-suspend fun TdKtxClient.replaceLiveStoryRtmpUrl(
-    chatId: Long,
-): RtmpUrl {
+suspend fun TdKtxClient.replaceLiveStoryRtmpUrl(chatId: Long): RtmpUrl {
     val request = ReplaceLiveStoryRtmpUrl(chatId)
     val requestJson = tdJson.encodeToString(ReplaceLiveStoryRtmpUrl.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8327,9 +8031,7 @@ suspend fun TdKtxClient.replaceLiveStoryRtmpUrl(
 /**
  * Returns information about a group call @group_call_id Group call identifier
  */
-suspend fun TdKtxClient.getGroupCall(
-    groupCallId: Int,
-): GroupCall {
+suspend fun TdKtxClient.getGroupCall(groupCallId: Int): GroupCall {
     val request = GetGroupCall(groupCallId)
     val requestJson = tdJson.encodeToString(GetGroupCall.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8339,9 +8041,7 @@ suspend fun TdKtxClient.getGroupCall(
 /**
  * Starts a scheduled video chat @group_call_id Group call identifier of the video chat
  */
-suspend fun TdKtxClient.startScheduledVideoChat(
-    groupCallId: Int,
-): Ok {
+suspend fun TdKtxClient.startScheduledVideoChat(groupCallId: Int): Ok {
     val request = StartScheduledVideoChat(groupCallId)
     val requestJson = tdJson.encodeToString(StartScheduledVideoChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8443,9 +8143,7 @@ suspend fun TdKtxClient.toggleGroupCallScreenSharingIsPaused(
 /**
  * Ends screen sharing in a joined group call; not supported in live stories @group_call_id Group call identifier
  */
-suspend fun TdKtxClient.endGroupCallScreenSharing(
-    groupCallId: Int,
-): Ok {
+suspend fun TdKtxClient.endGroupCallScreenSharing(groupCallId: Int): Ok {
     val request = EndGroupCallScreenSharing(groupCallId)
     val requestJson = tdJson.encodeToString(EndGroupCallScreenSharing.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8498,9 +8196,7 @@ suspend fun TdKtxClient.toggleGroupCallAreMessagesAllowed(
 /**
  * Returns information about the user or the chat that streams to a live story; for live stories that aren't an RTMP stream only @group_call_id Group call identifier
  */
-suspend fun TdKtxClient.getLiveStoryStreamer(
-    groupCallId: Int,
-): GroupCallParticipant {
+suspend fun TdKtxClient.getLiveStoryStreamer(groupCallId: Int): GroupCallParticipant {
     val request = GetLiveStoryStreamer(groupCallId)
     val requestJson = tdJson.encodeToString(GetLiveStoryStreamer.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8510,9 +8206,7 @@ suspend fun TdKtxClient.getLiveStoryStreamer(
 /**
  * Returns the list of message sender identifiers, on whose behalf messages can be sent to a live story @group_call_id Group call identifier
  */
-suspend fun TdKtxClient.getLiveStoryAvailableMessageSenders(
-    groupCallId: Int,
-): ChatMessageSenders {
+suspend fun TdKtxClient.getLiveStoryAvailableMessageSenders(groupCallId: Int): ChatMessageSenders {
     val request = GetLiveStoryAvailableMessageSenders(groupCallId)
     val requestJson = tdJson.encodeToString(GetLiveStoryAvailableMessageSenders.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8569,9 +8263,7 @@ suspend fun TdKtxClient.addPendingLiveStoryReaction(
 /**
  * Applies all pending paid reactions in a live story group call @group_call_id Group call identifier
  */
-suspend fun TdKtxClient.commitPendingLiveStoryReactions(
-    groupCallId: Int,
-): Ok {
+suspend fun TdKtxClient.commitPendingLiveStoryReactions(groupCallId: Int): Ok {
     val request = CommitPendingLiveStoryReactions(groupCallId)
     val requestJson = tdJson.encodeToString(CommitPendingLiveStoryReactions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8581,9 +8273,7 @@ suspend fun TdKtxClient.commitPendingLiveStoryReactions(
 /**
  * Removes all pending paid reactions in a live story group call @group_call_id Group call identifier
  */
-suspend fun TdKtxClient.removePendingLiveStoryReactions(
-    groupCallId: Int,
-): Ok {
+suspend fun TdKtxClient.removePendingLiveStoryReactions(groupCallId: Int): Ok {
     val request = RemovePendingLiveStoryReactions(groupCallId)
     val requestJson = tdJson.encodeToString(RemovePendingLiveStoryReactions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8627,9 +8317,7 @@ suspend fun TdKtxClient.deleteGroupCallMessagesBySender(
 /**
  * Returns the list of top live story donors @group_call_id Group call identifier of the live story
  */
-suspend fun TdKtxClient.getLiveStoryTopDonors(
-    groupCallId: Int,
-): LiveStoryDonors {
+suspend fun TdKtxClient.getLiveStoryTopDonors(groupCallId: Int): LiveStoryDonors {
     val request = GetLiveStoryTopDonors(groupCallId)
     val requestJson = tdJson.encodeToString(GetLiveStoryTopDonors.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8716,9 +8404,7 @@ suspend fun TdKtxClient.getVideoChatInviteLink(
 /**
  * Revokes invite link for a group call. Requires groupCall.can_be_managed right for video chats or groupCall.is_owned otherwise @group_call_id Group call identifier
  */
-suspend fun TdKtxClient.revokeGroupCallInviteLink(
-    groupCallId: Int,
-): Ok {
+suspend fun TdKtxClient.revokeGroupCallInviteLink(groupCallId: Int): Ok {
     val request = RevokeGroupCallInviteLink(groupCallId)
     val requestJson = tdJson.encodeToString(RevokeGroupCallInviteLink.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8747,9 +8433,7 @@ suspend fun TdKtxClient.startGroupCallRecording(
 /**
  * Ends recording of an active group call; for video chats only. Requires groupCall.can_be_managed right @group_call_id Group call identifier
  */
-suspend fun TdKtxClient.endGroupCallRecording(
-    groupCallId: Int,
-): Ok {
+suspend fun TdKtxClient.endGroupCallRecording(groupCallId: Int): Ok {
     val request = EndGroupCallRecording(groupCallId)
     val requestJson = tdJson.encodeToString(EndGroupCallRecording.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8898,9 +8582,7 @@ suspend fun TdKtxClient.loadGroupCallParticipants(
 /**
  * Leaves a group call @group_call_id Group call identifier
  */
-suspend fun TdKtxClient.leaveGroupCall(
-    groupCallId: Int,
-): Ok {
+suspend fun TdKtxClient.leaveGroupCall(groupCallId: Int): Ok {
     val request = LeaveGroupCall(groupCallId)
     val requestJson = tdJson.encodeToString(LeaveGroupCall.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8910,9 +8592,7 @@ suspend fun TdKtxClient.leaveGroupCall(
 /**
  * Ends a group call. Requires groupCall.can_be_managed right for video chats and live stories or groupCall.is_owned otherwise @group_call_id Group call identifier
  */
-suspend fun TdKtxClient.endGroupCall(
-    groupCallId: Int,
-): Ok {
+suspend fun TdKtxClient.endGroupCall(groupCallId: Int): Ok {
     val request = EndGroupCall(groupCallId)
     val requestJson = tdJson.encodeToString(EndGroupCall.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -8922,9 +8602,7 @@ suspend fun TdKtxClient.endGroupCall(
 /**
  * Returns information about available streams in a video chat or a live story @group_call_id Group call identifier
  */
-suspend fun TdKtxClient.getGroupCallStreams(
-    groupCallId: Int,
-): GroupCallStreams {
+suspend fun TdKtxClient.getGroupCallStreams(groupCallId: Int): GroupCallStreams {
     val request = GetGroupCallStreams(groupCallId)
     val requestJson = tdJson.encodeToString(GetGroupCallStreams.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9062,9 +8740,7 @@ suspend fun TdKtxClient.addContact(
  * Adds new contacts or edits existing contacts by their phone numbers; contacts' user identifiers are ignored
  * @param contacts The list of contacts to import or edit
  */
-suspend fun TdKtxClient.importContacts(
-    contacts: List<ImportedContact>? = null,
-): ImportedContacts {
+suspend fun TdKtxClient.importContacts(contacts: List<ImportedContact>? = null): ImportedContacts {
     val request = ImportContacts(contacts)
     val requestJson = tdJson.encodeToString(ImportContacts.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9074,8 +8750,7 @@ suspend fun TdKtxClient.importContacts(
 /**
  * Returns all contacts of the user
  */
-suspend fun TdKtxClient.getContacts(
-): Users {
+suspend fun TdKtxClient.getContacts(): Users {
     val request = GetContacts()
     val requestJson = tdJson.encodeToString(GetContacts.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9100,9 +8775,7 @@ suspend fun TdKtxClient.searchContacts(
 /**
  * Removes users from the contact list @user_ids Identifiers of users to be deleted
  */
-suspend fun TdKtxClient.removeContacts(
-    userIds: List<Long>? = null,
-): Ok {
+suspend fun TdKtxClient.removeContacts(userIds: List<Long>? = null): Ok {
     val request = RemoveContacts(userIds)
     val requestJson = tdJson.encodeToString(RemoveContacts.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9112,8 +8785,7 @@ suspend fun TdKtxClient.removeContacts(
 /**
  * Returns the total number of imported contacts
  */
-suspend fun TdKtxClient.getImportedContactCount(
-): Count {
+suspend fun TdKtxClient.getImportedContactCount(): Count {
     val request = GetImportedContactCount()
     val requestJson = tdJson.encodeToString(GetImportedContactCount.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9124,9 +8796,7 @@ suspend fun TdKtxClient.getImportedContactCount(
  * Changes imported contacts using the list of contacts saved on the device. Imports newly added contacts and, if at least the file database is enabled, deletes recently deleted contacts. Query result depends on the result of the previous query, so only one query is possible at the same time
  * @param contacts The new list of contacts to import
  */
-suspend fun TdKtxClient.changeImportedContacts(
-    contacts: List<ImportedContact>? = null,
-): ImportedContacts {
+suspend fun TdKtxClient.changeImportedContacts(contacts: List<ImportedContact>? = null): ImportedContacts {
     val request = ChangeImportedContacts(contacts)
     val requestJson = tdJson.encodeToString(ChangeImportedContacts.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9136,8 +8806,7 @@ suspend fun TdKtxClient.changeImportedContacts(
 /**
  * Clears all imported contacts, contact list remains unchanged
  */
-suspend fun TdKtxClient.clearImportedContacts(
-): Ok {
+suspend fun TdKtxClient.clearImportedContacts(): Ok {
     val request = ClearImportedContacts()
     val requestJson = tdJson.encodeToString(ClearImportedContacts.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9147,9 +8816,7 @@ suspend fun TdKtxClient.clearImportedContacts(
 /**
  * Changes the list of close friends of the current user @user_ids User identifiers of close friends; the users must be contacts of the current user
  */
-suspend fun TdKtxClient.setCloseFriends(
-    userIds: List<Long>? = null,
-): Ok {
+suspend fun TdKtxClient.setCloseFriends(userIds: List<Long>? = null): Ok {
     val request = SetCloseFriends(userIds)
     val requestJson = tdJson.encodeToString(SetCloseFriends.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9159,8 +8826,7 @@ suspend fun TdKtxClient.setCloseFriends(
 /**
  * Returns all close friends of the current user
  */
-suspend fun TdKtxClient.getCloseFriends(
-): Users {
+suspend fun TdKtxClient.getCloseFriends(): Users {
     val request = GetCloseFriends()
     val requestJson = tdJson.encodeToString(GetCloseFriends.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9285,9 +8951,7 @@ suspend fun TdKtxClient.searchUserByPhoneNumber(
  * Shares the phone number of the current user with a mutual contact. Supposed to be called when the user clicks on chatActionBarSharePhoneNumber
  * @param userId Identifier of the user with whom to share the phone number. The user must be a mutual contact
  */
-suspend fun TdKtxClient.sharePhoneNumber(
-    userId: Long,
-): Ok {
+suspend fun TdKtxClient.sharePhoneNumber(userId: Long): Ok {
     val request = SharePhoneNumber(userId)
     val requestJson = tdJson.encodeToString(SharePhoneNumber.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9331,9 +8995,7 @@ suspend fun TdKtxClient.getUserProfileAudios(
 /**
  * Checks whether a file is in the profile audio files of the current user. Returns a 404 error if it isn't @file_id Identifier of the audio file to check
  */
-suspend fun TdKtxClient.isProfileAudio(
-    fileId: Int,
-): Ok {
+suspend fun TdKtxClient.isProfileAudio(fileId: Int): Ok {
     val request = IsProfileAudio(fileId)
     val requestJson = tdJson.encodeToString(IsProfileAudio.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9377,9 +9039,7 @@ suspend fun TdKtxClient.setProfileAudioPosition(
 /**
  * Removes an audio file from the profile audio files of the current user @file_id Identifier of the audio file to be removed
  */
-suspend fun TdKtxClient.removeProfileAudio(
-    fileId: Int,
-): Ok {
+suspend fun TdKtxClient.removeProfileAudio(fileId: Int): Ok {
     val request = RemoveProfileAudio(fileId)
     val requestJson = tdJson.encodeToString(RemoveProfileAudio.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9484,8 +9144,7 @@ suspend fun TdKtxClient.searchStickers(
 /**
  * Returns greeting stickers from regular sticker sets that can be used for the start page of other users
  */
-suspend fun TdKtxClient.getGreetingStickers(
-): Stickers {
+suspend fun TdKtxClient.getGreetingStickers(): Stickers {
     val request = GetGreetingStickers()
     val requestJson = tdJson.encodeToString(GetGreetingStickers.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9495,9 +9154,7 @@ suspend fun TdKtxClient.getGreetingStickers(
 /**
  * Returns premium stickers from regular sticker sets @limit The maximum number of stickers to be returned; 0-100
  */
-suspend fun TdKtxClient.getPremiumStickers(
-    limit: Int,
-): Stickers {
+suspend fun TdKtxClient.getPremiumStickers(limit: Int): Stickers {
     val request = GetPremiumStickers(limit)
     val requestJson = tdJson.encodeToString(GetPremiumStickers.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9507,9 +9164,7 @@ suspend fun TdKtxClient.getPremiumStickers(
 /**
  * Returns a list of installed sticker sets @sticker_type Type of the sticker sets to return
  */
-suspend fun TdKtxClient.getInstalledStickerSets(
-    stickerType: StickerType? = null,
-): StickerSets {
+suspend fun TdKtxClient.getInstalledStickerSets(stickerType: StickerType? = null): StickerSets {
     val request = GetInstalledStickerSets(stickerType)
     val requestJson = tdJson.encodeToString(GetInstalledStickerSets.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9553,9 +9208,7 @@ suspend fun TdKtxClient.getTrendingStickerSets(
 /**
  * Returns a list of sticker sets attached to a file, including regular, mask, and emoji sticker sets. Currently, only animations, photos, and videos can have attached sticker sets @file_id File identifier
  */
-suspend fun TdKtxClient.getAttachedStickerSets(
-    fileId: Int,
-): StickerSets {
+suspend fun TdKtxClient.getAttachedStickerSets(fileId: Int): StickerSets {
     val request = GetAttachedStickerSets(fileId)
     val requestJson = tdJson.encodeToString(GetAttachedStickerSets.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9565,9 +9218,7 @@ suspend fun TdKtxClient.getAttachedStickerSets(
 /**
  * Returns information about a sticker set by its identifier @set_id Identifier of the sticker set
  */
-suspend fun TdKtxClient.getStickerSet(
-    setId: Long,
-): StickerSet {
+suspend fun TdKtxClient.getStickerSet(setId: Long): StickerSet {
     val request = GetStickerSet(setId)
     val requestJson = tdJson.encodeToString(GetStickerSet.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9577,9 +9228,7 @@ suspend fun TdKtxClient.getStickerSet(
 /**
  * Returns name of a sticker set by its identifier @set_id Identifier of the sticker set
  */
-suspend fun TdKtxClient.getStickerSetName(
-    setId: Long,
-): Text {
+suspend fun TdKtxClient.getStickerSetName(setId: Long): Text {
     val request = GetStickerSetName(setId)
     val requestJson = tdJson.encodeToString(GetStickerSetName.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9645,9 +9294,7 @@ suspend fun TdKtxClient.changeStickerSet(
 /**
  * Informs the server that some trending sticker sets have been viewed by the user @sticker_set_ids Identifiers of viewed trending sticker sets
  */
-suspend fun TdKtxClient.viewTrendingStickerSets(
-    stickerSetIds: List<Long>? = null,
-): Ok {
+suspend fun TdKtxClient.viewTrendingStickerSets(stickerSetIds: List<Long>? = null): Ok {
     val request = ViewTrendingStickerSets(stickerSetIds)
     val requestJson = tdJson.encodeToString(ViewTrendingStickerSets.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9670,9 +9317,7 @@ suspend fun TdKtxClient.reorderInstalledStickerSets(
 /**
  * Returns a list of recently used stickers @is_attached Pass true to return stickers and masks that were recently attached to photos or video files; pass false to return recently sent stickers
  */
-suspend fun TdKtxClient.getRecentStickers(
-    isAttached: Boolean,
-): Stickers {
+suspend fun TdKtxClient.getRecentStickers(isAttached: Boolean): Stickers {
     val request = GetRecentStickers(isAttached)
     val requestJson = tdJson.encodeToString(GetRecentStickers.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9710,9 +9355,7 @@ suspend fun TdKtxClient.removeRecentSticker(
 /**
  * Clears the list of recently used stickers @is_attached Pass true to clear the list of stickers recently attached to photo or video files; pass false to clear the list of recently sent stickers
  */
-suspend fun TdKtxClient.clearRecentStickers(
-    isAttached: Boolean,
-): Ok {
+suspend fun TdKtxClient.clearRecentStickers(isAttached: Boolean): Ok {
     val request = ClearRecentStickers(isAttached)
     val requestJson = tdJson.encodeToString(ClearRecentStickers.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9722,8 +9365,7 @@ suspend fun TdKtxClient.clearRecentStickers(
 /**
  * Returns favorite stickers
  */
-suspend fun TdKtxClient.getFavoriteStickers(
-): Stickers {
+suspend fun TdKtxClient.getFavoriteStickers(): Stickers {
     val request = GetFavoriteStickers()
     val requestJson = tdJson.encodeToString(GetFavoriteStickers.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9734,9 +9376,7 @@ suspend fun TdKtxClient.getFavoriteStickers(
  * Adds a new sticker to the list of favorite stickers. The new sticker is added to the top of the list. If the sticker was already in the list, it is removed from the list first. Only stickers belonging to a sticker set or in WEBP or WEBM format can be added to this list. Emoji stickers can't be added to favorite stickers
  * @param sticker Sticker file to add
  */
-suspend fun TdKtxClient.addFavoriteSticker(
-    sticker: InputFile? = null,
-): Ok {
+suspend fun TdKtxClient.addFavoriteSticker(sticker: InputFile? = null): Ok {
     val request = AddFavoriteSticker(sticker)
     val requestJson = tdJson.encodeToString(AddFavoriteSticker.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9746,9 +9386,7 @@ suspend fun TdKtxClient.addFavoriteSticker(
 /**
  * Removes a sticker from the list of favorite stickers @sticker Sticker file to delete from the list
  */
-suspend fun TdKtxClient.removeFavoriteSticker(
-    sticker: InputFile? = null,
-): Ok {
+suspend fun TdKtxClient.removeFavoriteSticker(sticker: InputFile? = null): Ok {
     val request = RemoveFavoriteSticker(sticker)
     val requestJson = tdJson.encodeToString(RemoveFavoriteSticker.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9758,9 +9396,7 @@ suspend fun TdKtxClient.removeFavoriteSticker(
 /**
  * Returns emoji corresponding to a sticker. The list is only for informational purposes, because a sticker is always sent with a fixed emoji from the corresponding Sticker object @sticker Sticker file identifier
  */
-suspend fun TdKtxClient.getStickerEmojis(
-    sticker: InputFile? = null,
-): Emojis {
+suspend fun TdKtxClient.getStickerEmojis(sticker: InputFile? = null): Emojis {
     val request = GetStickerEmojis(sticker)
     val requestJson = tdJson.encodeToString(GetStickerEmojis.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9800,9 +9436,7 @@ suspend fun TdKtxClient.getKeywordEmojis(
 /**
  * Returns available emoji categories @type Type of emoji categories to return; pass null to get default emoji categories
  */
-suspend fun TdKtxClient.getEmojiCategories(
-    type: EmojiCategoryType? = null,
-): EmojiCategories {
+suspend fun TdKtxClient.getEmojiCategories(type: EmojiCategoryType? = null): EmojiCategories {
     val request = GetEmojiCategories(type)
     val requestJson = tdJson.encodeToString(GetEmojiCategories.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9812,9 +9446,7 @@ suspend fun TdKtxClient.getEmojiCategories(
 /**
  * Returns an animated emoji corresponding to a given emoji. Returns a 404 error if the emoji has no animated emoji @emoji The emoji
  */
-suspend fun TdKtxClient.getAnimatedEmoji(
-    emoji: String? = null,
-): AnimatedEmoji {
+suspend fun TdKtxClient.getAnimatedEmoji(emoji: String? = null): AnimatedEmoji {
     val request = GetAnimatedEmoji(emoji)
     val requestJson = tdJson.encodeToString(GetAnimatedEmoji.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9825,9 +9457,7 @@ suspend fun TdKtxClient.getAnimatedEmoji(
  * Returns an HTTP URL which can be used to automatically log in to the translation platform and suggest new emoji replacements. The URL will be valid for 30 seconds after generation
  * @param languageCode Language code for which the emoji replacements will be suggested
  */
-suspend fun TdKtxClient.getEmojiSuggestionsUrl(
-    languageCode: String? = null,
-): HttpUrl {
+suspend fun TdKtxClient.getEmojiSuggestionsUrl(languageCode: String? = null): HttpUrl {
     val request = GetEmojiSuggestionsUrl(languageCode)
     val requestJson = tdJson.encodeToString(GetEmojiSuggestionsUrl.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9838,9 +9468,7 @@ suspend fun TdKtxClient.getEmojiSuggestionsUrl(
  * Returns the list of custom emoji stickers by their identifiers. Stickers are returned in arbitrary order. Only found stickers are returned
  * @param customEmojiIds Identifiers of custom emoji stickers. At most 200 custom emoji stickers can be received simultaneously
  */
-suspend fun TdKtxClient.getCustomEmojiStickers(
-    customEmojiIds: List<Long>? = null,
-): Stickers {
+suspend fun TdKtxClient.getCustomEmojiStickers(customEmojiIds: List<Long>? = null): Stickers {
     val request = GetCustomEmojiStickers(customEmojiIds)
     val requestJson = tdJson.encodeToString(GetCustomEmojiStickers.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9850,8 +9478,7 @@ suspend fun TdKtxClient.getCustomEmojiStickers(
 /**
  * Returns default list of custom emoji stickers for placing on a chat photo
  */
-suspend fun TdKtxClient.getDefaultChatPhotoCustomEmojiStickers(
-): Stickers {
+suspend fun TdKtxClient.getDefaultChatPhotoCustomEmojiStickers(): Stickers {
     val request = GetDefaultChatPhotoCustomEmojiStickers()
     val requestJson = tdJson.encodeToString(GetDefaultChatPhotoCustomEmojiStickers.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9861,8 +9488,7 @@ suspend fun TdKtxClient.getDefaultChatPhotoCustomEmojiStickers(
 /**
  * Returns default list of custom emoji stickers for placing on a profile photo
  */
-suspend fun TdKtxClient.getDefaultProfilePhotoCustomEmojiStickers(
-): Stickers {
+suspend fun TdKtxClient.getDefaultProfilePhotoCustomEmojiStickers(): Stickers {
     val request = GetDefaultProfilePhotoCustomEmojiStickers()
     val requestJson = tdJson.encodeToString(GetDefaultProfilePhotoCustomEmojiStickers.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9872,8 +9498,7 @@ suspend fun TdKtxClient.getDefaultProfilePhotoCustomEmojiStickers(
 /**
  * Returns default list of custom emoji stickers for reply background
  */
-suspend fun TdKtxClient.getDefaultBackgroundCustomEmojiStickers(
-): Stickers {
+suspend fun TdKtxClient.getDefaultBackgroundCustomEmojiStickers(): Stickers {
     val request = GetDefaultBackgroundCustomEmojiStickers()
     val requestJson = tdJson.encodeToString(GetDefaultBackgroundCustomEmojiStickers.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9883,8 +9508,7 @@ suspend fun TdKtxClient.getDefaultBackgroundCustomEmojiStickers(
 /**
  * Returns saved animations
  */
-suspend fun TdKtxClient.getSavedAnimations(
-): Animations {
+suspend fun TdKtxClient.getSavedAnimations(): Animations {
     val request = GetSavedAnimations()
     val requestJson = tdJson.encodeToString(GetSavedAnimations.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9895,9 +9519,7 @@ suspend fun TdKtxClient.getSavedAnimations(
  * Manually adds a new animation to the list of saved animations. The new animation is added to the beginning of the list. If the animation was already in the list, it is removed first. Only non-secret video animations with MIME type "video/mp4" can be added to the list
  * @param animation The animation file to be added. Only animations known to the server (i.e., successfully sent via a message) can be added to the list
  */
-suspend fun TdKtxClient.addSavedAnimation(
-    animation: InputFile? = null,
-): Ok {
+suspend fun TdKtxClient.addSavedAnimation(animation: InputFile? = null): Ok {
     val request = AddSavedAnimation(animation)
     val requestJson = tdJson.encodeToString(AddSavedAnimation.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9907,9 +9529,7 @@ suspend fun TdKtxClient.addSavedAnimation(
 /**
  * Removes an animation from the list of saved animations @animation Animation file to be removed
  */
-suspend fun TdKtxClient.removeSavedAnimation(
-    animation: InputFile? = null,
-): Ok {
+suspend fun TdKtxClient.removeSavedAnimation(animation: InputFile? = null): Ok {
     val request = RemoveSavedAnimation(animation)
     val requestJson = tdJson.encodeToString(RemoveSavedAnimation.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9919,8 +9539,7 @@ suspend fun TdKtxClient.removeSavedAnimation(
 /**
  * Returns up to 20 recently used inline bots in the order of their last usage
  */
-suspend fun TdKtxClient.getRecentInlineBots(
-): Users {
+suspend fun TdKtxClient.getRecentInlineBots(): Users {
     val request = GetRecentInlineBots()
     val requestJson = tdJson.encodeToString(GetRecentInlineBots.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9930,8 +9549,7 @@ suspend fun TdKtxClient.getRecentInlineBots(
 /**
  * Returns the list of bots owned by the current user
  */
-suspend fun TdKtxClient.getOwnedBots(
-): Users {
+suspend fun TdKtxClient.getOwnedBots(): Users {
     val request = GetOwnedBots()
     val requestJson = tdJson.encodeToString(GetOwnedBots.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -9954,9 +9572,7 @@ suspend fun TdKtxClient.searchHashtags(
 /**
  * Removes a hashtag from the list of recently used hashtags @hashtag Hashtag to delete
  */
-suspend fun TdKtxClient.removeRecentHashtag(
-    hashtag: String? = null,
-): Ok {
+suspend fun TdKtxClient.removeRecentHashtag(hashtag: String? = null): Ok {
     val request = RemoveRecentHashtag(hashtag)
     val requestJson = tdJson.encodeToString(RemoveRecentHashtag.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10011,9 +9627,7 @@ suspend fun TdKtxClient.setProfilePhoto(
 /**
  * Deletes a profile photo @profile_photo_id Identifier of the profile photo to delete
  */
-suspend fun TdKtxClient.deleteProfilePhoto(
-    profilePhotoId: Long,
-): Ok {
+suspend fun TdKtxClient.deleteProfilePhoto(profilePhotoId: Long): Ok {
     val request = DeleteProfilePhoto(profilePhotoId)
     val requestJson = tdJson.encodeToString(DeleteProfilePhoto.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10039,9 +9653,7 @@ suspend fun TdKtxClient.setAccentColor(
  * Changes color scheme for the current user based on an owned or a hosted upgraded gift; for Telegram Premium users only
  * @param upgradedGiftColorsId Identifier of the upgradedGiftColors scheme to use
  */
-suspend fun TdKtxClient.setUpgradedGiftColors(
-    upgradedGiftColorsId: Long,
-): Ok {
+suspend fun TdKtxClient.setUpgradedGiftColors(upgradedGiftColorsId: Long): Ok {
     val request = SetUpgradedGiftColors(upgradedGiftColorsId)
     val requestJson = tdJson.encodeToString(SetUpgradedGiftColors.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10079,9 +9691,7 @@ suspend fun TdKtxClient.setName(
 /**
  * Changes the bio of the current user @bio The new value of the user bio; 0-getOption("bio_length_max") characters without line feeds
  */
-suspend fun TdKtxClient.setBio(
-    bio: String? = null,
-): Ok {
+suspend fun TdKtxClient.setBio(bio: String? = null): Ok {
     val request = SetBio(bio)
     val requestJson = tdJson.encodeToString(SetBio.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10092,9 +9702,7 @@ suspend fun TdKtxClient.setBio(
  * Changes the editable username of the current user
  * @param username The new value of the username. Use an empty string to remove the username. The username can't be completely removed if there is another active or disabled username
  */
-suspend fun TdKtxClient.setUsername(
-    username: String? = null,
-): Ok {
+suspend fun TdKtxClient.setUsername(username: String? = null): Ok {
     val request = SetUsername(username)
     val requestJson = tdJson.encodeToString(SetUsername.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10119,9 +9727,7 @@ suspend fun TdKtxClient.toggleUsernameIsActive(
 /**
  * Changes order of active usernames of the current user @usernames The new order of active usernames. All currently active usernames must be specified
  */
-suspend fun TdKtxClient.reorderActiveUsernames(
-    usernames: List<String>? = null,
-): Ok {
+suspend fun TdKtxClient.reorderActiveUsernames(usernames: List<String>? = null): Ok {
     val request = ReorderActiveUsernames(usernames)
     val requestJson = tdJson.encodeToString(ReorderActiveUsernames.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10131,9 +9737,7 @@ suspend fun TdKtxClient.reorderActiveUsernames(
 /**
  * Changes the birthdate of the current user @birthdate The new value of the current user's birthdate; pass null to remove the birthdate
  */
-suspend fun TdKtxClient.setBirthdate(
-    birthdate: Birthdate? = null,
-): Ok {
+suspend fun TdKtxClient.setBirthdate(birthdate: Birthdate? = null): Ok {
     val request = SetBirthdate(birthdate)
     val requestJson = tdJson.encodeToString(SetBirthdate.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10143,9 +9747,7 @@ suspend fun TdKtxClient.setBirthdate(
 /**
  * Changes the main profile tab of the current user @main_profile_tab The new value of the main profile tab
  */
-suspend fun TdKtxClient.setMainProfileTab(
-    mainProfileTab: ProfileTab? = null,
-): Ok {
+suspend fun TdKtxClient.setMainProfileTab(mainProfileTab: ProfileTab? = null): Ok {
     val request = SetMainProfileTab(mainProfileTab)
     val requestJson = tdJson.encodeToString(SetMainProfileTab.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10155,9 +9757,7 @@ suspend fun TdKtxClient.setMainProfileTab(
 /**
  * Changes the personal chat of the current user @chat_id Identifier of the new personal chat; pass 0 to remove the chat. Use getSuitablePersonalChats to get suitable chats
  */
-suspend fun TdKtxClient.setPersonalChat(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.setPersonalChat(chatId: Long): Ok {
     val request = SetPersonalChat(chatId)
     val requestJson = tdJson.encodeToString(SetPersonalChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10167,9 +9767,7 @@ suspend fun TdKtxClient.setPersonalChat(
 /**
  * Changes the emoji status of the current user; for Telegram Premium users only @emoji_status New emoji status; pass null to switch to the default badge
  */
-suspend fun TdKtxClient.setEmojiStatus(
-    emojiStatus: EmojiStatus? = null,
-): Ok {
+suspend fun TdKtxClient.setEmojiStatus(emojiStatus: EmojiStatus? = null): Ok {
     val request = SetEmojiStatus(emojiStatus)
     val requestJson = tdJson.encodeToString(SetEmojiStatus.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10180,9 +9778,7 @@ suspend fun TdKtxClient.setEmojiStatus(
  * Toggles whether the current user has sponsored messages enabled. The setting has no effect for users without Telegram Premium for which sponsored messages are always enabled
  * @param hasSponsoredMessagesEnabled Pass true to enable sponsored messages for the current user; false to disable them
  */
-suspend fun TdKtxClient.toggleHasSponsoredMessagesEnabled(
-    hasSponsoredMessagesEnabled: Boolean,
-): Ok {
+suspend fun TdKtxClient.toggleHasSponsoredMessagesEnabled(hasSponsoredMessagesEnabled: Boolean): Ok {
     val request = ToggleHasSponsoredMessagesEnabled(hasSponsoredMessagesEnabled)
     val requestJson = tdJson.encodeToString(ToggleHasSponsoredMessagesEnabled.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10192,9 +9788,7 @@ suspend fun TdKtxClient.toggleHasSponsoredMessagesEnabled(
 /**
  * Changes the business location of the current user. Requires Telegram Business subscription @location The new location of the business; pass null to remove the location
  */
-suspend fun TdKtxClient.setBusinessLocation(
-    location: BusinessLocation? = null,
-): Ok {
+suspend fun TdKtxClient.setBusinessLocation(location: BusinessLocation? = null): Ok {
     val request = SetBusinessLocation(location)
     val requestJson = tdJson.encodeToString(SetBusinessLocation.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10205,9 +9799,7 @@ suspend fun TdKtxClient.setBusinessLocation(
  * Changes the business opening hours of the current user. Requires Telegram Business subscription
  * @param openingHours The new opening hours of the business; pass null to remove the opening hours; up to 28 time intervals can be specified
  */
-suspend fun TdKtxClient.setBusinessOpeningHours(
-    openingHours: BusinessOpeningHours? = null,
-): Ok {
+suspend fun TdKtxClient.setBusinessOpeningHours(openingHours: BusinessOpeningHours? = null): Ok {
     val request = SetBusinessOpeningHours(openingHours)
     val requestJson = tdJson.encodeToString(SetBusinessOpeningHours.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10217,9 +9809,7 @@ suspend fun TdKtxClient.setBusinessOpeningHours(
 /**
  * Changes the business greeting message settings of the current user. Requires Telegram Business subscription @greeting_message_settings The new settings for the greeting message of the business; pass null to disable the greeting message
  */
-suspend fun TdKtxClient.setBusinessGreetingMessageSettings(
-    greetingMessageSettings: BusinessGreetingMessageSettings? = null,
-): Ok {
+suspend fun TdKtxClient.setBusinessGreetingMessageSettings(greetingMessageSettings: BusinessGreetingMessageSettings? = null): Ok {
     val request = SetBusinessGreetingMessageSettings(greetingMessageSettings)
     val requestJson = tdJson.encodeToString(SetBusinessGreetingMessageSettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10229,9 +9819,7 @@ suspend fun TdKtxClient.setBusinessGreetingMessageSettings(
 /**
  * Changes the business away message settings of the current user. Requires Telegram Business subscription @away_message_settings The new settings for the away message of the business; pass null to disable the away message
  */
-suspend fun TdKtxClient.setBusinessAwayMessageSettings(
-    awayMessageSettings: BusinessAwayMessageSettings? = null,
-): Ok {
+suspend fun TdKtxClient.setBusinessAwayMessageSettings(awayMessageSettings: BusinessAwayMessageSettings? = null): Ok {
     val request = SetBusinessAwayMessageSettings(awayMessageSettings)
     val requestJson = tdJson.encodeToString(SetBusinessAwayMessageSettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10241,9 +9829,7 @@ suspend fun TdKtxClient.setBusinessAwayMessageSettings(
 /**
  * Changes the business start page of the current user. Requires Telegram Business subscription @start_page The new start page of the business; pass null to remove custom start page
  */
-suspend fun TdKtxClient.setBusinessStartPage(
-    startPage: InputBusinessStartPage? = null,
-): Ok {
+suspend fun TdKtxClient.setBusinessStartPage(startPage: InputBusinessStartPage? = null): Ok {
     val request = SetBusinessStartPage(startPage)
     val requestJson = tdJson.encodeToString(SetBusinessStartPage.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10271,9 +9857,7 @@ suspend fun TdKtxClient.sendPhoneNumberCode(
  * Sends Firebase Authentication SMS to the specified phone number. Works only when received a code of the type authenticationCodeTypeFirebaseAndroid or authenticationCodeTypeFirebaseIos
  * @param token Play Integrity API or SafetyNet Attestation API token for the Android application, or secret from push notification for the iOS application
  */
-suspend fun TdKtxClient.sendPhoneNumberFirebaseSms(
-    token: String? = null,
-): Ok {
+suspend fun TdKtxClient.sendPhoneNumberFirebaseSms(token: String? = null): Ok {
     val request = SendPhoneNumberFirebaseSms(token)
     val requestJson = tdJson.encodeToString(SendPhoneNumberFirebaseSms.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10283,9 +9867,7 @@ suspend fun TdKtxClient.sendPhoneNumberFirebaseSms(
 /**
  * Reports that authentication code wasn't delivered via SMS to the specified phone number; for official mobile applications only @mobile_network_code Current mobile network code
  */
-suspend fun TdKtxClient.reportPhoneNumberCodeMissing(
-    mobileNetworkCode: String? = null,
-): Ok {
+suspend fun TdKtxClient.reportPhoneNumberCodeMissing(mobileNetworkCode: String? = null): Ok {
     val request = ReportPhoneNumberCodeMissing(mobileNetworkCode)
     val requestJson = tdJson.encodeToString(ReportPhoneNumberCodeMissing.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10296,9 +9878,7 @@ suspend fun TdKtxClient.reportPhoneNumberCodeMissing(
  * Resends the authentication code sent to a phone number. Works only if the previously received authenticationCodeInfo next_code_type was not null and the server-specified timeout has passed
  * @param reason Reason of code resending; pass null if unknown
  */
-suspend fun TdKtxClient.resendPhoneNumberCode(
-    reason: ResendCodeReason? = null,
-): AuthenticationCodeInfo {
+suspend fun TdKtxClient.resendPhoneNumberCode(reason: ResendCodeReason? = null): AuthenticationCodeInfo {
     val request = ResendPhoneNumberCode(reason)
     val requestJson = tdJson.encodeToString(ResendPhoneNumberCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10308,9 +9888,7 @@ suspend fun TdKtxClient.resendPhoneNumberCode(
 /**
  * Checks the authentication code and completes the request for which the code was sent if appropriate @code Authentication code to check
  */
-suspend fun TdKtxClient.checkPhoneNumberCode(
-    code: String? = null,
-): Ok {
+suspend fun TdKtxClient.checkPhoneNumberCode(code: String? = null): Ok {
     val request = CheckPhoneNumberCode(code)
     val requestJson = tdJson.encodeToString(CheckPhoneNumberCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10320,8 +9898,7 @@ suspend fun TdKtxClient.checkPhoneNumberCode(
 /**
  * Returns information about the business bot that is connected to the current user account. Returns a 404 error if there is no connected bot
  */
-suspend fun TdKtxClient.getBusinessConnectedBot(
-): BusinessConnectedBotInfo {
+suspend fun TdKtxClient.getBusinessConnectedBot(): BusinessConnectedBotInfo {
     val request = GetBusinessConnectedBot()
     val requestJson = tdJson.encodeToString(GetBusinessConnectedBot.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10331,9 +9908,7 @@ suspend fun TdKtxClient.getBusinessConnectedBot(
 /**
  * Adds or changes business bot that is connected to the current user account @bot Connection settings for the bot
  */
-suspend fun TdKtxClient.setBusinessConnectedBot(
-    bot: BusinessConnectedBot? = null,
-): Ok {
+suspend fun TdKtxClient.setBusinessConnectedBot(bot: BusinessConnectedBot? = null): Ok {
     val request = SetBusinessConnectedBot(bot)
     val requestJson = tdJson.encodeToString(SetBusinessConnectedBot.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10343,9 +9918,7 @@ suspend fun TdKtxClient.setBusinessConnectedBot(
 /**
  * Confirms an unconfirmed business connection of the current user from another device @bot_user_id User identifier of the bot
  */
-suspend fun TdKtxClient.confirmBusinessConnectedBot(
-    botUserId: Long,
-): Ok {
+suspend fun TdKtxClient.confirmBusinessConnectedBot(botUserId: Long): Ok {
     val request = ConfirmBusinessConnectedBot(botUserId)
     val requestJson = tdJson.encodeToString(ConfirmBusinessConnectedBot.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10355,9 +9928,7 @@ suspend fun TdKtxClient.confirmBusinessConnectedBot(
 /**
  * Deletes the business bot that is connected to the current user account @bot_user_id Unique user identifier for the bot
  */
-suspend fun TdKtxClient.deleteBusinessConnectedBot(
-    botUserId: Long,
-): Ok {
+suspend fun TdKtxClient.deleteBusinessConnectedBot(botUserId: Long): Ok {
     val request = DeleteBusinessConnectedBot(botUserId)
     val requestJson = tdJson.encodeToString(DeleteBusinessConnectedBot.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10380,9 +9951,7 @@ suspend fun TdKtxClient.toggleBusinessConnectedBotChatIsPaused(
 /**
  * Removes the connected business bot from a specific chat by adding the chat to businessRecipients.excluded_chat_ids @chat_id Chat identifier
  */
-suspend fun TdKtxClient.removeBusinessConnectedBotFromChat(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.removeBusinessConnectedBotFromChat(chatId: Long): Ok {
     val request = RemoveBusinessConnectedBotFromChat(chatId)
     val requestJson = tdJson.encodeToString(RemoveBusinessConnectedBotFromChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10392,8 +9961,7 @@ suspend fun TdKtxClient.removeBusinessConnectedBotFromChat(
 /**
  * Returns business chat links created for the current account
  */
-suspend fun TdKtxClient.getBusinessChatLinks(
-): BusinessChatLinks {
+suspend fun TdKtxClient.getBusinessChatLinks(): BusinessChatLinks {
     val request = GetBusinessChatLinks()
     val requestJson = tdJson.encodeToString(GetBusinessChatLinks.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10404,9 +9972,7 @@ suspend fun TdKtxClient.getBusinessChatLinks(
  * Creates a business chat link for the current account. Requires Telegram Business subscription. There can be up to getOption("business_chat_link_count_max") links created. Returns the created link
  * @param linkInfo Information about the link to create
  */
-suspend fun TdKtxClient.createBusinessChatLink(
-    linkInfo: InputBusinessChatLink? = null,
-): BusinessChatLink {
+suspend fun TdKtxClient.createBusinessChatLink(linkInfo: InputBusinessChatLink? = null): BusinessChatLink {
     val request = CreateBusinessChatLink(linkInfo)
     val requestJson = tdJson.encodeToString(CreateBusinessChatLink.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10431,9 +9997,7 @@ suspend fun TdKtxClient.editBusinessChatLink(
 /**
  * Deletes a business chat link of the current account @link The link to delete
  */
-suspend fun TdKtxClient.deleteBusinessChatLink(
-    link: String? = null,
-): Ok {
+suspend fun TdKtxClient.deleteBusinessChatLink(link: String? = null): Ok {
     val request = DeleteBusinessChatLink(link)
     val requestJson = tdJson.encodeToString(DeleteBusinessChatLink.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10443,9 +10007,7 @@ suspend fun TdKtxClient.deleteBusinessChatLink(
 /**
  * Returns information about a business chat link @link_name Name of the link
  */
-suspend fun TdKtxClient.getBusinessChatLinkInfo(
-    linkName: String? = null,
-): BusinessChatLinkInfo {
+suspend fun TdKtxClient.getBusinessChatLinkInfo(linkName: String? = null): BusinessChatLinkInfo {
     val request = GetBusinessChatLinkInfo(linkName)
     val requestJson = tdJson.encodeToString(GetBusinessChatLinkInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10455,8 +10017,7 @@ suspend fun TdKtxClient.getBusinessChatLinkInfo(
 /**
  * Returns an HTTPS link, which can be used to get information about the current user
  */
-suspend fun TdKtxClient.getUserLink(
-): UserLink {
+suspend fun TdKtxClient.getUserLink(): UserLink {
     val request = GetUserLink()
     val requestJson = tdJson.encodeToString(GetUserLink.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10466,9 +10027,7 @@ suspend fun TdKtxClient.getUserLink(
 /**
  * Searches a user by a token from the user's link @token Token to search for
  */
-suspend fun TdKtxClient.searchUserByToken(
-    token: String? = null,
-): User {
+suspend fun TdKtxClient.searchUserByToken(token: String? = null): User {
     val request = SearchUserByToken(token)
     val requestJson = tdJson.encodeToString(SearchUserByToken.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10540,9 +10099,7 @@ suspend fun TdKtxClient.setMenuButton(
 /**
  * Returns menu button set by the bot for the given user; for bots only @user_id Identifier of the user or 0 to get the default menu button
  */
-suspend fun TdKtxClient.getMenuButton(
-    userId: Long,
-): BotMenuButton {
+suspend fun TdKtxClient.getMenuButton(userId: Long): BotMenuButton {
     val request = GetMenuButton(userId)
     val requestJson = tdJson.encodeToString(GetMenuButton.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10552,9 +10109,7 @@ suspend fun TdKtxClient.getMenuButton(
 /**
  * Sets default administrator rights for adding the bot to basic group and supergroup chats; for bots only @default_group_administrator_rights Default administrator rights for adding the bot to basic group and supergroup chats; pass null to remove default rights
  */
-suspend fun TdKtxClient.setDefaultGroupAdministratorRights(
-    defaultGroupAdministratorRights: ChatAdministratorRights? = null,
-): Ok {
+suspend fun TdKtxClient.setDefaultGroupAdministratorRights(defaultGroupAdministratorRights: ChatAdministratorRights? = null): Ok {
     val request = SetDefaultGroupAdministratorRights(defaultGroupAdministratorRights)
     val requestJson = tdJson.encodeToString(SetDefaultGroupAdministratorRights.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10564,9 +10119,7 @@ suspend fun TdKtxClient.setDefaultGroupAdministratorRights(
 /**
  * Sets default administrator rights for adding the bot to channel chats; for bots only @default_channel_administrator_rights Default administrator rights for adding the bot to channels; pass null to remove default rights
  */
-suspend fun TdKtxClient.setDefaultChannelAdministratorRights(
-    defaultChannelAdministratorRights: ChatAdministratorRights? = null,
-): Ok {
+suspend fun TdKtxClient.setDefaultChannelAdministratorRights(defaultChannelAdministratorRights: ChatAdministratorRights? = null): Ok {
     val request = SetDefaultChannelAdministratorRights(defaultChannelAdministratorRights)
     val requestJson = tdJson.encodeToString(SetDefaultChannelAdministratorRights.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10576,9 +10129,7 @@ suspend fun TdKtxClient.setDefaultChannelAdministratorRights(
 /**
  * Checks whether the specified bot can send messages to the user. Returns a 404 error if can't and the access can be granted by call to allowBotToSendMessages @bot_user_id Identifier of the target bot
  */
-suspend fun TdKtxClient.canBotSendMessages(
-    botUserId: Long,
-): Ok {
+suspend fun TdKtxClient.canBotSendMessages(botUserId: Long): Ok {
     val request = CanBotSendMessages(botUserId)
     val requestJson = tdJson.encodeToString(CanBotSendMessages.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10588,9 +10139,7 @@ suspend fun TdKtxClient.canBotSendMessages(
 /**
  * Allows the specified bot to send messages to the user @bot_user_id Identifier of the target bot
  */
-suspend fun TdKtxClient.allowBotToSendMessages(
-    botUserId: Long,
-): Ok {
+suspend fun TdKtxClient.allowBotToSendMessages(botUserId: Long): Ok {
     val request = AllowBotToSendMessages(botUserId)
     val requestJson = tdJson.encodeToString(AllowBotToSendMessages.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10617,9 +10166,7 @@ suspend fun TdKtxClient.sendWebAppCustomRequest(
 /**
  * Returns the list of media previews of a bot @bot_user_id Identifier of the target bot. The bot must have the main Web App
  */
-suspend fun TdKtxClient.getBotMediaPreviews(
-    botUserId: Long,
-): BotMediaPreviews {
+suspend fun TdKtxClient.getBotMediaPreviews(botUserId: Long): BotMediaPreviews {
     val request = GetBotMediaPreviews(botUserId)
     val requestJson = tdJson.encodeToString(GetBotMediaPreviews.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10715,9 +10262,7 @@ suspend fun TdKtxClient.deleteBotMediaPreviews(
  * Checks whether a username can be set for a new bot. Use checkChatUsername to check username for other chat types
  * @param username Username to be checked
  */
-suspend fun TdKtxClient.checkBotUsername(
-    username: String? = null,
-): CheckChatUsernameResult {
+suspend fun TdKtxClient.checkBotUsername(username: String? = null): CheckChatUsernameResult {
     val request = CheckBotUsername(username)
     val requestJson = tdJson.encodeToString(CheckBotUsername.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10761,9 +10306,7 @@ suspend fun TdKtxClient.getManagedBotToken(
 /**
  * Returns access settings of a managed bot; for bots only @bot_user_id Identifier of the managed bot
  */
-suspend fun TdKtxClient.getManagedBotAccessSettings(
-    botUserId: Long,
-): BotAccessSettings {
+suspend fun TdKtxClient.getManagedBotAccessSettings(botUserId: Long): BotAccessSettings {
     val request = GetManagedBotAccessSettings(botUserId)
     val requestJson = tdJson.encodeToString(GetManagedBotAccessSettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10956,8 +10499,7 @@ suspend fun TdKtxClient.removeMessageSenderBotVerification(
 /**
  * Returns all active sessions of the current user. Additionally, getBusinessConnectedBot must be used to show the bot on top of active sessions
  */
-suspend fun TdKtxClient.getActiveSessions(
-): Sessions {
+suspend fun TdKtxClient.getActiveSessions(): Sessions {
     val request = GetActiveSessions()
     val requestJson = tdJson.encodeToString(GetActiveSessions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10967,9 +10509,7 @@ suspend fun TdKtxClient.getActiveSessions(
 /**
  * Terminates a session of the current user @session_id Session identifier
  */
-suspend fun TdKtxClient.terminateSession(
-    sessionId: Long,
-): Ok {
+suspend fun TdKtxClient.terminateSession(sessionId: Long): Ok {
     val request = TerminateSession(sessionId)
     val requestJson = tdJson.encodeToString(TerminateSession.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10979,8 +10519,7 @@ suspend fun TdKtxClient.terminateSession(
 /**
  * Terminates all other sessions of the current user. Additionally, the user must be suggested to delete the connected business bot using deleteBusinessConnectedBot if there is any
  */
-suspend fun TdKtxClient.terminateAllOtherSessions(
-): Ok {
+suspend fun TdKtxClient.terminateAllOtherSessions(): Ok {
     val request = TerminateAllOtherSessions()
     val requestJson = tdJson.encodeToString(TerminateAllOtherSessions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -10990,9 +10529,7 @@ suspend fun TdKtxClient.terminateAllOtherSessions(
 /**
  * Confirms an unconfirmed session of the current user from another device @session_id Session identifier
  */
-suspend fun TdKtxClient.confirmSession(
-    sessionId: Long,
-): Ok {
+suspend fun TdKtxClient.confirmSession(sessionId: Long): Ok {
     val request = ConfirmSession(sessionId)
     val requestJson = tdJson.encodeToString(ConfirmSession.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11028,9 +10565,7 @@ suspend fun TdKtxClient.toggleSessionCanAcceptSecretChats(
 /**
  * Changes the period of inactivity after which sessions will automatically be terminated @inactive_session_ttl_days New number of days of inactivity before sessions will be automatically terminated; 1-366 days
  */
-suspend fun TdKtxClient.setInactiveSessionTtl(
-    inactiveSessionTtlDays: Int,
-): Ok {
+suspend fun TdKtxClient.setInactiveSessionTtl(inactiveSessionTtlDays: Int): Ok {
     val request = SetInactiveSessionTtl(inactiveSessionTtlDays)
     val requestJson = tdJson.encodeToString(SetInactiveSessionTtl.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11040,8 +10575,7 @@ suspend fun TdKtxClient.setInactiveSessionTtl(
 /**
  * Returns all website where the current user used Telegram to log in
  */
-suspend fun TdKtxClient.getConnectedWebsites(
-): ConnectedWebsites {
+suspend fun TdKtxClient.getConnectedWebsites(): ConnectedWebsites {
     val request = GetConnectedWebsites()
     val requestJson = tdJson.encodeToString(GetConnectedWebsites.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11051,9 +10585,7 @@ suspend fun TdKtxClient.getConnectedWebsites(
 /**
  * Disconnects website from the current user's Telegram account @website_id Website identifier
  */
-suspend fun TdKtxClient.disconnectWebsite(
-    websiteId: Long,
-): Ok {
+suspend fun TdKtxClient.disconnectWebsite(websiteId: Long): Ok {
     val request = DisconnectWebsite(websiteId)
     val requestJson = tdJson.encodeToString(DisconnectWebsite.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11063,8 +10595,7 @@ suspend fun TdKtxClient.disconnectWebsite(
 /**
  * Disconnects all websites from the current user's Telegram account
  */
-suspend fun TdKtxClient.disconnectAllWebsites(
-): Ok {
+suspend fun TdKtxClient.disconnectAllWebsites(): Ok {
     val request = DisconnectAllWebsites()
     val requestJson = tdJson.encodeToString(DisconnectAllWebsites.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11106,9 +10637,7 @@ suspend fun TdKtxClient.toggleSupergroupUsernameIsActive(
 /**
  * Disables all active non-editable usernames of a supergroup or channel, requires owner privileges in the supergroup or channel @supergroup_id Identifier of the supergroup or channel
  */
-suspend fun TdKtxClient.disableAllSupergroupUsernames(
-    supergroupId: Long,
-): Ok {
+suspend fun TdKtxClient.disableAllSupergroupUsernames(supergroupId: Long): Ok {
     val request = DisableAllSupergroupUsernames(supergroupId)
     val requestJson = tdJson.encodeToString(DisableAllSupergroupUsernames.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11332,9 +10861,7 @@ suspend fun TdKtxClient.toggleSupergroupIsForum(
 /**
  * Upgrades supergroup to a broadcast group; requires owner privileges in the supergroup @supergroup_id Identifier of the supergroup
  */
-suspend fun TdKtxClient.toggleSupergroupIsBroadcastGroup(
-    supergroupId: Long,
-): Ok {
+suspend fun TdKtxClient.toggleSupergroupIsBroadcastGroup(supergroupId: Long): Ok {
     val request = ToggleSupergroupIsBroadcastGroup(supergroupId)
     val requestJson = tdJson.encodeToString(ToggleSupergroupIsBroadcastGroup.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11393,9 +10920,7 @@ suspend fun TdKtxClient.getSupergroupMembers(
 /**
  * Closes a secret chat, effectively transferring its state to secretChatStateClosed @secret_chat_id Secret chat identifier
  */
-suspend fun TdKtxClient.closeSecretChat(
-    secretChatId: Int,
-): Ok {
+suspend fun TdKtxClient.closeSecretChat(secretChatId: Int): Ok {
     val request = CloseSecretChat(secretChatId)
     val requestJson = tdJson.encodeToString(CloseSecretChat.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11428,8 +10953,7 @@ suspend fun TdKtxClient.getChatEventLog(
 /**
  * Returns the list of supported time zones
  */
-suspend fun TdKtxClient.getTimeZones(
-): TimeZones {
+suspend fun TdKtxClient.getTimeZones(): TimeZones {
     val request = GetTimeZones()
     val requestJson = tdJson.encodeToString(GetTimeZones.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11507,8 +11031,7 @@ suspend fun TdKtxClient.getPaymentReceipt(
 /**
  * Returns saved order information. Returns a 404 error if there is no saved order information
  */
-suspend fun TdKtxClient.getSavedOrderInfo(
-): OrderInfo {
+suspend fun TdKtxClient.getSavedOrderInfo(): OrderInfo {
     val request = GetSavedOrderInfo()
     val requestJson = tdJson.encodeToString(GetSavedOrderInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11518,8 +11041,7 @@ suspend fun TdKtxClient.getSavedOrderInfo(
 /**
  * Deletes saved order information
  */
-suspend fun TdKtxClient.deleteSavedOrderInfo(
-): Ok {
+suspend fun TdKtxClient.deleteSavedOrderInfo(): Ok {
     val request = DeleteSavedOrderInfo()
     val requestJson = tdJson.encodeToString(DeleteSavedOrderInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11529,8 +11051,7 @@ suspend fun TdKtxClient.deleteSavedOrderInfo(
 /**
  * Deletes saved credentials for all payment provider bots
  */
-suspend fun TdKtxClient.deleteSavedCredentials(
-): Ok {
+suspend fun TdKtxClient.deleteSavedCredentials(): Ok {
     val request = DeleteSavedCredentials()
     val requestJson = tdJson.encodeToString(DeleteSavedCredentials.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11540,9 +11061,7 @@ suspend fun TdKtxClient.deleteSavedCredentials(
 /**
  * Changes settings for gift receiving for the current user @settings The new settings
  */
-suspend fun TdKtxClient.setGiftSettings(
-    settings: GiftSettings? = null,
-): Ok {
+suspend fun TdKtxClient.setGiftSettings(settings: GiftSettings? = null): Ok {
     val request = SetGiftSettings(settings)
     val requestJson = tdJson.encodeToString(SetGiftSettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11552,8 +11071,7 @@ suspend fun TdKtxClient.setGiftSettings(
 /**
  * Returns gifts that can be sent to other users and channel chats
  */
-suspend fun TdKtxClient.getAvailableGifts(
-): AvailableGifts {
+suspend fun TdKtxClient.getAvailableGifts(): AvailableGifts {
     val request = GetAvailableGifts()
     val requestJson = tdJson.encodeToString(GetAvailableGifts.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11564,9 +11082,7 @@ suspend fun TdKtxClient.getAvailableGifts(
  * Checks whether a gift with next_send_date in the future can be sent already
  * @param giftId Identifier of the gift to send
  */
-suspend fun TdKtxClient.canSendGift(
-    giftId: Long,
-): CanSendGiftResult {
+suspend fun TdKtxClient.canSendGift(giftId: Long): CanSendGiftResult {
     val request = CanSendGift(giftId)
     val requestJson = tdJson.encodeToString(CanSendGift.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11597,9 +11113,7 @@ suspend fun TdKtxClient.sendGift(
 /**
  * Returns auction state for a gift @auction_id Unique identifier of the auction
  */
-suspend fun TdKtxClient.getGiftAuctionState(
-    auctionId: String? = null,
-): GiftAuctionState {
+suspend fun TdKtxClient.getGiftAuctionState(auctionId: String? = null): GiftAuctionState {
     val request = GetGiftAuctionState(auctionId)
     val requestJson = tdJson.encodeToString(GetGiftAuctionState.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11609,9 +11123,7 @@ suspend fun TdKtxClient.getGiftAuctionState(
 /**
  * Returns the gifts that were acquired by the current user on a gift auction @gift_id Identifier of the auctioned gift
  */
-suspend fun TdKtxClient.getGiftAuctionAcquiredGifts(
-    giftId: Long,
-): GiftAuctionAcquiredGifts {
+suspend fun TdKtxClient.getGiftAuctionAcquiredGifts(giftId: Long): GiftAuctionAcquiredGifts {
     val request = GetGiftAuctionAcquiredGifts(giftId)
     val requestJson = tdJson.encodeToString(GetGiftAuctionAcquiredGifts.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11621,9 +11133,7 @@ suspend fun TdKtxClient.getGiftAuctionAcquiredGifts(
 /**
  * Informs TDLib that a gift auction was opened by the user @gift_id Identifier of the gift, which auction was opened
  */
-suspend fun TdKtxClient.openGiftAuction(
-    giftId: Long,
-): Ok {
+suspend fun TdKtxClient.openGiftAuction(giftId: Long): Ok {
     val request = OpenGiftAuction(giftId)
     val requestJson = tdJson.encodeToString(OpenGiftAuction.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11633,9 +11143,7 @@ suspend fun TdKtxClient.openGiftAuction(
 /**
  * Informs TDLib that a gift auction was closed by the user @gift_id Identifier of the gift, which auction was closed
  */
-suspend fun TdKtxClient.closeGiftAuction(
-    giftId: Long,
-): Ok {
+suspend fun TdKtxClient.closeGiftAuction(giftId: Long): Ok {
     val request = CloseGiftAuction(giftId)
     val requestJson = tdJson.encodeToString(CloseGiftAuction.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11741,9 +11249,7 @@ suspend fun TdKtxClient.toggleChatGiftNotifications(
 /**
  * Returns examples of possible upgraded gifts for a regular gift @regular_gift_id Identifier of the regular gift
  */
-suspend fun TdKtxClient.getGiftUpgradePreview(
-    regularGiftId: Long,
-): GiftUpgradePreview {
+suspend fun TdKtxClient.getGiftUpgradePreview(regularGiftId: Long): GiftUpgradePreview {
     val request = GetGiftUpgradePreview(regularGiftId)
     val requestJson = tdJson.encodeToString(GetGiftUpgradePreview.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11807,9 +11313,7 @@ suspend fun TdKtxClient.buyGiftUpgrade(
  * Crafts a new gift from other gifts that will be permanently lost
  * @param receivedGiftIds Identifier of the gifts to use for crafting. In the case of a successful craft, the resulting gift will have the number of the first gift. Consequently, the first gift must not have been withdrawn to the TON blockchain as an NFT and must have an empty gift_address
  */
-suspend fun TdKtxClient.craftGift(
-    receivedGiftIds: List<String>? = null,
-): CraftGiftResult {
+suspend fun TdKtxClient.craftGift(receivedGiftIds: List<String>? = null): CraftGiftResult {
     val request = CraftGift(receivedGiftIds)
     val requestJson = tdJson.encodeToString(CraftGift.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11936,7 +11440,23 @@ suspend fun TdKtxClient.getReceivedGifts(
     offset: String? = null,
     limit: Int,
 ): ReceivedGifts {
-    val request = GetReceivedGifts(businessConnectionId, ownerId, collectionId, excludeUnsaved, excludeSaved, excludeUnlimited, excludeUpgradable, excludeNonUpgradable, excludeUpgraded, excludeWithoutColors, excludeHosted, sortByPrice, offset, limit)
+    val request =
+        GetReceivedGifts(
+            businessConnectionId,
+            ownerId,
+            collectionId,
+            excludeUnsaved,
+            excludeSaved,
+            excludeUnlimited,
+            excludeUpgradable,
+            excludeNonUpgradable,
+            excludeUpgraded,
+            excludeWithoutColors,
+            excludeHosted,
+            sortByPrice,
+            offset,
+            limit,
+        )
     val requestJson = tdJson.encodeToString(GetReceivedGifts.serializer(), request)
     val responseJson = this.sendJson(requestJson)
     return tdJson.decodeFromString(ReceivedGifts.serializer(), responseJson)
@@ -11945,9 +11465,7 @@ suspend fun TdKtxClient.getReceivedGifts(
 /**
  * Returns information about a received gift @received_gift_id Identifier of the gift
  */
-suspend fun TdKtxClient.getReceivedGift(
-    receivedGiftId: String? = null,
-): ReceivedGift {
+suspend fun TdKtxClient.getReceivedGift(receivedGiftId: String? = null): ReceivedGift {
     val request = GetReceivedGift(receivedGiftId)
     val requestJson = tdJson.encodeToString(GetReceivedGift.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11974,9 +11492,7 @@ suspend fun TdKtxClient.getGiftsForCrafting(
 /**
  * Returns information about an upgraded gift by its name @name Unique name of the upgraded gift
  */
-suspend fun TdKtxClient.getUpgradedGift(
-    name: String? = null,
-): UpgradedGift {
+suspend fun TdKtxClient.getUpgradedGift(name: String? = null): UpgradedGift {
     val request = GetUpgradedGift(name)
     val requestJson = tdJson.encodeToString(GetUpgradedGift.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -11986,9 +11502,7 @@ suspend fun TdKtxClient.getUpgradedGift(
 /**
  * Returns information about value of an upgraded gift by its name @name Unique name of the upgraded gift
  */
-suspend fun TdKtxClient.getUpgradedGiftValueInfo(
-    name: String? = null,
-): UpgradedGiftValueInfo {
+suspend fun TdKtxClient.getUpgradedGiftValueInfo(name: String? = null): UpgradedGiftValueInfo {
     val request = GetUpgradedGiftValueInfo(name)
     val requestJson = tdJson.encodeToString(GetUpgradedGiftValueInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12013,8 +11527,7 @@ suspend fun TdKtxClient.getUpgradedGiftWithdrawalUrl(
 /**
  * Returns promotional animation for upgraded gifts
  */
-suspend fun TdKtxClient.getUpgradedGiftsPromotionalAnimation(
-): Animation {
+suspend fun TdKtxClient.getUpgradedGiftsPromotionalAnimation(): Animation {
     val request = GetUpgradedGiftsPromotionalAnimation()
     val requestJson = tdJson.encodeToString(GetUpgradedGiftsPromotionalAnimation.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12065,9 +11578,7 @@ suspend fun TdKtxClient.searchGiftsForResale(
  * Returns collections of gifts owned by the given user or chat
  * @param ownerId Identifier of the user or the channel chat that received the gifts
  */
-suspend fun TdKtxClient.getGiftCollections(
-    ownerId: MessageSender? = null,
-): GiftCollections {
+suspend fun TdKtxClient.getGiftCollections(ownerId: MessageSender? = null): GiftCollections {
     val request = GetGiftCollections(ownerId)
     val requestJson = tdJson.encodeToString(GetGiftCollections.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12222,8 +11733,7 @@ suspend fun TdKtxClient.refundStarPayment(
 /**
  * Returns a user who can be contacted to get support
  */
-suspend fun TdKtxClient.getSupportUser(
-): User {
+suspend fun TdKtxClient.getSupportUser(): User {
     val request = GetSupportUser()
     val requestJson = tdJson.encodeToString(GetSupportUser.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12246,9 +11756,7 @@ suspend fun TdKtxClient.getBackgroundUrl(
 /**
  * Searches for a background by its name @name The name of the background
  */
-suspend fun TdKtxClient.searchBackground(
-    name: String? = null,
-): Background {
+suspend fun TdKtxClient.searchBackground(name: String? = null): Background {
     val request = SearchBackground(name)
     val requestJson = tdJson.encodeToString(SearchBackground.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12275,9 +11783,7 @@ suspend fun TdKtxClient.setDefaultBackground(
 /**
  * Deletes default background for chats @for_dark_theme Pass true if the background is deleted for a dark theme
  */
-suspend fun TdKtxClient.deleteDefaultBackground(
-    forDarkTheme: Boolean,
-): Ok {
+suspend fun TdKtxClient.deleteDefaultBackground(forDarkTheme: Boolean): Ok {
     val request = DeleteDefaultBackground(forDarkTheme)
     val requestJson = tdJson.encodeToString(DeleteDefaultBackground.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12287,9 +11793,7 @@ suspend fun TdKtxClient.deleteDefaultBackground(
 /**
  * Returns backgrounds installed by the user @for_dark_theme Pass true to order returned backgrounds for a dark theme
  */
-suspend fun TdKtxClient.getInstalledBackgrounds(
-    forDarkTheme: Boolean,
-): Backgrounds {
+suspend fun TdKtxClient.getInstalledBackgrounds(forDarkTheme: Boolean): Backgrounds {
     val request = GetInstalledBackgrounds(forDarkTheme)
     val requestJson = tdJson.encodeToString(GetInstalledBackgrounds.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12299,9 +11803,7 @@ suspend fun TdKtxClient.getInstalledBackgrounds(
 /**
  * Removes background from the list of installed backgrounds @background_id The background identifier
  */
-suspend fun TdKtxClient.removeInstalledBackground(
-    backgroundId: Long,
-): Ok {
+suspend fun TdKtxClient.removeInstalledBackground(backgroundId: Long): Ok {
     val request = RemoveInstalledBackground(backgroundId)
     val requestJson = tdJson.encodeToString(RemoveInstalledBackground.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12311,8 +11813,7 @@ suspend fun TdKtxClient.removeInstalledBackground(
 /**
  * Resets list of installed backgrounds to its default value
  */
-suspend fun TdKtxClient.resetInstalledBackgrounds(
-): Ok {
+suspend fun TdKtxClient.resetInstalledBackgrounds(): Ok {
     val request = ResetInstalledBackgrounds()
     val requestJson = tdJson.encodeToString(ResetInstalledBackgrounds.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12322,9 +11823,7 @@ suspend fun TdKtxClient.resetInstalledBackgrounds(
 /**
  * Returns information about the current localization target. This is an offline method if only_local is true. Can be called before authorization @only_local Pass true to get only locally available information without sending network requests
  */
-suspend fun TdKtxClient.getLocalizationTargetInfo(
-    onlyLocal: Boolean,
-): LocalizationTargetInfo {
+suspend fun TdKtxClient.getLocalizationTargetInfo(onlyLocal: Boolean): LocalizationTargetInfo {
     val request = GetLocalizationTargetInfo(onlyLocal)
     val requestJson = tdJson.encodeToString(GetLocalizationTargetInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12334,9 +11833,7 @@ suspend fun TdKtxClient.getLocalizationTargetInfo(
 /**
  * Returns information about a language pack. Returned language pack identifier may be different from a provided one. Can be called before authorization @language_pack_id Language pack identifier
  */
-suspend fun TdKtxClient.getLanguagePackInfo(
-    languagePackId: String? = null,
-): LanguagePackInfo {
+suspend fun TdKtxClient.getLanguagePackInfo(languagePackId: String? = null): LanguagePackInfo {
     val request = GetLanguagePackInfo(languagePackId)
     val requestJson = tdJson.encodeToString(GetLanguagePackInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12362,9 +11859,7 @@ suspend fun TdKtxClient.getLanguagePackStrings(
  * Fetches the latest versions of all strings from a language pack in the current localization target from the server. This method doesn't need to be called explicitly for the current used/base language packs. Can be called before authorization
  * @param languagePackId Language pack identifier
  */
-suspend fun TdKtxClient.synchronizeLanguagePack(
-    languagePackId: String? = null,
-): Ok {
+suspend fun TdKtxClient.synchronizeLanguagePack(languagePackId: String? = null): Ok {
     val request = SynchronizeLanguagePack(languagePackId)
     val requestJson = tdJson.encodeToString(SynchronizeLanguagePack.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12374,9 +11869,7 @@ suspend fun TdKtxClient.synchronizeLanguagePack(
 /**
  * Adds a custom server language pack to the list of installed language packs in current localization target. Can be called before authorization @language_pack_id Identifier of a language pack to be added
  */
-suspend fun TdKtxClient.addCustomServerLanguagePack(
-    languagePackId: String? = null,
-): Ok {
+suspend fun TdKtxClient.addCustomServerLanguagePack(languagePackId: String? = null): Ok {
     val request = AddCustomServerLanguagePack(languagePackId)
     val requestJson = tdJson.encodeToString(AddCustomServerLanguagePack.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12401,9 +11894,7 @@ suspend fun TdKtxClient.setCustomLanguagePack(
 /**
  * Edits information about a custom local language pack in the current localization target. Can be called before authorization @info New information about the custom local language pack
  */
-suspend fun TdKtxClient.editCustomLanguagePackInfo(
-    info: LanguagePackInfo? = null,
-): Ok {
+suspend fun TdKtxClient.editCustomLanguagePackInfo(info: LanguagePackInfo? = null): Ok {
     val request = EditCustomLanguagePackInfo(info)
     val requestJson = tdJson.encodeToString(EditCustomLanguagePackInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12427,9 +11918,7 @@ suspend fun TdKtxClient.setCustomLanguagePackString(
  * Deletes all information about a language pack in the current localization target. The language pack which is currently in use (including base language pack) or is being synchronized can't be deleted. Can be called before authorization
  * @param languagePackId Identifier of the language pack to delete
  */
-suspend fun TdKtxClient.deleteLanguagePack(
-    languagePackId: String? = null,
-): Ok {
+suspend fun TdKtxClient.deleteLanguagePack(languagePackId: String? = null): Ok {
     val request = DeleteLanguagePack(languagePackId)
     val requestJson = tdJson.encodeToString(DeleteLanguagePack.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12453,9 +11942,7 @@ suspend fun TdKtxClient.registerDevice(
  * Handles a push notification. Returns error with code 406 if the push notification is not supported and connection to the server is required to fetch new data. Can be called before authorization
  * @param payload JSON-encoded push notification payload with all fields sent by the server, and "google.sent_time" and "google.notification.sound" fields added
  */
-suspend fun TdKtxClient.processPushNotification(
-    payload: String? = null,
-): Ok {
+suspend fun TdKtxClient.processPushNotification(payload: String? = null): Ok {
     val request = ProcessPushNotification(payload)
     val requestJson = tdJson.encodeToString(ProcessPushNotification.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12465,9 +11952,7 @@ suspend fun TdKtxClient.processPushNotification(
 /**
  * Returns a globally unique push notification subscription identifier for identification of an account, which has received a push notification. Can be called synchronously @payload JSON-encoded push notification payload
  */
-suspend fun TdKtxClient.getPushReceiverId(
-    payload: String? = null,
-): PushReceiverId {
+suspend fun TdKtxClient.getPushReceiverId(payload: String? = null): PushReceiverId {
     val request = GetPushReceiverId(payload)
     val requestJson = tdJson.encodeToString(GetPushReceiverId.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12477,9 +11962,7 @@ suspend fun TdKtxClient.getPushReceiverId(
 /**
  * Returns t.me URLs recently visited by a newly registered user @referrer Google Play referrer to identify the user
  */
-suspend fun TdKtxClient.getRecentlyVisitedTMeUrls(
-    referrer: String? = null,
-): TMeUrls {
+suspend fun TdKtxClient.getRecentlyVisitedTMeUrls(referrer: String? = null): TMeUrls {
     val request = GetRecentlyVisitedTMeUrls(referrer)
     val requestJson = tdJson.encodeToString(GetRecentlyVisitedTMeUrls.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12502,9 +11985,7 @@ suspend fun TdKtxClient.setUserPrivacySettingRules(
 /**
  * Returns the current privacy settings @setting The privacy setting
  */
-suspend fun TdKtxClient.getUserPrivacySettingRules(
-    setting: UserPrivacySetting? = null,
-): UserPrivacySettingRules {
+suspend fun TdKtxClient.getUserPrivacySettingRules(setting: UserPrivacySetting? = null): UserPrivacySettingRules {
     val request = GetUserPrivacySettingRules(setting)
     val requestJson = tdJson.encodeToString(GetUserPrivacySettingRules.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12514,9 +11995,7 @@ suspend fun TdKtxClient.getUserPrivacySettingRules(
 /**
  * Changes privacy settings for message read date @settings New settings
  */
-suspend fun TdKtxClient.setReadDatePrivacySettings(
-    settings: ReadDatePrivacySettings? = null,
-): Ok {
+suspend fun TdKtxClient.setReadDatePrivacySettings(settings: ReadDatePrivacySettings? = null): Ok {
     val request = SetReadDatePrivacySettings(settings)
     val requestJson = tdJson.encodeToString(SetReadDatePrivacySettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12526,8 +12005,7 @@ suspend fun TdKtxClient.setReadDatePrivacySettings(
 /**
  * Returns privacy settings for message read date
  */
-suspend fun TdKtxClient.getReadDatePrivacySettings(
-): ReadDatePrivacySettings {
+suspend fun TdKtxClient.getReadDatePrivacySettings(): ReadDatePrivacySettings {
     val request = GetReadDatePrivacySettings()
     val requestJson = tdJson.encodeToString(GetReadDatePrivacySettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12537,9 +12015,7 @@ suspend fun TdKtxClient.getReadDatePrivacySettings(
 /**
  * Changes privacy settings for new chat creation; can be used only if getOption("can_set_new_chat_privacy_settings") @settings New settings
  */
-suspend fun TdKtxClient.setNewChatPrivacySettings(
-    settings: NewChatPrivacySettings? = null,
-): Ok {
+suspend fun TdKtxClient.setNewChatPrivacySettings(settings: NewChatPrivacySettings? = null): Ok {
     val request = SetNewChatPrivacySettings(settings)
     val requestJson = tdJson.encodeToString(SetNewChatPrivacySettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12549,8 +12025,7 @@ suspend fun TdKtxClient.setNewChatPrivacySettings(
 /**
  * Returns privacy settings for new chat creation
  */
-suspend fun TdKtxClient.getNewChatPrivacySettings(
-): NewChatPrivacySettings {
+suspend fun TdKtxClient.getNewChatPrivacySettings(): NewChatPrivacySettings {
     val request = GetNewChatPrivacySettings()
     val requestJson = tdJson.encodeToString(GetNewChatPrivacySettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12560,9 +12035,7 @@ suspend fun TdKtxClient.getNewChatPrivacySettings(
 /**
  * Returns the total number of Telegram Stars received by the current user for paid messages from the given user @user_id Identifier of the user
  */
-suspend fun TdKtxClient.getPaidMessageRevenue(
-    userId: Long,
-): StarCount {
+suspend fun TdKtxClient.getPaidMessageRevenue(userId: Long): StarCount {
     val request = GetPaidMessageRevenue(userId)
     val requestJson = tdJson.encodeToString(GetPaidMessageRevenue.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12618,9 +12091,7 @@ suspend fun TdKtxClient.canSendMessageToUser(
  * Returns the value of an option by its name. (Check the list of available options on https://core.telegram.org/tdlib/options.) Can be called before authorization. Can be called synchronously for options "version" and "commit_hash"
  * @param name The name of the option
  */
-suspend fun TdKtxClient.getOption(
-    name: String? = null,
-): OptionValue {
+suspend fun TdKtxClient.getOption(name: String? = null): OptionValue {
     val request = GetOption(name)
     val requestJson = tdJson.encodeToString(GetOption.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12645,9 +12116,7 @@ suspend fun TdKtxClient.setOption(
 /**
  * Changes the period of inactivity after which the account of the current user will automatically be deleted @ttl New account TTL
  */
-suspend fun TdKtxClient.setAccountTtl(
-    ttl: AccountTtl? = null,
-): Ok {
+suspend fun TdKtxClient.setAccountTtl(ttl: AccountTtl? = null): Ok {
     val request = SetAccountTtl(ttl)
     val requestJson = tdJson.encodeToString(SetAccountTtl.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12657,8 +12126,7 @@ suspend fun TdKtxClient.setAccountTtl(
 /**
  * Returns the period of inactivity after which the account of the current user will automatically be deleted
  */
-suspend fun TdKtxClient.getAccountTtl(
-): AccountTtl {
+suspend fun TdKtxClient.getAccountTtl(): AccountTtl {
     val request = GetAccountTtl()
     val requestJson = tdJson.encodeToString(GetAccountTtl.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12683,9 +12151,7 @@ suspend fun TdKtxClient.deleteAccount(
 /**
  * Changes the default message auto-delete time for new chats @message_auto_delete_time New default message auto-delete time; must be from 0 up to 365 * 86400 and be divisible by 86400. If 0, then messages aren't deleted automatically
  */
-suspend fun TdKtxClient.setDefaultMessageAutoDeleteTime(
-    messageAutoDeleteTime: MessageAutoDeleteTime? = null,
-): Ok {
+suspend fun TdKtxClient.setDefaultMessageAutoDeleteTime(messageAutoDeleteTime: MessageAutoDeleteTime? = null): Ok {
     val request = SetDefaultMessageAutoDeleteTime(messageAutoDeleteTime)
     val requestJson = tdJson.encodeToString(SetDefaultMessageAutoDeleteTime.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12695,8 +12161,7 @@ suspend fun TdKtxClient.setDefaultMessageAutoDeleteTime(
 /**
  * Returns default message auto-delete time setting for new chats
  */
-suspend fun TdKtxClient.getDefaultMessageAutoDeleteTime(
-): MessageAutoDeleteTime {
+suspend fun TdKtxClient.getDefaultMessageAutoDeleteTime(): MessageAutoDeleteTime {
     val request = GetDefaultMessageAutoDeleteTime()
     val requestJson = tdJson.encodeToString(GetDefaultMessageAutoDeleteTime.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12706,9 +12171,7 @@ suspend fun TdKtxClient.getDefaultMessageAutoDeleteTime(
 /**
  * Removes a chat action bar without any other action @chat_id Chat identifier
  */
-suspend fun TdKtxClient.removeChatActionBar(
-    chatId: Long,
-): Ok {
+suspend fun TdKtxClient.removeChatActionBar(chatId: Long): Ok {
     val request = RemoveChatActionBar(chatId)
     val requestJson = tdJson.encodeToString(RemoveChatActionBar.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12870,9 +12333,7 @@ suspend fun TdKtxClient.getStarWithdrawalUrl(
  * Returns a URL for a Telegram Ad platform account that can be used to set up advertisements for the chat paid in the owned Telegram Stars
  * @param ownerId Identifier of the owner of the Telegram Stars; can be identifier of an owned bot, or identifier of an owned channel chat
  */
-suspend fun TdKtxClient.getStarAdAccountUrl(
-    ownerId: MessageSender? = null,
-): HttpUrl {
+suspend fun TdKtxClient.getStarAdAccountUrl(ownerId: MessageSender? = null): HttpUrl {
     val request = GetStarAdAccountUrl(ownerId)
     val requestJson = tdJson.encodeToString(GetStarAdAccountUrl.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12882,9 +12343,7 @@ suspend fun TdKtxClient.getStarAdAccountUrl(
 /**
  * Returns detailed Toncoin revenue statistics of the current user @is_dark Pass true if a dark theme is used by the application
  */
-suspend fun TdKtxClient.getTonRevenueStatistics(
-    isDark: Boolean,
-): TonRevenueStatistics {
+suspend fun TdKtxClient.getTonRevenueStatistics(isDark: Boolean): TonRevenueStatistics {
     val request = GetTonRevenueStatistics(isDark)
     val requestJson = tdJson.encodeToString(GetTonRevenueStatistics.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12895,9 +12354,7 @@ suspend fun TdKtxClient.getTonRevenueStatistics(
  * Returns a URL for Toncoin withdrawal from the current user's account. The user must have at least 10 toncoins to withdraw and can withdraw up to 100000 Toncoins in one transaction
  * @param password The 2-step verification password of the current user
  */
-suspend fun TdKtxClient.getTonWithdrawalUrl(
-    password: String? = null,
-): HttpUrl {
+suspend fun TdKtxClient.getTonWithdrawalUrl(password: String? = null): HttpUrl {
     val request = GetTonWithdrawalUrl(password)
     val requestJson = tdJson.encodeToString(GetTonWithdrawalUrl.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12982,9 +12439,7 @@ suspend fun TdKtxClient.getStatisticalGraph(
  * Returns storage usage statistics. Can be called before authorization
  * @param chatLimit The maximum number of chats with the largest storage usage for which separate statistics need to be returned. All other chats will be grouped in entries with chat_id == 0. If the chat info database is not used, the chat_limit is ignored and is always set to 0
  */
-suspend fun TdKtxClient.getStorageStatistics(
-    chatLimit: Int,
-): StorageStatistics {
+suspend fun TdKtxClient.getStorageStatistics(chatLimit: Int): StorageStatistics {
     val request = GetStorageStatistics(chatLimit)
     val requestJson = tdJson.encodeToString(GetStorageStatistics.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -12994,8 +12449,7 @@ suspend fun TdKtxClient.getStorageStatistics(
 /**
  * Quickly returns approximate storage usage statistics. Can be called before authorization
  */
-suspend fun TdKtxClient.getStorageStatisticsFast(
-): StorageStatisticsFast {
+suspend fun TdKtxClient.getStorageStatisticsFast(): StorageStatisticsFast {
     val request = GetStorageStatisticsFast()
     val requestJson = tdJson.encodeToString(GetStorageStatisticsFast.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13005,8 +12459,7 @@ suspend fun TdKtxClient.getStorageStatisticsFast(
 /**
  * Returns database statistics
  */
-suspend fun TdKtxClient.getDatabaseStatistics(
-): DatabaseStatistics {
+suspend fun TdKtxClient.getDatabaseStatistics(): DatabaseStatistics {
     val request = GetDatabaseStatistics()
     val requestJson = tdJson.encodeToString(GetDatabaseStatistics.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13036,7 +12489,8 @@ suspend fun TdKtxClient.optimizeStorage(
     returnDeletedFileStatistics: Boolean,
     chatLimit: Int,
 ): StorageStatistics {
-    val request = OptimizeStorage(size, ttl, count, immunityDelay, fileTypes, chatIds, excludeChatIds, returnDeletedFileStatistics, chatLimit)
+    val request =
+        OptimizeStorage(size, ttl, count, immunityDelay, fileTypes, chatIds, excludeChatIds, returnDeletedFileStatistics, chatLimit)
     val requestJson = tdJson.encodeToString(OptimizeStorage.serializer(), request)
     val responseJson = this.sendJson(requestJson)
     return tdJson.decodeFromString(StorageStatistics.serializer(), responseJson)
@@ -13046,9 +12500,7 @@ suspend fun TdKtxClient.optimizeStorage(
  * Sets the current network type. Can be called before authorization. Calling this method forces all network connections to reopen, mitigating the delay in switching between different networks, so it must be called whenever the network is changed, even if the network type remains the same. Network type is used to check whether the library can use the network at all and also for collecting detailed network data usage statistics
  * @param type The new network type; pass null to set network type to networkTypeOther
  */
-suspend fun TdKtxClient.setNetworkType(
-    type: NetworkType? = null,
-): Ok {
+suspend fun TdKtxClient.setNetworkType(type: NetworkType? = null): Ok {
     val request = SetNetworkType(type)
     val requestJson = tdJson.encodeToString(SetNetworkType.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13058,9 +12510,7 @@ suspend fun TdKtxClient.setNetworkType(
 /**
  * Returns network data usage statistics. Can be called before authorization @only_current Pass true to get statistics only for the current library launch
  */
-suspend fun TdKtxClient.getNetworkStatistics(
-    onlyCurrent: Boolean,
-): NetworkStatistics {
+suspend fun TdKtxClient.getNetworkStatistics(onlyCurrent: Boolean): NetworkStatistics {
     val request = GetNetworkStatistics(onlyCurrent)
     val requestJson = tdJson.encodeToString(GetNetworkStatistics.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13070,9 +12520,7 @@ suspend fun TdKtxClient.getNetworkStatistics(
 /**
  * Adds the specified data to data usage statistics. Can be called before authorization @entry The network statistics entry with the data to be added to statistics
  */
-suspend fun TdKtxClient.addNetworkStatistics(
-    entry: NetworkStatisticsEntry? = null,
-): Ok {
+suspend fun TdKtxClient.addNetworkStatistics(entry: NetworkStatisticsEntry? = null): Ok {
     val request = AddNetworkStatistics(entry)
     val requestJson = tdJson.encodeToString(AddNetworkStatistics.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13082,8 +12530,7 @@ suspend fun TdKtxClient.addNetworkStatistics(
 /**
  * Resets all network data usage statistics to zero. Can be called before authorization
  */
-suspend fun TdKtxClient.resetNetworkStatistics(
-): Ok {
+suspend fun TdKtxClient.resetNetworkStatistics(): Ok {
     val request = ResetNetworkStatistics()
     val requestJson = tdJson.encodeToString(ResetNetworkStatistics.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13093,8 +12540,7 @@ suspend fun TdKtxClient.resetNetworkStatistics(
 /**
  * Returns auto-download settings presets for the current user
  */
-suspend fun TdKtxClient.getAutoDownloadSettingsPresets(
-): AutoDownloadSettingsPresets {
+suspend fun TdKtxClient.getAutoDownloadSettingsPresets(): AutoDownloadSettingsPresets {
     val request = GetAutoDownloadSettingsPresets()
     val requestJson = tdJson.encodeToString(GetAutoDownloadSettingsPresets.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13117,8 +12563,7 @@ suspend fun TdKtxClient.setAutoDownloadSettings(
 /**
  * Returns autosave settings for the current user
  */
-suspend fun TdKtxClient.getAutosaveSettings(
-): AutosaveSettings {
+suspend fun TdKtxClient.getAutosaveSettings(): AutosaveSettings {
     val request = GetAutosaveSettings()
     val requestJson = tdJson.encodeToString(GetAutosaveSettings.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13141,8 +12586,7 @@ suspend fun TdKtxClient.setAutosaveSettings(
 /**
  * Clears the list of all autosave settings exceptions. The method is guaranteed to work only after at least one call to getAutosaveSettings
  */
-suspend fun TdKtxClient.clearAutosaveSettingsExceptions(
-): Ok {
+suspend fun TdKtxClient.clearAutosaveSettingsExceptions(): Ok {
     val request = ClearAutosaveSettingsExceptions()
     val requestJson = tdJson.encodeToString(ClearAutosaveSettingsExceptions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13182,9 +12626,7 @@ suspend fun TdKtxClient.addWebBrowserSettingsException(
 /**
  * Removes a special handling for the opening of the specified URL @url URL of the website
  */
-suspend fun TdKtxClient.removeWebBrowserSettingsException(
-    url: String? = null,
-): Ok {
+suspend fun TdKtxClient.removeWebBrowserSettingsException(url: String? = null): Ok {
     val request = RemoveWebBrowserSettingsException(url)
     val requestJson = tdJson.encodeToString(RemoveWebBrowserSettingsException.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13194,8 +12636,7 @@ suspend fun TdKtxClient.removeWebBrowserSettingsException(
 /**
  * Removes special handling for the opening of all links
  */
-suspend fun TdKtxClient.removeAllWebBrowserSettingsExceptions(
-): Ok {
+suspend fun TdKtxClient.removeAllWebBrowserSettingsExceptions(): Ok {
     val request = RemoveAllWebBrowserSettingsExceptions()
     val requestJson = tdJson.encodeToString(RemoveAllWebBrowserSettingsExceptions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13205,9 +12646,7 @@ suspend fun TdKtxClient.removeAllWebBrowserSettingsExceptions(
 /**
  * Returns information about a bank card @bank_card_number The bank card number
  */
-suspend fun TdKtxClient.getBankCardInfo(
-    bankCardNumber: String? = null,
-): BankCardInfo {
+suspend fun TdKtxClient.getBankCardInfo(bankCardNumber: String? = null): BankCardInfo {
     val request = GetBankCardInfo(bankCardNumber)
     val requestJson = tdJson.encodeToString(GetBankCardInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13230,9 +12669,7 @@ suspend fun TdKtxClient.getPassportElement(
 /**
  * Returns all available Telegram Passport elements @password The 2-step verification password of the current user
  */
-suspend fun TdKtxClient.getAllPassportElements(
-    password: String? = null,
-): PassportElements {
+suspend fun TdKtxClient.getAllPassportElements(password: String? = null): PassportElements {
     val request = GetAllPassportElements(password)
     val requestJson = tdJson.encodeToString(GetAllPassportElements.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13257,9 +12694,7 @@ suspend fun TdKtxClient.setPassportElement(
 /**
  * Deletes a Telegram Passport element @type Element type
  */
-suspend fun TdKtxClient.deletePassportElement(
-    type: PassportElementType? = null,
-): Ok {
+suspend fun TdKtxClient.deletePassportElement(type: PassportElementType? = null): Ok {
     val request = DeletePassportElement(type)
     val requestJson = tdJson.encodeToString(DeletePassportElement.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13282,9 +12717,7 @@ suspend fun TdKtxClient.setPassportElementErrors(
 /**
  * Returns an IETF language tag of the language preferred in the country, which must be used to fill native fields in Telegram Passport personal details. Returns a 404 error if unknown @country_code A two-letter ISO 3166-1 alpha-2 country code
  */
-suspend fun TdKtxClient.getPreferredCountryLanguage(
-    countryCode: String? = null,
-): Text {
+suspend fun TdKtxClient.getPreferredCountryLanguage(countryCode: String? = null): Text {
     val request = GetPreferredCountryLanguage(countryCode)
     val requestJson = tdJson.encodeToString(GetPreferredCountryLanguage.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13294,9 +12727,7 @@ suspend fun TdKtxClient.getPreferredCountryLanguage(
 /**
  * Sends a code to verify an email address to be added to a user's Telegram Passport @email_address Email address
  */
-suspend fun TdKtxClient.sendEmailAddressVerificationCode(
-    emailAddress: String? = null,
-): EmailAddressAuthenticationCodeInfo {
+suspend fun TdKtxClient.sendEmailAddressVerificationCode(emailAddress: String? = null): EmailAddressAuthenticationCodeInfo {
     val request = SendEmailAddressVerificationCode(emailAddress)
     val requestJson = tdJson.encodeToString(SendEmailAddressVerificationCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13306,8 +12737,7 @@ suspend fun TdKtxClient.sendEmailAddressVerificationCode(
 /**
  * Resends the code to verify an email address to be added to a user's Telegram Passport
  */
-suspend fun TdKtxClient.resendEmailAddressVerificationCode(
-): EmailAddressAuthenticationCodeInfo {
+suspend fun TdKtxClient.resendEmailAddressVerificationCode(): EmailAddressAuthenticationCodeInfo {
     val request = ResendEmailAddressVerificationCode()
     val requestJson = tdJson.encodeToString(ResendEmailAddressVerificationCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13317,9 +12747,7 @@ suspend fun TdKtxClient.resendEmailAddressVerificationCode(
 /**
  * Checks the email address verification code for Telegram Passport @code Verification code to check
  */
-suspend fun TdKtxClient.checkEmailAddressVerificationCode(
-    code: String? = null,
-): Ok {
+suspend fun TdKtxClient.checkEmailAddressVerificationCode(code: String? = null): Ok {
     val request = CheckEmailAddressVerificationCode(code)
     val requestJson = tdJson.encodeToString(CheckEmailAddressVerificationCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13408,9 +12836,7 @@ suspend fun TdKtxClient.uploadStickerFile(
 /**
  * Returns a suggested name for a new sticker set with a given title @title Sticker set title; 1-64 characters
  */
-suspend fun TdKtxClient.getSuggestedStickerSetName(
-    title: String? = null,
-): Text {
+suspend fun TdKtxClient.getSuggestedStickerSetName(title: String? = null): Text {
     val request = GetSuggestedStickerSetName(title)
     val requestJson = tdJson.encodeToString(GetSuggestedStickerSetName.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13420,9 +12846,7 @@ suspend fun TdKtxClient.getSuggestedStickerSetName(
 /**
  * Checks whether a name can be used for a new sticker set @name Name to be checked
  */
-suspend fun TdKtxClient.checkStickerSetName(
-    name: String? = null,
-): CheckStickerSetNameResult {
+suspend fun TdKtxClient.checkStickerSetName(name: String? = null): CheckStickerSetNameResult {
     val request = CheckStickerSetName(name)
     val requestJson = tdJson.encodeToString(CheckStickerSetName.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13540,9 +12964,7 @@ suspend fun TdKtxClient.setStickerSetTitle(
 /**
  * Completely deletes a sticker set @name Sticker set name. The sticker set must be owned by the current user
  */
-suspend fun TdKtxClient.deleteStickerSet(
-    name: String? = null,
-): Ok {
+suspend fun TdKtxClient.deleteStickerSet(name: String? = null): Ok {
     val request = DeleteStickerSet(name)
     val requestJson = tdJson.encodeToString(DeleteStickerSet.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13567,9 +12989,7 @@ suspend fun TdKtxClient.setStickerPositionInSet(
 /**
  * Removes a sticker from the set to which it belongs. The sticker set must be owned by the current user @sticker Sticker to remove from the set
  */
-suspend fun TdKtxClient.removeStickerFromSet(
-    sticker: InputFile? = null,
-): Ok {
+suspend fun TdKtxClient.removeStickerFromSet(sticker: InputFile? = null): Ok {
     val request = RemoveStickerFromSet(sticker)
     val requestJson = tdJson.encodeToString(RemoveStickerFromSet.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13662,9 +13082,7 @@ suspend fun TdKtxClient.getMapThumbnailFile(
 /**
  * Returns information about a limit, increased for Premium users. Returns a 404 error if the limit is unknown @limit_type Type of the limit
  */
-suspend fun TdKtxClient.getPremiumLimit(
-    limitType: PremiumLimitType? = null,
-): PremiumLimit {
+suspend fun TdKtxClient.getPremiumLimit(limitType: PremiumLimitType? = null): PremiumLimit {
     val request = GetPremiumLimit(limitType)
     val requestJson = tdJson.encodeToString(GetPremiumLimit.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13674,9 +13092,7 @@ suspend fun TdKtxClient.getPremiumLimit(
 /**
  * Returns information about features, available to Premium users @source Source of the request; pass null if the method is called from some non-standard source
  */
-suspend fun TdKtxClient.getPremiumFeatures(
-    source: PremiumSource? = null,
-): PremiumFeatures {
+suspend fun TdKtxClient.getPremiumFeatures(source: PremiumSource? = null): PremiumFeatures {
     val request = GetPremiumFeatures(source)
     val requestJson = tdJson.encodeToString(GetPremiumFeatures.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13686,8 +13102,7 @@ suspend fun TdKtxClient.getPremiumFeatures(
 /**
  * Returns examples of premium stickers for demonstration purposes
  */
-suspend fun TdKtxClient.getPremiumStickerExamples(
-): Stickers {
+suspend fun TdKtxClient.getPremiumStickerExamples(): Stickers {
     val request = GetPremiumStickerExamples()
     val requestJson = tdJson.encodeToString(GetPremiumStickerExamples.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13697,9 +13112,7 @@ suspend fun TdKtxClient.getPremiumStickerExamples(
 /**
  * Returns the sticker to be used as representation of the Telegram Premium subscription @month_count Number of months the Telegram Premium subscription will be active
  */
-suspend fun TdKtxClient.getPremiumInfoSticker(
-    monthCount: Int,
-): Sticker {
+suspend fun TdKtxClient.getPremiumInfoSticker(monthCount: Int): Sticker {
     val request = GetPremiumInfoSticker(monthCount)
     val requestJson = tdJson.encodeToString(GetPremiumInfoSticker.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13709,9 +13122,7 @@ suspend fun TdKtxClient.getPremiumInfoSticker(
 /**
  * Informs TDLib that the user viewed detailed information about a Premium feature on the Premium features screen @feature The viewed premium feature
  */
-suspend fun TdKtxClient.viewPremiumFeature(
-    feature: PremiumFeature? = null,
-): Ok {
+suspend fun TdKtxClient.viewPremiumFeature(feature: PremiumFeature? = null): Ok {
     val request = ViewPremiumFeature(feature)
     val requestJson = tdJson.encodeToString(ViewPremiumFeature.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13721,8 +13132,7 @@ suspend fun TdKtxClient.viewPremiumFeature(
 /**
  * Informs TDLib that the user clicked Premium subscription button on the Premium features screen
  */
-suspend fun TdKtxClient.clickPremiumSubscriptionButton(
-): Ok {
+suspend fun TdKtxClient.clickPremiumSubscriptionButton(): Ok {
     val request = ClickPremiumSubscriptionButton()
     val requestJson = tdJson.encodeToString(ClickPremiumSubscriptionButton.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13732,8 +13142,7 @@ suspend fun TdKtxClient.clickPremiumSubscriptionButton(
 /**
  * Returns state of Telegram Premium subscription and promotion videos for Premium features
  */
-suspend fun TdKtxClient.getPremiumState(
-): PremiumState {
+suspend fun TdKtxClient.getPremiumState(): PremiumState {
     val request = GetPremiumState()
     val requestJson = tdJson.encodeToString(GetPremiumState.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13743,8 +13152,7 @@ suspend fun TdKtxClient.getPremiumState(
 /**
  * Returns available options for gifting Telegram Premium to a user
  */
-suspend fun TdKtxClient.getPremiumGiftPaymentOptions(
-): PremiumGiftPaymentOptions {
+suspend fun TdKtxClient.getPremiumGiftPaymentOptions(): PremiumGiftPaymentOptions {
     val request = GetPremiumGiftPaymentOptions()
     val requestJson = tdJson.encodeToString(GetPremiumGiftPaymentOptions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13755,9 +13163,7 @@ suspend fun TdKtxClient.getPremiumGiftPaymentOptions(
  * Returns available options for creating of Telegram Premium giveaway or manual distribution of Telegram Premium among chat members
  * @param boostedChatId Identifier of the supergroup or channel chat, which will be automatically boosted by receivers of the gift codes and which is administered by the user
  */
-suspend fun TdKtxClient.getPremiumGiveawayPaymentOptions(
-    boostedChatId: Long,
-): PremiumGiveawayPaymentOptions {
+suspend fun TdKtxClient.getPremiumGiveawayPaymentOptions(boostedChatId: Long): PremiumGiveawayPaymentOptions {
     val request = GetPremiumGiveawayPaymentOptions(boostedChatId)
     val requestJson = tdJson.encodeToString(GetPremiumGiveawayPaymentOptions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13767,9 +13173,7 @@ suspend fun TdKtxClient.getPremiumGiveawayPaymentOptions(
 /**
  * Returns information about a Telegram Premium gift code @code The code to check
  */
-suspend fun TdKtxClient.checkPremiumGiftCode(
-    code: String? = null,
-): PremiumGiftCodeInfo {
+suspend fun TdKtxClient.checkPremiumGiftCode(code: String? = null): PremiumGiftCodeInfo {
     val request = CheckPremiumGiftCode(code)
     val requestJson = tdJson.encodeToString(CheckPremiumGiftCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13779,9 +13183,7 @@ suspend fun TdKtxClient.checkPremiumGiftCode(
 /**
  * Applies a Telegram Premium gift code @code The code to apply
  */
-suspend fun TdKtxClient.applyPremiumGiftCode(
-    code: String? = null,
-): Ok {
+suspend fun TdKtxClient.applyPremiumGiftCode(code: String? = null): Ok {
     val request = ApplyPremiumGiftCode(code)
     val requestJson = tdJson.encodeToString(ApplyPremiumGiftCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13844,8 +13246,7 @@ suspend fun TdKtxClient.getGiveawayInfo(
 /**
  * Returns available options for Telegram Stars purchase
  */
-suspend fun TdKtxClient.getStarPaymentOptions(
-): StarPaymentOptions {
+suspend fun TdKtxClient.getStarPaymentOptions(): StarPaymentOptions {
     val request = GetStarPaymentOptions()
     val requestJson = tdJson.encodeToString(GetStarPaymentOptions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13855,9 +13256,7 @@ suspend fun TdKtxClient.getStarPaymentOptions(
 /**
  * Returns available options for Telegram Stars gifting @user_id Identifier of the user who will receive Telegram Stars; pass 0 to get options for an unspecified user
  */
-suspend fun TdKtxClient.getStarGiftPaymentOptions(
-    userId: Long,
-): StarPaymentOptions {
+suspend fun TdKtxClient.getStarGiftPaymentOptions(userId: Long): StarPaymentOptions {
     val request = GetStarGiftPaymentOptions(userId)
     val requestJson = tdJson.encodeToString(GetStarGiftPaymentOptions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13867,8 +13266,7 @@ suspend fun TdKtxClient.getStarGiftPaymentOptions(
 /**
  * Returns available options for Telegram Star giveaway creation
  */
-suspend fun TdKtxClient.getStarGiveawayPaymentOptions(
-): StarGiveawayPaymentOptions {
+suspend fun TdKtxClient.getStarGiveawayPaymentOptions(): StarGiveawayPaymentOptions {
     val request = GetStarGiveawayPaymentOptions()
     val requestJson = tdJson.encodeToString(GetStarGiveawayPaymentOptions.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13914,9 +13312,7 @@ suspend fun TdKtxClient.getStarSubscriptions(
 /**
  * Checks whether an in-store purchase is possible. Must be called before any in-store purchase. For official applications only @purpose Transaction purpose
  */
-suspend fun TdKtxClient.canPurchaseFromStore(
-    purpose: StorePaymentPurpose? = null,
-): Ok {
+suspend fun TdKtxClient.canPurchaseFromStore(purpose: StorePaymentPurpose? = null): Ok {
     val request = CanPurchaseFromStore(purpose)
     val requestJson = tdJson.encodeToString(CanPurchaseFromStore.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -13971,9 +13367,7 @@ suspend fun TdKtxClient.editUserStarSubscription(
 /**
  * Reuses an active Telegram Star subscription to a channel chat and joins the chat again @subscription_id Identifier of the subscription
  */
-suspend fun TdKtxClient.reuseStarSubscription(
-    subscriptionId: String? = null,
-): Ok {
+suspend fun TdKtxClient.reuseStarSubscription(subscriptionId: String? = null): Ok {
     val request = ReuseStarSubscription(subscriptionId)
     val requestJson = tdJson.encodeToString(ReuseStarSubscription.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14094,9 +13488,7 @@ suspend fun TdKtxClient.getConnectedAffiliatePrograms(
 /**
  * Returns information about features, available to Business users @source Source of the request; pass null if the method is called from settings or some non-standard source
  */
-suspend fun TdKtxClient.getBusinessFeatures(
-    source: BusinessFeature? = null,
-): BusinessFeatures {
+suspend fun TdKtxClient.getBusinessFeatures(source: BusinessFeature? = null): BusinessFeatures {
     val request = GetBusinessFeatures(source)
     val requestJson = tdJson.encodeToString(GetBusinessFeatures.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14106,9 +13498,7 @@ suspend fun TdKtxClient.getBusinessFeatures(
 /**
  * Accepts Telegram terms of service @terms_of_service_id Terms of service identifier
  */
-suspend fun TdKtxClient.acceptTermsOfService(
-    termsOfServiceId: String? = null,
-): Ok {
+suspend fun TdKtxClient.acceptTermsOfService(termsOfServiceId: String? = null): Ok {
     val request = AcceptTermsOfService(termsOfServiceId)
     val requestJson = tdJson.encodeToString(AcceptTermsOfService.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14163,9 +13553,7 @@ suspend fun TdKtxClient.answerCustomQuery(
 /**
  * Succeeds after a specified amount of time has passed. Can be called before initialization @seconds Number of seconds before the function returns
  */
-suspend fun TdKtxClient.setAlarm(
-    seconds: Double,
-): Ok {
+suspend fun TdKtxClient.setAlarm(seconds: Double): Ok {
     val request = SetAlarm(seconds)
     val requestJson = tdJson.encodeToString(SetAlarm.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14175,8 +13563,7 @@ suspend fun TdKtxClient.setAlarm(
 /**
  * Returns information about existing countries. Can be called before authorization
  */
-suspend fun TdKtxClient.getCountries(
-): Countries {
+suspend fun TdKtxClient.getCountries(): Countries {
     val request = GetCountries()
     val requestJson = tdJson.encodeToString(GetCountries.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14186,9 +13573,7 @@ suspend fun TdKtxClient.getCountries(
 /**
  * Returns information about an existing country. Can be called before authorization @country_code A two-letter ISO 3166-1 alpha-2 country code
  */
-suspend fun TdKtxClient.getCountry(
-    countryCode: String? = null,
-): CountryInfo {
+suspend fun TdKtxClient.getCountry(countryCode: String? = null): CountryInfo {
     val request = GetCountry(countryCode)
     val requestJson = tdJson.encodeToString(GetCountry.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14198,8 +13583,7 @@ suspend fun TdKtxClient.getCountry(
 /**
  * Uses the current IP address to find the current country. Returns two-letter ISO 3166-1 alpha-2 country code. Can be called before authorization
  */
-suspend fun TdKtxClient.getCountryCode(
-): Text {
+suspend fun TdKtxClient.getCountryCode(): Text {
     val request = GetCountryCode()
     val requestJson = tdJson.encodeToString(GetCountryCode.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14209,9 +13593,7 @@ suspend fun TdKtxClient.getCountryCode(
 /**
  * Returns information about a phone number by its prefix. Can be called before authorization @phone_number_prefix The phone number prefix
  */
-suspend fun TdKtxClient.getPhoneNumberInfo(
-    phoneNumberPrefix: String? = null,
-): PhoneNumberInfo {
+suspend fun TdKtxClient.getPhoneNumberInfo(phoneNumberPrefix: String? = null): PhoneNumberInfo {
     val request = GetPhoneNumberInfo(phoneNumberPrefix)
     val requestJson = tdJson.encodeToString(GetPhoneNumberInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14237,9 +13619,7 @@ suspend fun TdKtxClient.getPhoneNumberInfoSync(
  * Returns information about a given collectible item that was purchased at https://fragment.com
  * @param type Type of the collectible item. The item must be used by a user and must be visible to the current user
  */
-suspend fun TdKtxClient.getCollectibleItemInfo(
-    type: CollectibleItemType? = null,
-): CollectibleItemInfo {
+suspend fun TdKtxClient.getCollectibleItemInfo(type: CollectibleItemType? = null): CollectibleItemInfo {
     val request = GetCollectibleItemInfo(type)
     val requestJson = tdJson.encodeToString(GetCollectibleItemInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14249,9 +13629,7 @@ suspend fun TdKtxClient.getCollectibleItemInfo(
 /**
  * Returns information about a tg:// deep link. Use "tg://need_update_for_some_feature" or "tg:some_unsupported_feature" for testing. Returns a 404 error for unknown links. Can be called before authorization @link The link
  */
-suspend fun TdKtxClient.getDeepLinkInfo(
-    link: String? = null,
-): DeepLinkInfo {
+suspend fun TdKtxClient.getDeepLinkInfo(link: String? = null): DeepLinkInfo {
     val request = GetDeepLinkInfo(link)
     val requestJson = tdJson.encodeToString(GetDeepLinkInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14261,8 +13639,7 @@ suspend fun TdKtxClient.getDeepLinkInfo(
 /**
  * Returns application config, provided by the server. Can be called before authorization
  */
-suspend fun TdKtxClient.getApplicationConfig(
-): JsonValue {
+suspend fun TdKtxClient.getApplicationConfig(): JsonValue {
     val request = GetApplicationConfig()
     val requestJson = tdJson.encodeToString(GetApplicationConfig.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14286,8 +13663,7 @@ suspend fun TdKtxClient.saveApplicationLogEvent(
 /**
  * Returns the link for downloading official Telegram application to be used when the current user invites friends to Telegram
  */
-suspend fun TdKtxClient.getApplicationDownloadLink(
-): HttpUrl {
+suspend fun TdKtxClient.getApplicationDownloadLink(): HttpUrl {
     val request = GetApplicationDownloadLink()
     val requestJson = tdJson.encodeToString(GetApplicationDownloadLink.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14333,9 +13709,7 @@ suspend fun TdKtxClient.editProxy(
 /**
  * Enables a proxy. Only one proxy can be enabled at a time. Can be called before authorization @proxy_id Proxy identifier
  */
-suspend fun TdKtxClient.enableProxy(
-    proxyId: Int,
-): Ok {
+suspend fun TdKtxClient.enableProxy(proxyId: Int): Ok {
     val request = EnableProxy(proxyId)
     val requestJson = tdJson.encodeToString(EnableProxy.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14345,8 +13719,7 @@ suspend fun TdKtxClient.enableProxy(
 /**
  * Disables the currently enabled proxy. Can be called before authorization
  */
-suspend fun TdKtxClient.disableProxy(
-): Ok {
+suspend fun TdKtxClient.disableProxy(): Ok {
     val request = DisableProxy()
     val requestJson = tdJson.encodeToString(DisableProxy.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14356,9 +13729,7 @@ suspend fun TdKtxClient.disableProxy(
 /**
  * Removes a proxy server. Can be called before authorization @proxy_id Proxy identifier
  */
-suspend fun TdKtxClient.removeProxy(
-    proxyId: Int,
-): Ok {
+suspend fun TdKtxClient.removeProxy(proxyId: Int): Ok {
     val request = RemoveProxy(proxyId)
     val requestJson = tdJson.encodeToString(RemoveProxy.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14368,8 +13739,7 @@ suspend fun TdKtxClient.removeProxy(
 /**
  * Returns the list of proxies that are currently set up. Can be called before authorization
  */
-suspend fun TdKtxClient.getProxies(
-): AddedProxies {
+suspend fun TdKtxClient.getProxies(): AddedProxies {
     val request = GetProxies()
     val requestJson = tdJson.encodeToString(GetProxies.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14380,9 +13750,7 @@ suspend fun TdKtxClient.getProxies(
  * Computes time needed to receive a response from a Telegram server through a proxy. Can be called before authorization
  * @param proxy The proxy to test; pass null to ping a Telegram server without a proxy
  */
-suspend fun TdKtxClient.pingProxy(
-    proxy: Proxy? = null,
-): Seconds {
+suspend fun TdKtxClient.pingProxy(proxy: Proxy? = null): Seconds {
     val request = PingProxy(proxy)
     val requestJson = tdJson.encodeToString(PingProxy.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14392,9 +13760,7 @@ suspend fun TdKtxClient.pingProxy(
 /**
  * Sets new log stream for internal logging of TDLib. Can be called synchronously @log_stream New log stream
  */
-suspend fun TdKtxClient.setLogStream(
-    logStream: LogStream? = null,
-): Ok {
+suspend fun TdKtxClient.setLogStream(logStream: LogStream? = null): Ok {
     val request = SetLogStream(logStream)
     val requestJson = tdJson.encodeToString(SetLogStream.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14404,8 +13770,7 @@ suspend fun TdKtxClient.setLogStream(
 /**
  * Returns information about currently used log stream for internal logging of TDLib. Can be called synchronously
  */
-suspend fun TdKtxClient.getLogStream(
-): LogStream {
+suspend fun TdKtxClient.getLogStream(): LogStream {
     val request = GetLogStream()
     val requestJson = tdJson.encodeToString(GetLogStream.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14416,9 +13781,7 @@ suspend fun TdKtxClient.getLogStream(
  * Sets the verbosity level of the internal logging of TDLib. Can be called synchronously
  * @param newVerbosityLevel New value of the verbosity level for logging. Value 0 corresponds to fatal errors, value 1 corresponds to errors, value 2 corresponds to warnings and debug warnings, value 3 corresponds to informational, value 4 corresponds to debug, value 5 corresponds to verbose debug, value greater than 5 and up to 1023 can be used to enable even more logging
  */
-suspend fun TdKtxClient.setLogVerbosityLevel(
-    newVerbosityLevel: Int,
-): Ok {
+suspend fun TdKtxClient.setLogVerbosityLevel(newVerbosityLevel: Int): Ok {
     val request = SetLogVerbosityLevel(newVerbosityLevel)
     val requestJson = tdJson.encodeToString(SetLogVerbosityLevel.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14428,8 +13791,7 @@ suspend fun TdKtxClient.setLogVerbosityLevel(
 /**
  * Returns current verbosity level of the internal logging of TDLib. Can be called synchronously
  */
-suspend fun TdKtxClient.getLogVerbosityLevel(
-): LogVerbosityLevel {
+suspend fun TdKtxClient.getLogVerbosityLevel(): LogVerbosityLevel {
     val request = GetLogVerbosityLevel()
     val requestJson = tdJson.encodeToString(GetLogVerbosityLevel.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14439,8 +13801,7 @@ suspend fun TdKtxClient.getLogVerbosityLevel(
 /**
  * Returns the list of available TDLib internal log tags, for example, ["actor", "binlog", "connections", "notifications", "proxy"]. Can be called synchronously
  */
-suspend fun TdKtxClient.getLogTags(
-): LogTags {
+suspend fun TdKtxClient.getLogTags(): LogTags {
     val request = GetLogTags()
     val requestJson = tdJson.encodeToString(GetLogTags.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14465,9 +13826,7 @@ suspend fun TdKtxClient.setLogTagVerbosityLevel(
 /**
  * Returns current verbosity level for a specified TDLib internal log tag. Can be called synchronously @tag Logging tag to change verbosity level
  */
-suspend fun TdKtxClient.getLogTagVerbosityLevel(
-    tag: String? = null,
-): LogVerbosityLevel {
+suspend fun TdKtxClient.getLogTagVerbosityLevel(tag: String? = null): LogVerbosityLevel {
     val request = GetLogTagVerbosityLevel(tag)
     val requestJson = tdJson.encodeToString(GetLogTagVerbosityLevel.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14492,9 +13851,7 @@ suspend fun TdKtxClient.addLogMessage(
 /**
  * Returns support information for the given user; for Telegram support only @user_id User identifier
  */
-suspend fun TdKtxClient.getUserSupportInfo(
-    userId: Long,
-): UserSupportInfo {
+suspend fun TdKtxClient.getUserSupportInfo(userId: Long): UserSupportInfo {
     val request = GetUserSupportInfo(userId)
     val requestJson = tdJson.encodeToString(GetUserSupportInfo.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14517,8 +13874,7 @@ suspend fun TdKtxClient.setUserSupportInfo(
 /**
  * Returns localized name of the Telegram support user; for Telegram support only
  */
-suspend fun TdKtxClient.getSupportName(
-): Text {
+suspend fun TdKtxClient.getSupportName(): Text {
     val request = GetSupportName()
     val requestJson = tdJson.encodeToString(GetSupportName.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14528,8 +13884,7 @@ suspend fun TdKtxClient.getSupportName(
 /**
  * Does nothing; for testing only. This is an offline method. Can be called before authorization
  */
-suspend fun TdKtxClient.testCallEmpty(
-): Ok {
+suspend fun TdKtxClient.testCallEmpty(): Ok {
     val request = TestCallEmpty()
     val requestJson = tdJson.encodeToString(TestCallEmpty.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14539,9 +13894,7 @@ suspend fun TdKtxClient.testCallEmpty(
 /**
  * Returns the received string; for testing only. This is an offline method. Can be called before authorization @x String to return
  */
-suspend fun TdKtxClient.testCallString(
-    x: String? = null,
-): TestString {
+suspend fun TdKtxClient.testCallString(x: String? = null): TestString {
     val request = TestCallString(x)
     val requestJson = tdJson.encodeToString(TestCallString.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14551,9 +13904,7 @@ suspend fun TdKtxClient.testCallString(
 /**
  * Returns the received bytes; for testing only. This is an offline method. Can be called before authorization @x Bytes to return
  */
-suspend fun TdKtxClient.testCallBytes(
-    x: String? = null,
-): TestBytes {
+suspend fun TdKtxClient.testCallBytes(x: String? = null): TestBytes {
     val request = TestCallBytes(x)
     val requestJson = tdJson.encodeToString(TestCallBytes.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14563,9 +13914,7 @@ suspend fun TdKtxClient.testCallBytes(
 /**
  * Returns the received vector of numbers; for testing only. This is an offline method. Can be called before authorization @x Vector of numbers to return
  */
-suspend fun TdKtxClient.testCallVectorInt(
-    x: List<Int>? = null,
-): TestVectorInt {
+suspend fun TdKtxClient.testCallVectorInt(x: List<Int>? = null): TestVectorInt {
     val request = TestCallVectorInt(x)
     val requestJson = tdJson.encodeToString(TestCallVectorInt.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14575,9 +13924,7 @@ suspend fun TdKtxClient.testCallVectorInt(
 /**
  * Returns the received vector of objects containing a number; for testing only. This is an offline method. Can be called before authorization @x Vector of objects to return
  */
-suspend fun TdKtxClient.testCallVectorIntObject(
-    x: List<TestInt>? = null,
-): TestVectorIntObject {
+suspend fun TdKtxClient.testCallVectorIntObject(x: List<TestInt>? = null): TestVectorIntObject {
     val request = TestCallVectorIntObject(x)
     val requestJson = tdJson.encodeToString(TestCallVectorIntObject.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14587,9 +13934,7 @@ suspend fun TdKtxClient.testCallVectorIntObject(
 /**
  * Returns the received vector of strings; for testing only. This is an offline method. Can be called before authorization @x Vector of strings to return
  */
-suspend fun TdKtxClient.testCallVectorString(
-    x: List<String>? = null,
-): TestVectorString {
+suspend fun TdKtxClient.testCallVectorString(x: List<String>? = null): TestVectorString {
     val request = TestCallVectorString(x)
     val requestJson = tdJson.encodeToString(TestCallVectorString.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14599,9 +13944,7 @@ suspend fun TdKtxClient.testCallVectorString(
 /**
  * Returns the received vector of objects containing a string; for testing only. This is an offline method. Can be called before authorization @x Vector of objects to return
  */
-suspend fun TdKtxClient.testCallVectorStringObject(
-    x: List<TestString>? = null,
-): TestVectorStringObject {
+suspend fun TdKtxClient.testCallVectorStringObject(x: List<TestString>? = null): TestVectorStringObject {
     val request = TestCallVectorStringObject(x)
     val requestJson = tdJson.encodeToString(TestCallVectorStringObject.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14611,9 +13954,7 @@ suspend fun TdKtxClient.testCallVectorStringObject(
 /**
  * Returns the squared received number; for testing only. This is an offline method. Can be called before authorization @x Number to square
  */
-suspend fun TdKtxClient.testSquareInt(
-    x: Int,
-): TestInt {
+suspend fun TdKtxClient.testSquareInt(x: Int): TestInt {
     val request = TestSquareInt(x)
     val requestJson = tdJson.encodeToString(TestSquareInt.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14623,8 +13964,7 @@ suspend fun TdKtxClient.testSquareInt(
 /**
  * Sends a simple network request to the Telegram servers; for testing only. Can be called before authorization
  */
-suspend fun TdKtxClient.testNetwork(
-): Ok {
+suspend fun TdKtxClient.testNetwork(): Ok {
     val request = TestNetwork()
     val requestJson = tdJson.encodeToString(TestNetwork.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14651,8 +13991,7 @@ suspend fun TdKtxClient.testProxy(
 /**
  * Forces an updates.getDifference call to the Telegram servers; for testing only
  */
-suspend fun TdKtxClient.testGetDifference(
-): Ok {
+suspend fun TdKtxClient.testGetDifference(): Ok {
     val request = TestGetDifference()
     val requestJson = tdJson.encodeToString(TestGetDifference.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14662,8 +14001,7 @@ suspend fun TdKtxClient.testGetDifference(
 /**
  * Does nothing and ensures that the Update object is used; for testing only. This is an offline method. Can be called before authorization
  */
-suspend fun TdKtxClient.testUseUpdate(
-): Update {
+suspend fun TdKtxClient.testUseUpdate(): Update {
     val request = TestUseUpdate()
     val requestJson = tdJson.encodeToString(TestUseUpdate.serializer(), request)
     val responseJson = this.sendJson(requestJson)
@@ -14673,12 +14011,9 @@ suspend fun TdKtxClient.testUseUpdate(
 /**
  * Returns the specified error and ensures that the Error object is used; for testing only. Can be called synchronously @error The error to be returned
  */
-suspend fun TdKtxClient.testReturnError(
-    error: Error? = null,
-): Error {
+suspend fun TdKtxClient.testReturnError(error: Error? = null): Error {
     val request = TestReturnError(error)
     val requestJson = tdJson.encodeToString(TestReturnError.serializer(), request)
     val responseJson = this.sendJson(requestJson)
     return tdJson.decodeFromString(Error.serializer(), responseJson)
 }
-

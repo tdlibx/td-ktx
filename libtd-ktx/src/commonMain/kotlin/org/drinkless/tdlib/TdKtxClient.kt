@@ -15,39 +15,40 @@ import kotlinx.coroutines.sync.withLock
 
 open class TdKtxClient(
     private val timeout: Double = 1.0,
-    private val engine: TdEngine = TdClientEngine()
+    private val engine: TdEngine = TdClientEngine(),
 ) {
     private val clientId = engine.createClient()
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    val updates = flow {
-        while (scope.isActive) {
-            try {
-                // Receive response from TDLib.
-                // Timeout is in seconds.
-                val response = engine.receive(clientId, timeout)
-                if (response != null) {
-                    emit(response)
+    val updates =
+        flow {
+            while (scope.isActive) {
+                try {
+                    // Receive response from TDLib.
+                    // Timeout is in seconds.
+                    val response = engine.receive(clientId, timeout)
+                    if (response != null) {
+                        emit(response)
 
-                    val extraId = extractExtra(response)
-                    if (extraId != null) {
-                        val deferred = pendingRequests.withLock {
-                            callbacks.remove(extraId)
+                        val extraId = extractExtra(response)
+                        if (extraId != null) {
+                            val deferred =
+                                pendingRequests.withLock {
+                                    callbacks.remove(extraId)
+                                }
+                            deferred?.complete(response)
                         }
-                        deferred?.complete(response)
                     }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    println("TD_FLOW_DEBUG: TdKtxClient error: ${e.message}")
+
+                    // Continue loop in case of non-cancellation exceptions
                 }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                println("TD_FLOW_DEBUG: TdKtxClient error: ${e.message}")
-
-                // Continue loop in case of non-cancellation exceptions
             }
-        }
-    }.shareIn(scope, SharingStarted.WhileSubscribed(5000), 1000)
-
+        }.shareIn(scope, SharingStarted.WhileSubscribed(5000), 1000)
 
     private val pendingRequests = Mutex()
     internal val callbacks = HashMap<String, CompletableDeferred<String>>()

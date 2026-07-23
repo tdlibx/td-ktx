@@ -8,8 +8,8 @@ import org.drinkless.tdlib.generated.UpdateAuthorizationState
 import org.drinkless.tdlib.generated.UpdateUserStatus
 
 fun TelegramFlow.authorizationStateFlow(): Flow<AuthorizationState> =
-    this.getUpdatesFlowOfType<UpdateAuthorizationState>()
+    this
+        .getUpdatesFlowOfType<UpdateAuthorizationState>()
         .mapNotNull { it.authorizationState }
 
-fun TelegramFlow.userStatusFlow(): Flow<UpdateUserStatus> =
-    this.getUpdatesFlowOfType()
+fun TelegramFlow.userStatusFlow(): Flow<UpdateUserStatus> = this.getUpdatesFlowOfType()

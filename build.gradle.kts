@@ -9,6 +9,8 @@ plugins {
     alias(libs.plugins.compose.multiplatform) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.dokka) apply false
+    alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.ktlint) apply false
     id("org.jetbrains.kotlin.multiplatform") version "2.2.21" apply false
     id("org.jetbrains.kotlin.jvm") version "2.2.21" apply false
     id("com.vanniktech.maven.publish") version "0.37.0" apply false
@@ -38,6 +40,22 @@ findProject(":tdktxgen")?.run {
         tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
             compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
         }
+    }
+}
+
+// Apply detekt and ktlint to all subprojects that contain Kotlin source.
+subprojects {
+    plugins.withId("org.jetbrains.kotlin.multiplatform") {
+        apply(plugin = "io.gitlab.arturbosch.detekt")
+        apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    }
+    plugins.withId("org.jetbrains.kotlin.jvm") {
+        apply(plugin = "io.gitlab.arturbosch.detekt")
+        apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    }
+    plugins.withId("org.jetbrains.kotlin.android") {
+        apply(plugin = "io.gitlab.arturbosch.detekt")
+        apply(plugin = "org.jlleitschuh.gradle.ktlint")
     }
 }
 

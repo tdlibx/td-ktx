@@ -65,9 +65,10 @@ class TdlibxBootstrapSettingsPlugin : Plugin<Settings> {
 
     private fun readBootstrapVersion(target: Settings): String {
         val provider = target.providers.gradleProperty("tdlibx.bootstrapVersion")
-        val fromManifest = runCatching {
-            this::class.java.`package`.implementationVersion
-        }.getOrNull()
+        val fromManifest =
+            runCatching {
+                this::class.java.`package`.implementationVersion
+            }.getOrNull()
         return provider.orElse(target.providers.provider { fromManifest ?: "unspecified" }).get()
     }
 }
