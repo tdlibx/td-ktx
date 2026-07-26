@@ -1,0 +1,85 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="androidApp" type="AndroidRunConfigurationType" factoryName="Android App">
+    <module name="app" />
+    <option name="DEPLOY" value="true" />
+    <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+    <option name=" artifactType" value="APK" />
+    <option name="ARTIFACT_NAME" value="" />
+    <option name="PM_INSTALL_OPTIONS" value="" />
+    <option name="ALL_USERS" value="false" />
+    <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+    <option name="CLEAR_LOGCAT" value="false" />
+    <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+    <option name="SKIP_NOOP_APK_INSTALLATIONS" value="false" />
+    <option name="FORCE_STOP_APP" value="true" />
+    <option name="DEBUGGER_TYPE" value="Java" />
+    <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+    <option name="PREFERRED_AVD" value="" />
+    <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+    <option name="SELECTED_CLOUD_PROJECT_CONFIGURATION" value="-1" />
+    <option name="SELECTED_CLOUD_CONFIGURATION_NAME" value="" />
+    <option name="SELECTED_CLOUD_CONFIGURATION_PROJECT_LOCATION" value="" />
+    <option name="VALID_API_CREDENTIALS" value="false" />
+    <option name="DEBUG_IMG_MODE" value="COLD" />
+    <option name="ACTIVITY_NAME" value="" />
+    <option name="ACTIVITY_CLASS_NAME" value="" />
+    <option name="SEARCH_ACTIVITY_NAME" value="" />
+    <option name="PREFER_LAUNCH_ACTIVITY" value="true" />
+    <option name="ACTIVITY_AUTO_LAUNCH_SELECTION" value="false" />
+    <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+    <option name="ACTIVITY_CLEAR_LOGCAT" value="false" />
+    <option name="SHOW_ALL_REGISTRATIONS" value="false" />
+    <option name="INSTALLATION_OPTION" value="LOCAL_INSTALLATION" />
+    <option name="RESOLVE_WORKSPACE_DEPENDENCIES" value="false" />
+    <option name="CLEAR_APP_STORAGE" value="false" />
+    <option name="DYNAMIC_LANGUAGE_LOCALE" value="" />
+    <option name="EXTRA_ANDROID_TEST_RUNNER_FLAGS" value="" />
+    <option name="CUSTIOM_RUNNER_ARGS" value="" />
+    <option name="CUSTOM_RUNNER_ARGS_VALIDATION_ENABLED" value="false" />
+    <option name="CUSTOM_RUNNER_ARGS" value="" />
+    <option name="WITH_COMPATIBILITY_PROVIDER" value="false" />
+    <option name="EXTRA_AFTER_LAUNCH_OPTIONS" value="" />
+    <option name="EXTRA_LOGCAT_ARGS" value="" />
+    <option name="LOGCAT_CHANNEL" value="DEFAULT" />
+    <option name="PROFILING_MODE" value="NOT_SET" />
+    <option name="ADVANCED_PROFILING" value="false" />
+    <option name="STARTUP_PROFILING_CONFIG_ID" value="" />
+    <option name="STARTUP_PROFILING_CONFIG_NAME" value="" />
+    <option name="BASICTESTINGPROFILE" value="" />
+    <option name="BENCHMARK_PROFILING" value="false" />
+    <option name="STATEMENT_PROFILING_CONFIG_ID" value="" />
+    <option name="STATEMENT_PROFILING_CONFIG_NAME" value="" />
+    <option name="NATIVE_TRACKING" value="DISABLED" />
+    <option name="PROFILING_POINT" value="-1" />
+    <option name="STARTUP_PROFILING" value="false" />
+    <option name="SAMPLING_CONFIG" value="" />
+    <option name="NATIVE_SAMPLE_PERIOD" value="" />
+    <option name="NATIVE_SAMPLING_STARTUP" value="false" />
+    <option name="NATIVE_SAMPLING_FROM_RANGE" value="false" />
+    <option name="NATIVE_SAMPLE_RANGE_START" value="0" />
+    <option name="NATIVE_SAMPLE_RANGE_END" value="0" />
+    <option name="APP_STARTUP_PROFILING_ENABLED" value="false" />
+    <option name="APP_STARTUP_PROFILING_LAST_ID" value="0" />
+    <option name="APP_STARTUP_PROFILING_TIMESTAMP" value="0" />
+    <option name="LOG_SLOW_DISPATCHING_MAX_MULTIPLIER" value="0" />
+    <option name="LOG_SLOW_RENDERING_MAX_MULTIPLIER" value="0" />
+    <option name="TRACK_ALLOCATIONS" value="false" />
+    <option name="CLASSES_THAT_MUST_BE_LOADED" value="" />
+    <option name="MIN_FREE_HEAP_SIZE_BEFORE_GC" value="0" />
+    <option name="COMPLIMENTARY_DEPLOY_DROPDOWN_CHOICE" value="NONE" />
+    <option name="DEPLOY_AND_BUNDLE_SPLITAPK" value="true" />
+    <option name="COMPILE_LAYOUTS_TO_NAMESPACES" value="false" />
+    <option name="RUN_AS_COMPOSE_PREVIEW" value="false" />
+    <option name="RUN_FEATURE" value="DEFAULT" />
+    <RunnerSettings RunnerId="AndroidDebugRunner" />
+    <RunnerSettings RunnerId="AndroidProfileRunner" />
+    <RunnerSettings RunnerId="AndroidRunner" />
+    <ConfigurationWrapper RunnerId="AndroidDebugRunner" />
+    <ConfigurationWrapper RunnerId="AndroidProfileRunner" />
+    <ConfigurationWrapper RunnerId="AndroidRunner" />
+    <method v="2">
+      <option name="com.jetbrains.instrumentation.runBeforeLaunchTask" enabled="true" />
+      <option name="com.android.instantapp.runManagement.provisionBeforeRun" value="true" />
+    </method>
+  </configuration>
+</component>
